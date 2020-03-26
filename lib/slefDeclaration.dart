@@ -1,5 +1,11 @@
+import 'package:covid19/familyDeclaration.dart';
+import 'package:covid19/familyRadio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:async';
+import 'globalVar.dart' as global;
+import 'package:location_permissions/location_permissions.dart';
 
 class SelfDeclaration extends StatefulWidget {
   @override
@@ -7,16 +13,156 @@ class SelfDeclaration extends StatefulWidget {
 }
 
 class _SelfDeclarationState extends State<SelfDeclaration> {
+  List<String> eng = [
+    "select travelled country",
+    "from",
+    "to",
+    "Select your State",
+    "Select your District",
+    "Get Location",
+    "Submit"
+  ];
+  List<String> hin = [
+    "यात्रा देश का चयन करें",
+    "से",
+    "तक",
+    "अपना राज्य चुनें",
+    "अपने जिले का चयन करें",
+    "स्थान प्राप्त करें",
+    "प्रस्तुत"
+  ];
+  List<String> pun = [
+    "ਯਾਤਰਾ ਦੇਸ਼ ਦੀ ਚੋਣ ਕਰੋ",
+    "ਤੋਂ",
+    "ਨੂੰ",
+    "ਆਪਣੇ ਰਾਜ ਦੀ ਚੋਣ ਕਰੋ",
+    "ਆਪਣੇ ਜ਼ਿਲ੍ਹੇ ਦੀ ਚੋਣ ਕਰੋ",
+    "ਸਥਾਨ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "ਜਮ੍ਹਾਂ ਕਰੋ"
+  ];
+  List<String> kan = [
+    "ಪ್ರಯಾಣ ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "ಇಂದ",
+    "ಗೆ",
+    "ನಿಮ್ಮ ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "ನಿಮ್ಮ ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "ಸ್ಥಳ ಪಡೆಯಿರಿ",
+    "ಸಲ್ಲಿಸು"
+  ];
+  List<String> mar = [
+    "प्रवासी देश निवडा",
+    "पासून",
+    "ते",
+    "आपले राज्य निवडा",
+    "आपला जिल्हा निवडा",
+    "स्थान मिळवा",
+    "प्रस्तुत करणे"
+  ];
+  List<String> odi = [
+    "ଭ୍ରମଣକାରୀ ଦେଶ ଚୟନ କରନ୍ତୁ",
+    "ରୁ",
+    "to",
+    "ଆପଣଙ୍କର ରାଜ୍ୟ ଚୟନ କରନ୍ତୁ",
+    "ଆପଣଙ୍କର ଜିଲ୍ଲା ଚୟନ କରନ୍ତୁ",
+    "ସ୍ଥାନ ପାଆନ୍ତୁ",
+    "ଦାଖଲ"
+  ];
+  List<String> tel = [
+    "ప్రయాణించిన దేశాన్ని ఎంచుకోండి",
+    "నుండి",
+    "టు",
+    "మీ రాష్ట్రాన్ని ఎంచుకోండి",
+    "మీ జిల్లాను ఎంచుకోండి",
+    "స్థానం పొందండి",
+    "సమర్పించు"
+  ];
+  List<String> tam = [
+    "பயண நாட்டைத் தேர்ந்தெடுக்கவும்",
+    "from",
+    "to",
+    "உங்கள் மாநிலத்தைத் தேர்ந்தெடுக்கவும்",
+    "உங்கள் மாவட்டத்தைத் தேர்ந்தெடுக்கவும்",
+    "இருப்பிடத்தைப் பெறு",
+    "சமர்ப்பி"
+  ];
+  List<String> uiVar = [];
+  void uiLang() {
+    switch (global.lang) {
+      case "hindi":
+        {
+          uiVar = hin;
+          break;
+        }
+      case "english":
+        {
+          uiVar = eng;
+          break;
+        }
+      case "odiya":
+        {
+          uiVar = odi;
+          break;
+        }
+      case "marathi":
+        {
+          uiVar = mar;
+          break;
+        }
+      case "tamil":
+        {
+          uiVar = tam;
+          break;
+        }
+      case "telegu":
+        {
+          uiVar = tel;
+          break;
+        }
+      case "kannada":
+        {
+          uiVar = kan;
+          break;
+        }
+    }
+  }
+
   int isInfected;
   int gender;
   int travelled = 0;
   TextEditingController nameEditor = new TextEditingController();
   TextEditingController fnameEditor = new TextEditingController();
 
-  Widget travel() {
-    if (travelled == 1) {
+  Position position;
+  StreamSubscription<Position> positionStream;
+  String lat, long = '';
+
+  getLocation() async {
+    var geolocator = Geolocator();
+    var locationOptions =
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 1);
+
+    positionStream = geolocator
+        .getPositionStream(locationOptions)
+        .listen((Position position) {
+      // print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
+      if (position != null) {
+        setState(() {
+          lat = position.latitude.toString();
+          long = position.longitude.toString();
+        });
+      } else {
+        setState(() {
+          lat = 'Latitude';
+          long = 'Longitude';
+        });
+      }
+    });
+  }
+
+  Widget travel(List<int> travelled, int i) {
+    if (travelled[i] == 1) {
       return Text("");
-    } else if (travelled == 0) {
+    } else if (travelled[i] == 0) {
       return Column(
         children: <Widget>[
           Container(
@@ -26,7 +172,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: DropdownButton(
-              hint: Text('Select Travelled Country',
+              hint: Text(uiVar[0],
                   style: TextStyle(color: Colors.black, fontSize: 15.0)),
               value: selectedDistrict,
               onChanged: (newValue) {
@@ -67,7 +213,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                       setState(() => dateTime = newDateTime);
                     }
                   },
-                  child: Text("From"),
+                  child: Text(uiVar[1]),
                 ),
               ),
               Container(
@@ -90,7 +236,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                       setState(() => dateTime = newDateTime);
                     }
                   },
-                  child: Text("To"),
+                  child: Text(uiVar[2]),
                 ),
               )
             ],
@@ -121,8 +267,12 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
   Duration duration;
   @override
   void initState() {
+    uiLang();
+    lat = 'Latitude';
+    long = 'Longitude';
     dateTime = DateTime.now();
     duration = Duration(minutes: 10);
+
     // TODO: implement initState
     super.initState();
   }
@@ -147,206 +297,8 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
               children: <Widget>[
                 Image(
                     width: 300, image: AssetImage("assets/images/covid19.png")),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Name",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10.0),
-                  padding: EdgeInsets.only(left: 5.0),
-                  height: 45.0,
-                  //width: 200.0,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                    ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: TextFormField(
-                    obscureText: false,
-                    controller: nameEditor,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: Colors.red,
-                        focusColor: Colors.white),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Father's name",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 5.0),
-                  margin: EdgeInsets.all(10.0),
-                  height: 45.0,
-                  //width: 200.0,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                    ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: TextFormField(
-                    obscureText: false,
-                    controller: fnameEditor,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      fillColor: Colors.red,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "Gender",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0, right: 5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text("Male"),
-                          new Radio(
-                              activeColor: Colors.black,
-                              value: 0,
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value;
-                                });
-                              }),
-                          Text("Female"),
-                          new Radio(
-                              activeColor: Colors.black,
-                              value: 1,
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value;
-                                });
-                              }),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "Are you Infected?",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0, right: 5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text("Yes"),
-                          new Radio(
-                              activeColor: Colors.black,
-                              value: 0,
-                              groupValue: isInfected,
-                              onChanged: (value) {
-                                setState(() {
-                                  isInfected = value;
-                                });
-                              }),
-                          Text("No"),
-                          new Radio(
-                              activeColor: Colors.black,
-                              value: 1,
-                              groupValue: isInfected,
-                              onChanged: (value) {
-                                setState(() {
-                                  isInfected = value;
-                                });
-                              }),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "Have Travelled?",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0, right: 5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text("Yes"),
-                          new Radio(
-                              activeColor: Colors.black,
-                              value: 0,
-                              groupValue: travelled,
-                              onChanged: (value) {
-                                setState(() {
-                                  travelled = value;
-                                });
-                              }),
-                          Text("No"),
-                          new Radio(
-                              activeColor: Colors.black,
-                              value: 1,
-                              groupValue: travelled,
-                              onChanged: (value) {
-                                setState(() {
-                                  travelled = value;
-                                });
-                              }),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                travel(),
+                //FamilyDeclaration(),
+                //travel(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -363,7 +315,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                       child: DropdownButton(
                         iconDisabledColor: Colors.black,
                         hint: Text(
-                          'Select your State',
+                          uiVar[3],
                           style: TextStyle(color: Colors.black, fontSize: 15.0),
                         ),
                         value: selectedState,
@@ -389,7 +341,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: DropdownButton(
-                        hint: Text('Select your District',
+                        hint: Text(uiVar[4],
                             style:
                                 TextStyle(color: Colors.black, fontSize: 15.0)),
                         value: selectedDistrict,
@@ -424,7 +376,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                             BoxShadow(color: Colors.black26, blurRadius: 10.0),
                           ]),
                       child: Text(
-                        "Longitude",
+                        long,
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
@@ -442,7 +394,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                             BoxShadow(color: Colors.black26, blurRadius: 10.0),
                           ]),
                       child: Text(
-                        "Lattitude",
+                        lat,
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
@@ -457,8 +409,11 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                             BoxShadow(color: Colors.black26, blurRadius: 10.0),
                           ]),
                       child: MaterialButton(
-                        onPressed: () {},
-                        child: Text("Get Location"),
+                        onPressed: () {
+                          getLocation();
+                          setState(() {});
+                        },
+                        child: Text(uiVar[5]),
                       ),
                     )
                   ],
@@ -484,7 +439,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                   child: MaterialButton(
                     onPressed: () {},
                     child: Text(
-                      "Submit",
+                      uiVar[6],
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
