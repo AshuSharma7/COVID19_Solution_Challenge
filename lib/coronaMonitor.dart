@@ -61,46 +61,46 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            content["countries_stat"][41]["country_name"],
+                            content["countries_stat"][42]["country_name"],
                             style: TextStyle(fontSize: 28.0),
                           ),
                           Text(
                             "Total Case:" +
-                                content["countries_stat"][41]["cases"],
+                                content["countries_stat"][42]["cases"],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Text(
                             "Deaths: " +
-                                content["countries_stat"][41]["deaths"],
+                                content["countries_stat"][42]["deaths"],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Text(
                             "Total Recovered: " +
-                                content["countries_stat"][41]
+                                content["countries_stat"][42]
                                     ["total_recovered"],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Text(
                             "New Cases: " +
                                 content["countries_stat"][
-                                        41] //new_deaths":"2","new_cases":"121","serious_critical":"0","active_cases":"602","total_cases_per_1m_population":"0.5
+                                        42] //new_deaths":"2","new_cases":"121","serious_critical":"0","active_cases":"602","total_cases_per_1m_population":"0.5
                                     ["new_cases"],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Text(
                             "Serious/Critical: " +
-                                content["countries_stat"][41]
+                                content["countries_stat"][42]
                                     ["serious_critical"],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Text(
                             "Active Cases: " +
-                                content["countries_stat"][41]["active_cases"],
+                                content["countries_stat"][42]["active_cases"],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Text(
                             "Total Cases Per 1M People: " +
-                                content["countries_stat"][41]
+                                content["countries_stat"][42]
                                     ["total_cases_per_1m_population"],
                             style: TextStyle(fontSize: 20.0),
                           ),
@@ -196,11 +196,13 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                   ],
                 );
               } else {
-                return Container(
-                  width: 100,
-                  height: 100,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 10.0,
+                return Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 10.0,
+                    ),
                   ),
                 );
               }

@@ -16,6 +16,11 @@ Future<List<dynamic>> getUri() async {
   return json.decode(response.body);
 }
 
+List<String> url = [
+  "https://www.youtube.com/watch?v=9OIbMVfPqtg",
+  // "https://www.youtube.com/watch?v=jOoXFWDVPZk"
+];
+
 class _VideoPageState extends State<VideoPage> {
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,13 @@ class _VideoPageState extends State<VideoPage> {
         title: Text("Videos"),
       ),
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            Color(0xFFFF9933),
+            Color(0xFFFFFFFF),
+            Color(0xFF138808),
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
@@ -32,7 +44,7 @@ class _VideoPageState extends State<VideoPage> {
               if (snapshot.hasData) {
                 List content = snapshot.data;
                 return ListView.builder(
-                  itemCount: content.length,
+                  itemCount: 1,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
@@ -41,12 +53,20 @@ class _VideoPageState extends State<VideoPage> {
                           borderRadius: BorderRadius.circular(20.0)),
                       //padding: EdgeInsets.only(top: 20.0),
                       margin: EdgeInsets.all(20.0),
-                      child: FluTube(
-                        "https://www.youtube.com/watch?v=G5Z7dOG9SuM",
-                        autoInitialize: true,
-                        aspectRatio: 16 / 9,
-                        allowMuting: false,
-                        looping: true,
+                      child: Column(
+                        children: <Widget>[
+                          FluTube(
+                            url[index],
+                            autoInitialize: true,
+                            aspectRatio: 16 / 9,
+                            allowMuting: false,
+                            // autoPlay: true,
+                            //looping: true,
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                        ],
                       ),
                     );
                   },

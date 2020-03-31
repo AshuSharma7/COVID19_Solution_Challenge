@@ -1,5 +1,6 @@
 import 'package:covid19/familyDeclaration.dart';
 import 'package:covid19/familyRadio.dart';
+import 'package:covid19/grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -437,7 +438,10 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                         BoxShadow(color: Colors.black26, blurRadius: 10.0),
                       ]),
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage2()));
+                    },
                     child: Text(
                       uiVar[6],
                       style: TextStyle(color: Colors.white),

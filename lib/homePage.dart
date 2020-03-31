@@ -17,7 +17,13 @@ class HomePage extends StatelessWidget {
       // ),
       body: Container(
         padding: EdgeInsets.only(top: 60),
-        color: Color(0xFFd2edfd),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            Color(0xFFFF9933),
+            Color(0xFFFFFFFF),
+            Color(0xFF138808),
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(

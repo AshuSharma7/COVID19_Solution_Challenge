@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:covid19/familyRadio.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
@@ -11,118 +13,50 @@ class FamilyDeclaration extends StatefulWidget {
   _FamilyDeclarationState createState() => _FamilyDeclarationState();
 }
 
-List<String> eng = [
-  "Family Members",
-  "Member",
-  "Adhaar No.",
-  "Gender",
-  "Are you Infected?",
-  "Have Symptoms?",
-  "Have Travelled?",
-];
-List<String> hin = [
-  "यात्रा देश का चयन करें",
-  "से",
-  "तक",
-  "अपना राज्य चुनें",
-  "अपने जिले का चयन करें",
-  "स्थान प्राप्त करें",
-  "प्रस्तुत"
-];
-List<String> pun = [
-  "ਯਾਤਰਾ ਦੇਸ਼ ਦੀ ਚੋਣ ਕਰੋ",
-  "ਤੋਂ",
-  "ਨੂੰ",
-  "ਆਪਣੇ ਰਾਜ ਦੀ ਚੋਣ ਕਰੋ",
-  "ਆਪਣੇ ਜ਼ਿਲ੍ਹੇ ਦੀ ਚੋਣ ਕਰੋ",
-  "ਸਥਾਨ ਪ੍ਰਾਪਤ ਕਰੋ",
-  "ਜਮ੍ਹਾਂ ਕਰੋ"
-];
-List<String> kan = [
-  "ಪ್ರಯಾಣ ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-  "ಇಂದ",
-  "ಗೆ",
-  "ನಿಮ್ಮ ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-  "ನಿಮ್ಮ ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-  "ಸ್ಥಳ ಪಡೆಯಿರಿ",
-  "ಸಲ್ಲಿಸು"
-];
-List<String> mar = [
-  "प्रवासी देश निवडा",
-  "पासून",
-  "ते",
-  "आपले राज्य निवडा",
-  "आपला जिल्हा निवडा",
-  "स्थान मिळवा",
-  "प्रस्तुत करणे"
-];
-List<String> odi = [
-  "ଭ୍ରମଣକାରୀ ଦେଶ ଚୟନ କରନ୍ତୁ",
-  "ରୁ",
-  "to",
-  "ଆପଣଙ୍କର ରାଜ୍ୟ ଚୟନ କରନ୍ତୁ",
-  "ଆପଣଙ୍କର ଜିଲ୍ଲା ଚୟନ କରନ୍ତୁ",
-  "ସ୍ଥାନ ପାଆନ୍ତୁ",
-  "ଦାଖଲ"
-];
-List<String> tel = [
-  "ప్రయాణించిన దేశాన్ని ఎంచుకోండి",
-  "నుండి",
-  "టు",
-  "మీ రాష్ట్రాన్ని ఎంచుకోండి",
-  "మీ జిల్లాను ఎంచుకోండి",
-  "స్థానం పొందండి",
-  "సమర్పించు"
-];
-List<String> tam = [
-  "பயண நாட்டைத் தேர்ந்தெடுக்கவும்",
-  "from",
-  "to",
-  "உங்கள் மாநிலத்தைத் தேர்ந்தெடுக்கவும்",
-  "உங்கள் மாவட்டத்தைத் தேர்ந்தெடுக்கவும்",
-  "இருப்பிடத்தைப் பெறு",
-  "சமர்ப்பி"
-];
-List<String> uiVar = [];
-void uiLang() {
-  switch (global.lang) {
-    case "hindi":
-      {
-        uiVar = hin;
-        break;
-      }
-    case "english":
-      {
-        uiVar = eng;
-        break;
-      }
-    case "odiya":
-      {
-        uiVar = odi;
-        break;
-      }
-    case "marathi":
-      {
-        uiVar = mar;
-        break;
-      }
-    case "tamil":
-      {
-        uiVar = tam;
-        break;
-      }
-    case "telegu":
-      {
-        uiVar = tel;
-        break;
-      }
-    case "kannada":
-      {
-        uiVar = kan;
-        break;
-      }
-  }
-}
+AsyncSnapshot<Map<String, dynamic>> snapshot;
+String data;
+Map content;
+
+// List<String> uiVar = [];
+// void uiLang() {
+//   switch (global.lang) {
+//     case "hindi":
+//       {
+//         uiVar = con;
+//         break;
+//       }
+//     case "english":
+//       {
+//         uiVar = eng;
+//         break;
+//       }
+//     case "odiya":
+//       {
+//         uiVar = odi;
+//         break;
+//       }
+//     case "marathi":
+//       {
+//         uiVar = mar;
+//         break;
+//       }
+//     case "tamil":
+//       {
+//         uiVar = tam;
+//         break;
+//       }
+//     case "telegu":
+//       {
+//         uiVar = tel;
+//         break;
+//       }
+//     case "kannada":
+//       {
+//         uiVar = kan;
+//         break;
+//       }
+//   }
+// }
 
 TextEditingController nameEditor = new TextEditingController();
 TextEditingController fnameEditor = new TextEditingController();
@@ -133,10 +67,72 @@ List<String> country = ["india", "china", "usa", "russia", "japan", "italy"];
 String selectedDistrict;
 
 class _FamilyDeclarationState extends State<FamilyDeclaration> {
-  Widget travel(List<int> travelled, int i) {
-    if (travelled[i] == 1) {
+  void getJson() async {
+    data = await DefaultAssetBundle.of(context)
+        .loadString("assets/files/language.json");
+    snapshot = await json.decode(data);
+    print(snapshot.data);
+    content = snapshot.data;
+  }
+
+  Widget symptoms(int i) {
+    if (declaration.haveSymptoms[i] == true) {
+      return Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Fever?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms["fever"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms["fever"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms["fever"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms["fever"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Text(" ");
+    }
+  }
+
+  Widget travel(List<bool> travelled, int i) {
+    if (travelled[i] == false) {
       return Text("");
-    } else if (travelled[i] == 0) {
+    } else if (travelled[i] == true) {
       return Column(
         children: <Widget>[
           Container(
@@ -227,6 +223,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
   Duration duration;
   @override
   void initState() {
+    getJson();
     dateTime = DateTime.now();
     duration = Duration(minutes: 10);
     // TODO: implement initState
@@ -460,21 +457,21 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                 Text("Yes"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 0,
-                                    groupValue: declaration.gender[index],
+                                    value: true,
+                                    groupValue: declaration.isInfected[index],
                                     onChanged: (value) {
                                       setState(() {
-                                        declaration.gender[index] = value;
+                                        declaration.isInfected[index] = value;
                                       });
                                     }),
                                 Text("No"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 1,
-                                    groupValue: declaration.gender[index],
+                                    value: false,
+                                    groupValue: declaration.isInfected[index],
                                     onChanged: (value) {
                                       setState(() {
-                                        declaration.gender[index] = value;
+                                        declaration.isInfected[index] = value;
                                       });
                                     }),
                               ],
@@ -507,21 +504,21 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                 Text("Yes"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 0,
-                                    groupValue: declaration.isInfected[index],
+                                    value: true,
+                                    groupValue: declaration.haveSymptoms[index],
                                     onChanged: (value) {
                                       setState(() {
-                                        declaration.isInfected[index] = value;
+                                        declaration.haveSymptoms[index] = value;
                                       });
                                     }),
                                 Text("No"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 1,
-                                    groupValue: declaration.isInfected[index],
+                                    value: false,
+                                    groupValue: declaration.haveSymptoms[index],
                                     onChanged: (value) {
                                       setState(() {
-                                        declaration.isInfected[index] = value;
+                                        declaration.haveSymptoms[index] = value;
                                       });
                                     }),
                               ],
@@ -529,6 +526,8 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                           )
                         ],
                       ),
+                      SizedBox(height: 15.0),
+                      symptoms(index),
                       SizedBox(height: 15.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -552,7 +551,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                 Text("Yes"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 0,
+                                    value: true,
                                     groupValue:
                                         declaration.haveTravelled[index],
                                     onChanged: (value) {
@@ -564,7 +563,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                 Text("No"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 1,
+                                    value: false,
                                     groupValue:
                                         declaration.haveTravelled[index],
                                     onChanged: (value) {
@@ -579,10 +578,35 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                         ],
                       ),
                       SizedBox(height: 15.0),
-                      travel(declaration.haveTravelled, index)
+                      travel(declaration.haveTravelled, index),
                     ],
                   );
                 },
+              ),
+            ),
+            Container(
+              width: 150.0,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Color(0xFF3180e4),
+                    Color(0xFF564dc2),
+                  ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                  ]),
+              child: MaterialButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelfDeclaration()));
+                },
+                child: Text(
+                  "submit",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             )
           ],

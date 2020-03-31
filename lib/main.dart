@@ -1,10 +1,17 @@
+import 'package:covid19/advisory.dart';
+import 'package:covid19/advisoryUpdate.dart';
 import 'package:covid19/coronaMonitor.dart';
 import 'package:covid19/familyDeclaration.dart';
 import 'package:covid19/faqPage.dart';
+import 'package:covid19/googleMap.dart';
 import 'package:covid19/grid.dart';
+import 'package:covid19/helpLine.dart';
 import 'package:covid19/languagePage.dart';
 import 'package:covid19/loginPage.dart';
+import 'package:covid19/register.dart';
 import 'package:covid19/slefDeclaration.dart';
+import 'package:covid19/testingCentre.dart';
+import 'package:covid19/videoPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
@@ -16,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CoronaMonitor(),
+      home: RegisterPage(),
     );
   }
 }

@@ -30,11 +30,11 @@ class _SplashPageState extends State<SplashPage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xFF3180e4),
-            Color(0xFF564dc2),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        ),
+            gradient: LinearGradient(colors: [
+          Color(0xFFFF9933),
+          Color(0xFFFFFFFF),
+          Color(0xFF138808),
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -50,7 +50,7 @@ class _SplashPageState extends State<SplashPage> {
                   onPressed: () {},
                   child: Icon(
                     Icons.speaker_phone,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 200,
                   ),
                 ),

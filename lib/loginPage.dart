@@ -1,3 +1,5 @@
+import 'package:covid19/familyDeclaration.dart';
+import 'package:covid19/grid.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
@@ -31,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(text.toString()),
+        title: Text("Login"),
         backgroundColor: Color(0xFF426bd7),
         elevation: 0.0,
         automaticallyImplyLeading: false,
@@ -219,8 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                SelfDeclaration()));
+                                            builder: (context) => HomePage2()));
                                   },
                                   child: Text(
                                     "Login",

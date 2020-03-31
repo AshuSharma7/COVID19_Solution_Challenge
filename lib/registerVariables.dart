@@ -9,11 +9,17 @@ String fatherName;
 
 List<String> firstName = [];
 List<String> state = [];
-List<int> isInfected = [0, 0, 0, 0, 0];
-List<int> haveTravelled = [0, 0, 0, 0, 0];
+List<bool> haveTravelled = [false, false, false, false, false];
+List<bool> isInfected = [false, false, false, false, false];
+List<bool> haveSymptoms = [false, false, false, false, false];
 List<String> country = [];
 List<String> fromDate = [];
 List<String> toDate = [];
+Map<String, bool> symptoms = {
+  "fever": false,
+  "cough": false,
+  "breathing": false
+};
 List<int> gender = [0, 0, 0, 0, 0];
 TextEditingController name1Editor = new TextEditingController();
 TextEditingController name2Editor = new TextEditingController();
