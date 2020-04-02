@@ -1,0 +1,107 @@
+{
+	"familyDeclaration": [
+		{
+			"english": [{
+				"familyMembers": "Family Members",
+				"memberName": "Member Name",
+				"Adhhar no.": "Adhhar no.",
+				"haveTravelled": "Have Travelled?",
+				"isInfected": "Is Infected?",
+				"haveSymptoms": "Have Symptoms?",
+				"gender": "Gender",
+				"male": "Male",
+				"female": "Female",
+				"yes": "Yes",
+				"no": "No",
+				"country": "Select Travelled Country",
+				"to": "to",
+				"from": "from"
+			}],
+			"hindi": [{
+				"familyMembers": "परिवार के सदस्य",
+				"memberName": "सदस्य का नाम",
+				"Adhhar no.": "अधार सं",
+				"haveTravelled": "यात्रा की है?",
+				"isInfected": "संक्रमित है?",
+				"haveSymptoms": "क्या लक्षण हैं?",
+				"gender": "लिंग",
+				"male": "पुरुष",
+				"female": "महिला",
+				"yes": "हाँ",
+				"no": "नहीं",
+				"country": "चयनित देश चुनें",
+				"to": "तक",
+				"from": "से"
+			}],
+			"telugu": [{
+				"familyMembers": "కుటుంబ సభ్యులు",
+				"memberName": "సభ్యుల పేరు",
+				"Adhhar no.": "అధర్ నో",
+				"haveTravelled": "ప్రయాణించారా?",
+				"isInfected": "సోకినదా?",
+				"haveSymptoms": "లక్షణాలు ఏమిటి?",
+				"gender": "సెక్స్",
+				"male": "మగ",
+				"female": "ఆడ",
+				"yes": "అవును",
+				"no": "లేదు",
+				"country": "ఎంచుకున్న దేశాన్ని ఎంచుకోండి",
+				"to": "వరకు",
+				"from": "నుండి"
+			}],
+			"tamil": [{
+				"familyMembers": "குடும்ப உறுப்பினர்கள்",
+				"memberName": "உறுப்பினர் பெயர்",
+				"adhhar": "ஆதார் இல்லை",
+				"haveTravelled": "பயணம்?",
+				"isInfected": "பாதிக்கப்பட்டதா?",
+				"haveSymptoms": "அறிகுறிகள் என்ன?",
+				"gender": "செக்ஸ்",
+				"male": "ஆண்",
+				"female": "பெண்",
+				"yes": "ஆம்",
+				"no": "இல்லை",
+				"country": "தேர்ந்தெடுக்கப்பட்ட நாட்டைத் தேர்ந்தெடு",
+				"to": "வரை",
+				"from": "இருந்து"
+			}],
+			"marathi": [{
+				"familyMembers": "कुटुंबातील सदस्य",
+				"memberName": "सदस्याचे नाव",
+				"adhhar": "आधार नंबर",
+				"haveTravelled": "प्रवास?",
+				"isInfected": "प्रभावित?",
+				"haveSymptoms": "चिन्हे काय आहेत?",
+				"gender": "सेक्स",
+				"male": "नर",
+				"female": "मादी",
+				"yes": "होय",
+				"no": "नाही",
+				"country": "देश निवडा",
+				"to": "वर",
+				"from": "पासून"
+			}],
+			"punjabi": [{
+				"ਪਰਿਵਾਰਕ ਮੈਂਬਰ": "ਪਰਿਵਾਰਕ ਮੈਂਬਰ",
+"ਸਦੱਸ ਨਾਮ": "ਸਦੱਸ ਦਾ ਨਾਮ",
+"ਅਧਾਰ ਨੰਬਰ.": "ਆਧਾਰ ਨੰ",
+"ਹੈਟ੍ਰੈਵਲਲਡ": "ਯਾਤਰਾ ਕੀਤੀ ਹੈ?",
+"isInfected": "ਸੰਕਰਮਿਤ?",
+"ਹੈਲੱਸਟ ਲੱਛਣ": "ਲੱਛਣ ਕੀ ਹਨ?",
+"ਲਿੰਗ": "ਲਿੰਗ",
+"ਮਰਦ": "ਨਰ",
+"ਰਤ": "femaleਰਤ",
+"ਹਾਂ": "ਹਾਂ",
+"ਨਹੀਂ": "ਨਹੀਂ",
+"ਦੇਸ਼": "ਚੁਣੇ ਹੋਏ ਦੇਸ਼ ਚੁਣੋ",
+"ਤੋਂ": "ਤੋਂ",
+"ਤੋਂ": "ਤੋਂ"
+			}]
+		}
+	],
+	"grid" : [{
+		"english": [{
+			
+		}]
+	}]
+}

@@ -4,6 +4,7 @@ import 'package:covid19/familyRadio.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'globalVar.dart' as global;
 import 'registerVariables.dart' as declaration;
 import 'slefDeclaration.dart' as self;
@@ -181,6 +182,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                     );
                     if (newDateTime != null) {
                       setState(() => dateTime = newDateTime);
+                      declaration.from[i] = dateTime.toString();
                     }
                   },
                   child: Text("from"),
@@ -204,6 +206,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                     );
                     if (newDateTime != null) {
                       setState(() => dateTime = newDateTime);
+                      declaration.to[i] = dateTime.toString();
                     }
                   },
                   child: Text("to"),
@@ -381,7 +384,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                   color: Colors.black26, blurRadius: 10.0),
                             ]),
                         child: TextField(
-                          controller: declaration.editor[index],
+                          controller: declaration.adhharEditor[index],
                           decoration: InputDecoration(border: InputBorder.none),
                         ),
                       ),
@@ -410,7 +413,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                 Text("Male"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 0,
+                                    value: "Male",
                                     groupValue: declaration.gender[index],
                                     onChanged: (value) {
                                       setState(() {
@@ -420,7 +423,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                 Text("Female"),
                                 new Radio(
                                     activeColor: Colors.black,
-                                    value: 1,
+                                    value: "Female",
                                     groupValue: declaration.gender[index],
                                     onChanged: (value) {
                                       setState(() {
@@ -597,11 +600,28 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                     BoxShadow(color: Colors.black26, blurRadius: 10.0),
                   ]),
               child: MaterialButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SelfDeclaration()));
+                onPressed: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  for (int i = 0; i < members; i++) {
+                    declaration.makePost(
+                        prefs.getString('username'),
+                        declaration.editor[i].text,
+                        declaration.gender[i],
+                        declaration.adhharEditor[i].text,
+                        declaration.isInfected[i],
+                        declaration.haveSymptoms[i],
+                        declaration.haveTravelled[i],
+                        declaration.from[i],
+                        declaration.to[i]);
+                  }
+                  if (declaration.error != true) {
+                    prefs.setBool('declaration', true);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SelfDeclaration()));
+                  }
                 },
                 child: Text(
                   "submit",
