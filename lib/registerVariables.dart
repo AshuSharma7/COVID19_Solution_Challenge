@@ -8,16 +8,18 @@ int mobile;
 String fatherName;
 
 List<String> firstName = [];
-List<String> state = [];
 List<bool> haveTravelled = [false, false, false, false, false];
 List<String> from = ["", "", "", "", ""];
 List<String> to = ["", "", "", "", ""];
 List<bool> isInfected = [false, false, false, false, false];
 List<bool> haveSymptoms = [false, false, false, false, false];
 List<int> adhhar = [0, 0, 0, 0, 0];
-List<String> country = [];
+List<String> country = ["", "", "", "", ""];
+List<String> district = ["", "", "", "", ""];
 List<String> fromDate = [];
 List<String> toDate = [];
+List<String> address = ["", "", "", "", ""];
+List<String> state = ["", "", "", "", ""];
 bool error = true;
 Map<String, bool> symptoms = {
   "fever": false,

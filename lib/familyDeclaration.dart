@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:covid19/familyRadio.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globalVar.dart' as global;
 import 'registerVariables.dart' as declaration;
@@ -18,56 +18,144 @@ AsyncSnapshot<Map<String, dynamic>> snapshot;
 String data;
 Map content;
 
-// List<String> uiVar = [];
-// void uiLang() {
-//   switch (global.lang) {
-//     case "hindi":
-//       {
-//         uiVar = con;
-//         break;
-//       }
-//     case "english":
-//       {
-//         uiVar = eng;
-//         break;
-//       }
-//     case "odiya":
-//       {
-//         uiVar = odi;
-//         break;
-//       }
-//     case "marathi":
-//       {
-//         uiVar = mar;
-//         break;
-//       }
-//     case "tamil":
-//       {
-//         uiVar = tam;
-//         break;
-//       }
-//     case "telegu":
-//       {
-//         uiVar = tel;
-//         break;
-//       }
-//     case "kannada":
-//       {
-//         uiVar = kan;
-//         break;
-//       }
-//   }
-// }
-
 TextEditingController nameEditor = new TextEditingController();
 TextEditingController fnameEditor = new TextEditingController();
 int members = 1;
 double height = 20;
 
 List<String> country = ["india", "china", "usa", "russia", "japan", "italy"];
+List<String> district = ["Alwar"];
+String selectedCountry;
 String selectedDistrict;
+String selectedState;
+List<String> states = [
+  "Rajasthan",
+  "Uttar Pradesh",
+  "Gujrat",
+  "Haryana",
+  "Delhi",
+  "Punjab",
+  "Bihar",
+  "TamilNadu"
+];
 
 class _FamilyDeclarationState extends State<FamilyDeclaration> {
+  String lat, long = '';
+  Position position;
+  StreamSubscription<Position> positionStream;
+  getLocation() async {
+    var geolocator = Geolocator();
+    var locationOptions =
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 1);
+
+    positionStream = geolocator
+        .getPositionStream(locationOptions)
+        .listen((Position position) {
+      // print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
+      if (position != null) {
+        setState(() {
+          lat = position.latitude.toString();
+          long = position.longitude.toString();
+        });
+      } else {
+        setState(() {
+          lat = 'Latitude';
+          long = 'Longitude';
+        });
+      }
+    });
+  }
+
+  Widget GetLocation(int i) {
+    if (members == 1) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 100,
+            height: 30.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+                boxShadow: [
+                  BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                ]),
+            child: Text(
+              long,
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          SizedBox(
+            width: 20.0,
+          ),
+          Container(
+            width: 100,
+            height: 30.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+                boxShadow: [
+                  BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                ]),
+            child: Text(
+              lat,
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          SizedBox(
+            width: 20.0,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+                boxShadow: [
+                  BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                ]),
+            child: MaterialButton(
+              onPressed: () {
+                getLocation();
+                setState(() {});
+              },
+              child: Text("Get Location"),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Address",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width - 50,
+            height: 50.0,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                ]),
+            child: TextField(
+              controller: declaration.editor[i],
+              decoration: InputDecoration(border: InputBorder.none),
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+        ],
+      );
+    }
+  }
+
   void getJson() async {
     data = await DefaultAssetBundle.of(context)
         .loadString("assets/files/language.json");
@@ -126,13 +214,13 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
         ],
       );
     } else {
-      return Text(" ");
+      return SizedBox(height: 0.0);
     }
   }
 
   Widget travel(List<bool> travelled, int i) {
     if (travelled[i] == false) {
-      return Text("");
+      return SizedBox(height: 0.0);
     } else if (travelled[i] == true) {
       return Column(
         children: <Widget>[
@@ -145,10 +233,10 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
             child: DropdownButton(
               hint: Text("Select Travelled country",
                   style: TextStyle(color: Colors.black, fontSize: 15.0)),
-              value: selectedDistrict,
+              value: selectedCountry,
               onChanged: (newValue) {
                 setState(() {
-                  selectedDistrict = newValue;
+                  selectedCountry = newValue;
                 });
               },
               items: country.map((location) {
@@ -227,6 +315,8 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
   @override
   void initState() {
     getJson();
+    lat = 'Latitude';
+    long = 'Longitude';
     dateTime = DateTime.now();
     duration = Duration(minutes: 10);
     // TODO: implement initState
@@ -277,7 +367,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("1"),
+                      Text("Self"),
                       new Radio(
                           activeColor: Colors.black,
                           value: 1,
@@ -391,6 +481,85 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                       SizedBox(
                         height: 15.0,
                       ),
+                      GetLocation(index),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0),
+                              // border: Border.all(
+                              //     color: Colors.white,
+                              //     style: BorderStyle.solid,
+                              //     width: 0.80),
+                            ),
+                            child: DropdownButton(
+                              iconDisabledColor: Colors.black,
+                              hint: Text(
+                                "Select State",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 15.0),
+                              ),
+                              value: selectedState,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedState = newValue;
+                                  declaration.state[index] = newValue;
+                                });
+                              },
+                              items: states.map((location) {
+                                return DropdownMenuItem(
+                                  child: new Text(location,
+                                      style: TextStyle(color: Colors.black)),
+                                  value: location,
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15.0,
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0),
+                              // border: Border.all(
+                              //     color: Colors.white,
+                              //     style: BorderStyle.solid,
+                              //     width: 0.80),
+                            ),
+                            child: DropdownButton(
+                              iconDisabledColor: Colors.black,
+                              hint: Text(
+                                "Select District",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 15.0),
+                              ),
+                              value: selectedDistrict,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedDistrict = newValue;
+                                  declaration.district[index] = newValue;
+                                });
+                              },
+                              items: states.map((location) {
+                                return DropdownMenuItem(
+                                  child: new Text(location,
+                                      style: TextStyle(color: Colors.black)),
+                                  value: location,
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
@@ -531,7 +700,6 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                       ),
                       SizedBox(height: 15.0),
                       symptoms(index),
-                      SizedBox(height: 15.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
@@ -580,8 +748,9 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                           )
                         ],
                       ),
-                      SizedBox(height: 15.0),
+                      SizedBox(height: 5.0),
                       travel(declaration.haveTravelled, index),
+                      SizedBox(height: 20.0)
                     ],
                   );
                 },
