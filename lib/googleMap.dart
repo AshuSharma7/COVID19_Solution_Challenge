@@ -16,23 +16,41 @@ Future<List<dynamic>> getUri() async {
 
 GoogleMapController mapController;
 List content;
-List<String> a = ["as", "ash"];
-List<double> lat = [20.5937, 25.75];
-List<double> long = [78.9629, 70.67];
+int length = 1;
 
 class _MapPageState extends State<MapPage> {
   final Map<String, Marker> markers = {};
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       markers.clear();
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < 29; i++) {
         final marker = Marker(
+          onTap: () {
+            return showDialog(
+                context: (context),
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(content[i]["state"]),
+                    content: Text("Total Cases: " +
+                        content[i]["cases"].toString() +
+                        "\nTotal deaths: " +
+                        content[i]["death"].toString() +
+                        "\nTotal Cured: " +
+                        content[i]["cured"].toString()),
+                    actions: <Widget>[
+                      IconButton(
+                          icon: Icon(Icons.done),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })
+                    ],
+                  );
+                });
+          },
           markerId: MarkerId(content[i]["id"].toString()),
-          position: LatLng(content[i]["lattitude"], content[i]["longitude"]),
-          infoWindow: InfoWindow(
-            title: content[i]["state"],
-            snippet: content[i]["cases"].toString(),
-          ),
+          position: LatLng(double.parse(content[i]["latitude"]),
+              double.parse(content[i]["longitude"])),
+          infoWindow: InfoWindow(),
         );
         markers[content[i]["state"]] = marker;
       }
@@ -56,13 +74,21 @@ class _MapPageState extends State<MapPage> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               content = snapshot.data;
-              return GoogleMap(
-                initialCameraPosition:
-                    CameraPosition(target: LatLng(20.5937, 78.9629)),
-                onMapCreated: _onMapCreated,
-                markers: markers.values.toSet(),
-                // markers: ,
-              );
+              if (true) {
+                return GoogleMap(
+                  initialCameraPosition:
+                      CameraPosition(target: LatLng(20.5937, 78.9629)),
+                  onMapCreated: _onMapCreated,
+                  markers: markers.values.toSet(),
+                  // markers: ,
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 10.0,
+                  ),
+                );
+              }
             } else {
               return Center(
                 child: CircularProgressIndicator(
