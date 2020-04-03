@@ -25,18 +25,16 @@ class _MapPageState extends State<MapPage> {
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       markers.clear();
-      for (final i in a) {
-        print(i);
-        print(a.indexOf(i));
+      for (int i = 0; i < 3; i++) {
         final marker = Marker(
-          markerId: MarkerId(content[a.indexOf(i)]["id"].toString()),
-          position: LatLng(lat[a.indexOf(i)], long[a.indexOf(i)]),
+          markerId: MarkerId(content[i]["id"].toString()),
+          position: LatLng(content[i]["lattitude"], content[i]["longitude"]),
           infoWindow: InfoWindow(
-            title: content[a.indexOf(i)]["state"],
-            snippet: content[a.indexOf(i)]["cases"].toString(),
+            title: content[i]["state"],
+            snippet: content[i]["cases"].toString(),
           ),
         );
-        markers[content[a.indexOf(i)]["state"]] = marker;
+        markers[content[i]["state"]] = marker;
       }
     });
   }
