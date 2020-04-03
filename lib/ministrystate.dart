@@ -24,14 +24,11 @@ double height;
 List<charts.Series<Task, String>> _seriesPieData;
 List<charts.Series<Sales, int>> _seriesLineData;
 
-_generateData() {
+_generateData(double cases, double deaths, double cured) {
   var piedata = [
-    new Task('उत्तर प्रदेश', 35.8, Color(0xff3366cc)),
-    new Task('बिहार', 8.3, Color(0xff990099)),
-    new Task('राजस्थान', 10.8, Color(0xff109618)),
-    new Task('आंध्र प्रदेश', 15.6, Color(0xfffdbe19)),
-    new Task('तमिल नाडु', 19.2, Color(0xffff9900)),
-    new Task('केरल', 10.3, Color(0xffdc3912)),
+    new Task('Total Cases', cases, Color(0xff3366cc)),
+    new Task('Total Deaths', deaths, Color(0xff990099)),
+    new Task('Total Cured', cured, Color(0xff109618)),
   ];
 
   var linesalesdata = [
@@ -75,6 +72,7 @@ _generateData() {
     new Sales(10, 45),
   ];
 
+  _seriesPieData.clear();
   _seriesPieData.add(
     charts.Series(
       domainFn: (Task task, _) => task.task,
@@ -139,6 +137,7 @@ class _stateList extends State<stateList> {
                 }
               }
               states.sort((a, b) => a.toString().compareTo(b.toString()));
+
               return ListView.builder(
                 itemCount: states.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -189,7 +188,6 @@ class _stateList extends State<stateList> {
     super.initState();
     _seriesPieData = List<charts.Series<Task, String>>();
     _seriesLineData = List<charts.Series<Sales, int>>();
-    _generateData();
   }
 }
 
@@ -219,55 +217,45 @@ Widget stateDetails(String state) {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 List content = snapshot.data;
+                int index;
+                for (int i = 0; i < content.length; i++) {
+                  if (content[i]["state"] == state) {
+                    index = i;
+                  }
+                }
+                _generateData(
+                    content[index]["cases"].toDouble(),
+                    content[index]["death"].toDouble(),
+                    content[index]["cured"].toDouble());
                 return TabBarView(children: [
-                  ListView.builder(
-                      itemCount: 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (true) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            child: charts.PieChart(_seriesPieData,
-                                animate: true,
-                                animationDuration: Duration(seconds: 5),
-                                behaviors: [
-                                  new charts.DatumLegend(
-                                    outsideJustification:
-                                        charts.OutsideJustification.endDrawArea,
-                                    horizontalFirst: false,
-                                    desiredMaxRows: 2,
-                                    cellPadding: new EdgeInsets.only(
-                                        right: 4.0, bottom: 4.0),
-                                    entryTextStyle: charts.TextStyleSpec(
-                                        color: charts.MaterialPalette.purple
-                                            .shadeDefault,
-                                        fontFamily: 'Georgia',
-                                        fontSize: 11),
-                                  )
-                                ],
-                                defaultRenderer: new charts.ArcRendererConfig(
-                                    arcWidth: 100,
-                                    arcRendererDecorators: [
-                                      new charts.ArcLabelDecorator(
-                                          labelPosition:
-                                              charts.ArcLabelPosition.inside)
-                                    ])),
-                          );
-                        } else {
-                          return Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFFFF9933),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter),
-                            ),
-                          );
-                        }
-                      }),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: charts.PieChart(_seriesPieData,
+                        animate: true,
+                        animationDuration: Duration(seconds: 5),
+                        behaviors: [
+                          new charts.DatumLegend(
+                            outsideJustification:
+                                charts.OutsideJustification.endDrawArea,
+                            horizontalFirst: false,
+                            desiredMaxRows: 2,
+                            cellPadding:
+                                new EdgeInsets.only(right: 4.0, bottom: 4.0),
+                            entryTextStyle: charts.TextStyleSpec(
+                                color:
+                                    charts.MaterialPalette.purple.shadeDefault,
+                                fontFamily: 'Georgia',
+                                fontSize: 11),
+                          )
+                        ],
+                        defaultRenderer: new charts.ArcRendererConfig(
+                            arcWidth: 100,
+                            arcRendererDecorators: [
+                              new charts.ArcLabelDecorator(
+                                  labelPosition: charts.ArcLabelPosition.inside)
+                            ])),
+                  ),
                   ListView.builder(
                       itemCount: 1,
                       itemBuilder: (BuildContext context, int index) {
