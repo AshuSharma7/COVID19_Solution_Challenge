@@ -6,6 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 int mobile;
 String fatherName;
+List<String> stateList = ["rajsthan", "gujrat"];
+List<String> rajsthan = ["Alwar", "Jaipur"];
+List<String> gujrat = ["ahemdabad", "surat"];
+List<String> defaultList = ["Please Select State First"];
+List<List> districtList = [defaultList, rajsthan, gujrat];
+Map<String, int> statesID = {
+  "rajsthan": 1,
+  "gujrat": 2,
+};
 
 List<String> firstName = [];
 List<bool> haveTravelled = [false, false, false, false, false];
@@ -13,6 +22,7 @@ List<String> from = ["", "", "", "", ""];
 List<String> to = ["", "", "", "", ""];
 List<bool> isInfected = [false, false, false, false, false];
 List<bool> haveSymptoms = [false, false, false, false, false];
+List<bool> isCured = [false, false, false, false, false];
 List<int> adhhar = [0, 0, 0, 0, 0];
 List<String> country = ["", "", "", "", ""];
 List<String> district = ["", "", "", "", ""];
@@ -21,11 +31,13 @@ List<String> toDate = [];
 List<String> address = ["", "", "", "", ""];
 List<String> state = ["", "", "", "", ""];
 bool error = true;
-Map<String, bool> symptoms = {
-  "fever": false,
-  "cough": false,
-  "breathing": false
-};
+List<Map<String, bool>> symptoms = [
+  {"fever": false, "cough": false, "breathing": false},
+  {"fever": false, "cough": false, "breathing": false},
+  {"fever": false, "cough": false, "breathing": false},
+  {"fever": false, "cough": false, "breathing": false},
+  {"fever": false, "cough": false, "breathing": false}
+];
 List<String> gender = ["", "", "", "", ""];
 TextEditingController name1Editor = new TextEditingController();
 TextEditingController name2Editor = new TextEditingController();

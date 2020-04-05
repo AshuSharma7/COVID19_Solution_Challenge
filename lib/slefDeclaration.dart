@@ -1,6 +1,6 @@
 import 'package:covid19/familyDeclaration.dart';
 import 'package:covid19/familyRadio.dart';
-import 'package:covid19/grid.dart';
+import 'package:covid19/helpLine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -414,7 +414,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                           getLocation();
                           setState(() {});
                         },
-                        child: Text(uiVar[5]),
+                        child: Text("Get Location"),
                       ),
                     )
                   ],
@@ -440,7 +440,7 @@ class _SelfDeclarationState extends State<SelfDeclaration> {
                   child: MaterialButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage2()));
+                          MaterialPageRoute(builder: (context) => HelpLine()));
                     },
                     child: Text(
                       uiVar[6],

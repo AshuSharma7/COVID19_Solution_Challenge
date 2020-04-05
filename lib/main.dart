@@ -1,19 +1,11 @@
-import 'package:covid19/advisory.dart';
-import 'package:covid19/advisoryUpdate.dart';
-import 'package:covid19/coronaMonitor.dart';
-import 'package:covid19/familyDeclaration.dart';
-import 'package:covid19/faqPage.dart';
+import 'package:covid19/chart1.dart';
 import 'package:covid19/googleMap.dart';
 import 'package:covid19/grid.dart';
-import 'package:covid19/helpLine.dart';
-import 'package:covid19/languagePage.dart';
-import 'package:covid19/loginPage.dart';
-import 'package:covid19/register.dart';
-import 'package:covid19/slefDeclaration.dart';
-import 'package:covid19/userCheck.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:covid19/homePage.dart';
+import 'package:covid19/registerVariables.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'ministrystate.dart' as ministry;
 import 'dart:convert';
 
 void main() => runApp(MyApp());
@@ -23,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FamilyDeclaration(),
+      home: ministry.stateList(),
     );
   }
 }

@@ -17,7 +17,7 @@ class FamilyDeclaration extends StatefulWidget {
 AsyncSnapshot<Map<String, dynamic>> snapshot;
 String data;
 Map content;
-
+int id = 0;
 TextEditingController nameEditor = new TextEditingController();
 TextEditingController fnameEditor = new TextEditingController();
 int members = 1;
@@ -190,20 +190,112 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                     new Radio(
                         activeColor: Colors.black,
                         value: true,
-                        groupValue: declaration.symptoms["fever"],
+                        groupValue: declaration.symptoms[i]["fever"],
                         onChanged: (value) {
                           setState(() {
-                            declaration.symptoms["fever"] = value;
+                            declaration.symptoms[i]["fever"] = value;
                           });
                         }),
                     Text("No"),
                     new Radio(
                         activeColor: Colors.black,
                         value: false,
-                        groupValue: declaration.symptoms["fever"],
+                        groupValue: declaration.symptoms[i]["fever"],
                         onChanged: (value) {
                           setState(() {
-                            declaration.symptoms["fever"] = value;
+                            declaration.symptoms[i]["fever"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Cough?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["cough"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["cough"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["cough"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["cough"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Short Breathing??",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["breathing"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["breathing"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["breathing"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["breathing"] = value;
                           });
                         }),
                   ],
@@ -493,10 +585,6 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(15.0),
-                              // border: Border.all(
-                              //     color: Colors.white,
-                              //     style: BorderStyle.solid,
-                              //     width: 0.80),
                             ),
                             child: DropdownButton(
                               iconDisabledColor: Colors.black,
@@ -508,11 +596,13 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                               value: selectedState,
                               onChanged: (newValue) {
                                 setState(() {
+                                  declaration.district[index] = "";
+                                  id = declaration.statesID[newValue];
                                   selectedState = newValue;
                                   declaration.state[index] = newValue;
                                 });
                               },
-                              items: states.map((location) {
+                              items: declaration.stateList.map((location) {
                                 return DropdownMenuItem(
                                   child: new Text(location,
                                       style: TextStyle(color: Colors.black)),
@@ -548,7 +638,8 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                   declaration.district[index] = newValue;
                                 });
                               },
-                              items: states.map((location) {
+                              items:
+                                  declaration.districtList[id].map((location) {
                                 return DropdownMenuItem(
                                   child: new Text(location,
                                       style: TextStyle(color: Colors.black)),
@@ -700,6 +791,52 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                       ),
                       SizedBox(height: 15.0),
                       symptoms(index),
+                      SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            "Is Cured?",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26, blurRadius: 10.0),
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text("Yes"),
+                                new Radio(
+                                    activeColor: Colors.black,
+                                    value: true,
+                                    groupValue: declaration.isCured[index],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        declaration.isCured[index] = value;
+                                      });
+                                    }),
+                                Text("No"),
+                                new Radio(
+                                    activeColor: Colors.black,
+                                    value: false,
+                                    groupValue: declaration.isCured[index],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        declaration.isCured[index] = value;
+                                      });
+                                    }),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 15.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
@@ -770,6 +907,11 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                   ]),
               child: MaterialButton(
                 onPressed: () async {
+                  for (int i = 0; i < members; i++) {
+                    if (declaration.haveSymptoms[i] == true) {
+                      if (declaration.symptoms[i]["fever"] == true) {}
+                    }
+                  }
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   for (int i = 0; i < members; i++) {
