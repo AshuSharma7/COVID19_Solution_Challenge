@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:covid19/dashBoardGoogleMap.dart' as dash;
 import 'package:covid19/familyDeclaration.dart';
+import 'package:covid19/ministrystate.dart';
+import 'dashBoardStates.dart' as dash;
 import 'package:covid19/selfchecker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -180,7 +183,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => secondgrid()),
+                                            builder: (context) =>
+                                                dash.stateList(
+                                                    para: "is_infected")),
                                       );
                                     },
                                   ),
@@ -241,7 +246,10 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => secondgrid()),
+                                            builder: (context) =>
+                                                dash.stateList(
+                                                  para: "symptoms",
+                                                )),
                                       );
                                     },
                                   ),
@@ -767,7 +775,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Ministry()),
+                                            builder: (context) => stateList()),
                                       );
                                     },
                                   ),
