@@ -1,13 +1,19 @@
+import 'package:covid19/googleMap.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'districtListMinistry.dart';
+
 class stateList extends StatefulWidget {
   final Widget child;
 
-  stateList({Key key, this.child}) : super(key: key);
+  stateList({
+    Key key,
+    this.child,
+  }) : super(key: key);
   _stateList createState() => _stateList();
 }
 
@@ -116,69 +122,102 @@ _generateData(double cases, double deaths, double cured) {
 class _stateList extends State<stateList> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color(0xFFFF9933),
-          Color(0xFFFFFFFF),
-          Color(0xFF138808),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-      ),
-      child: FutureBuilder(
-          future: getUri(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              List content = snapshot.data;
-              for (int i = 0; i < content.length; i++) {
-                if (!states.contains(content[i]["state"])) {
-                  states.add(content[i]["state"]);
-                }
-              }
-              states.sort((a, b) => a.toString().compareTo(b.toString()));
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("States"),
+          bottom: TabBar(
+            indicatorColor: Color(0xff9962D0),
+            tabs: [
+              Tab(
+                  text: "State List",
+                  icon: Icon(
+                    FontAwesomeIcons.paragraph,
+                  )),
+              Tab(text: "State Map", icon: Icon(FontAwesomeIcons.map)),
+              Tab(text: "District Map", icon: Icon(FontAwesomeIcons.map)),
+            ],
+          ),
+        ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color(0xFFFF9933),
+              Color(0xFFFFFFFF),
+              Color(0xFF138808),
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          ),
+          child: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              FutureBuilder(
+                  future: getUri(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List content = snapshot.data;
+                      for (int i = 0; i < content.length; i++) {
+                        if (!states.contains(content[i]["state"])) {
+                          states.add(content[i]["state"]);
+                        }
+                      }
+                      states
+                          .sort((a, b) => a.toString().compareTo(b.toString()));
 
-              return ListView.builder(
-                itemCount: states.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  stateDetails(states[index])));
-                    },
-                    child: Container(
-                      height: 60,
-                      margin: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10.0)
-                          ]),
-                      child: Center(
-                          child: Text(
-                        states[index],
-                        style: TextStyle(fontSize: 20.0),
-                      )),
-                    ),
-                  );
-                },
-              );
-            } else {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3.0,
-                  ),
-                ),
-              );
-            }
-          }),
+                      return ListView.builder(
+                        itemCount: states.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          stateDetails(states[index])));
+                            },
+                            child: Container(
+                              height: 60,
+                              margin: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black26, blurRadius: 10.0)
+                                  ]),
+                              child: Center(
+                                  child: Text(
+                                states[index],
+                                style: TextStyle(fontSize: 20.0),
+                              )),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3.0,
+                          ),
+                        ),
+                      );
+                    }
+                  }),
+              MapPage(
+                boo: true,
+              ),
+              MapPage(
+                boo: false,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -195,7 +234,7 @@ Widget stateDetails(String state) {
   return Scaffold(
     // debugShowCheckedModeBanner: false,
     body: DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: Color(0xff1976d2),
@@ -204,13 +243,20 @@ Widget stateDetails(String state) {
               indicatorColor: Color(0xff9962D0),
               tabs: [
                 Tab(
+                  text: "District List",
+                  icon: Icon(Icons.menu),
+                ),
+                Tab(
+                    text: "Pie Chart",
                     icon: Icon(
-                  FontAwesomeIcons.chartPie,
-                )),
-                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
+                      FontAwesomeIcons.chartPie,
+                    )),
+                Tab(
+                    text: "Graph Chart",
+                    icon: Icon(FontAwesomeIcons.chartLine)),
               ],
             ),
-            title: Text('कोविड-19'),
+            title: Text(state),
           ),
           body: FutureBuilder(
             future: getUri(),
@@ -219,7 +265,8 @@ Widget stateDetails(String state) {
                 List content = snapshot.data;
                 int index;
                 for (int i = 0; i < content.length; i++) {
-                  if (content[i]["state"] == state) {
+                  if (content[i]["state"] == state &&
+                      content[i]["is_state"] == true) {
                     index = i;
                   }
                 }
@@ -228,6 +275,7 @@ Widget stateDetails(String state) {
                     content[index]["death"].toDouble(),
                     content[index]["cured"].toDouble());
                 return TabBarView(children: [
+                  DistrictList(state: state),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
@@ -286,7 +334,7 @@ Widget stateDetails(String state) {
                                 )
                               ]),
                         );
-                      })
+                      }),
                 ]);
               } else {
                 return Center(
