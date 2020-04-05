@@ -5,6 +5,8 @@ import 'dart:convert';
 
 class MapPage extends StatefulWidget {
   @override
+  bool boo;
+  MapPage({Key key, @required this.boo}) : super(key: key);
   _MapPageState createState() => _MapPageState();
 }
 
@@ -23,36 +25,38 @@ class _MapPageState extends State<MapPage> {
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       markers.clear();
-      for (int i = 0; i < 29; i++) {
-        final marker = Marker(
-          onTap: () {
-            return showDialog(
-                context: (context),
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(content[i]["state"]),
-                    content: Text("Total Cases: " +
-                        content[i]["cases"].toString() +
-                        "\nTotal deaths: " +
-                        content[i]["death"].toString() +
-                        "\nTotal Cured: " +
-                        content[i]["cured"].toString()),
-                    actions: <Widget>[
-                      IconButton(
-                          icon: Icon(Icons.done),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          })
-                    ],
-                  );
-                });
-          },
-          markerId: MarkerId(content[i]["id"].toString()),
-          position: LatLng(double.parse(content[i]["latitude"]),
-              double.parse(content[i]["longitude"])),
-          infoWindow: InfoWindow(),
-        );
-        markers[content[i]["state"]] = marker;
+      for (int i = 0; i < content.length; i++) {
+        if (content[i]["is_state"] == widget.boo) {
+          final marker = Marker(
+            onTap: () {
+              return showDialog(
+                  context: (context),
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(content[i]["state"]),
+                      content: Text("Total Cases: " +
+                          content[i]["cases"].toString() +
+                          "\nTotal deaths: " +
+                          content[i]["death"].toString() +
+                          "\nTotal Cured: " +
+                          content[i]["cured"].toString()),
+                      actions: <Widget>[
+                        IconButton(
+                            icon: Icon(Icons.done),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            })
+                      ],
+                    );
+                  });
+            },
+            markerId: MarkerId(content[i]["id"].toString()),
+            position: LatLng(double.parse(content[i]["latitude"]),
+                double.parse(content[i]["longitude"])),
+            infoWindow: InfoWindow(),
+          );
+          markers[content[i]["state"]] = marker;
+        }
       }
     });
   }
@@ -60,43 +64,34 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Center(
-              child: Text(
-            "Google Map",
-            style: TextStyle(color: Colors.black),
-          )),
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-        ),
         body: FutureBuilder(
-          future: getUri(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              content = snapshot.data;
-              if (true) {
-                return GoogleMap(
-                  initialCameraPosition:
-                      CameraPosition(target: LatLng(20.5937, 78.9629)),
-                  onMapCreated: _onMapCreated,
-                  markers: markers.values.toSet(),
-                  // markers: ,
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 10.0,
-                  ),
-                );
-              }
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 10.0,
-                ),
-              );
-            }
-          },
-        ));
+      future: getUri(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          content = snapshot.data;
+          if (true) {
+            return GoogleMap(
+              initialCameraPosition:
+                  CameraPosition(target: LatLng(20.5937, 78.9629)),
+              onMapCreated: _onMapCreated,
+              markers: markers.values.toSet(),
+              // markers: ,
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 10.0,
+              ),
+            );
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 10.0,
+            ),
+          );
+        }
+      },
+    ));
   }
 }
