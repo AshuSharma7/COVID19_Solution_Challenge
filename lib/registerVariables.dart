@@ -77,7 +77,7 @@ void makePost(
   String from,
   String to,
 ) async {
-  String url = "https://covid-mitrc.herokuapp.com/accounts/register";
+  String url = "https://covid-mitrc.herokuapp.com/accounts/member/create";
   var body = {
     "user_id": username,
     "name": name,
@@ -96,14 +96,17 @@ void makePost(
     "latitude": null,
     "longitude": null
   };
-  print(body);
-  // Response r = await post(
-  //   Uri.parse(url),
-  //   headers: {"Content-Type": "application/json"},
-  //   body: json.encode(body),
-  // );
-  // if (r.statusCode != 200) {
-  //   error = true;
-  // }
-  // print(r.body);
+  //print(body);
+  Response r = await post(
+    Uri.parse(url),
+    headers: {"Content-Type": "application/json"},
+    body: json.encode(body),
+  );
+  print(r.body);
+  if (r.statusCode != 200) {
+    error = true;
+  } else {
+    error = false;
+  }
+  //print(r.body);
 }

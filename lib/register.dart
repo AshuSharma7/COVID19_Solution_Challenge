@@ -225,25 +225,49 @@ class RegisterPage extends StatelessWidget {
                                                   if (adhharEditor
                                                           .text.length ==
                                                       12) {
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    prefs.setString('username',
-                                                        adhharEditor.text);
-                                                    File file =
-                                                        await auth.getPath();
-                                                    file.writeAsString(
-                                                        adhharEditor.text);
-                                                    makePost();
-                                                    adhharEditor.clear();
-                                                    nameEditor.clear();
-                                                    passEditor.clear();
-                                                    Navigator.pushAndRemoveUntil(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                FamilyDeclaration()),
-                                                        (route) => false);
+                                                    Response response =
+                                                        await makePost();
+                                                    if (response.statusCode ==
+                                                        200) {
+                                                      SharedPreferences prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      prefs.setString('aadhar',
+                                                          adhharEditor.text);
+                                                      makePost();
+                                                      adhharEditor.clear();
+                                                      nameEditor.clear();
+                                                      passEditor.clear();
+                                                      Navigator.pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  FamilyDeclaration()),
+                                                          (route) => false);
+                                                    } else {
+                                                      return showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            title:
+                                                                Text("Error"),
+                                                            content: Text(
+                                                                "Check Your Internet Connection"),
+                                                            actions: <Widget>[
+                                                              IconButton(
+                                                                  icon: Icon(
+                                                                      Icons
+                                                                          .done),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  })
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    }
                                                   } else {
                                                     return showDialog(
                                                       context: context,
