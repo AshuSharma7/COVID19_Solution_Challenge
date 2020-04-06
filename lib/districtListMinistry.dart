@@ -33,11 +33,13 @@ class _DistrictListState extends State<DistrictList> {
             future: getUri(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
+                //print(widget.state.toLowerCase());
                 List content = snapshot.data;
                 return ListView.builder(
                     itemCount: content.length,
                     itemBuilder: (BuildContextcontext, int index) {
-                      if (content[index]["state"] == widget.state &&
+                      if (content[index]["state"].toUpperCase() ==
+                              widget.state &&
                           content[index]["is_state"] == false) {
                         return Container(
                           margin: EdgeInsets.all(10.0),
