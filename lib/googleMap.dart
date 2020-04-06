@@ -25,6 +25,7 @@ class _MapPageState extends State<MapPage> {
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       markers.clear();
+      print(content.length);
       for (int i = 0; i < content.length; i++) {
         if (content[i]["is_state"] == widget.boo) {
           final marker = Marker(
@@ -33,7 +34,9 @@ class _MapPageState extends State<MapPage> {
                   context: (context),
                   builder: (context) {
                     return AlertDialog(
-                      title: Text(content[i]["state"]),
+                      title: widget.boo
+                          ? Text(content[i]["state"])
+                          : Text(content[i]["district"]),
                       content: Text("Total Cases: " +
                           content[i]["cases"].toString() +
                           "\nTotal deaths: " +
@@ -55,7 +58,11 @@ class _MapPageState extends State<MapPage> {
                 double.parse(content[i]["longitude"])),
             infoWindow: InfoWindow(),
           );
-          markers[content[i]["state"]] = marker;
+          if (widget.boo == true) {
+            markers[content[i]["state"]] = marker;
+          } else {
+            markers[content[i]["district"]] = marker;
+          }
         }
       }
     });
