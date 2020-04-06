@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:covid19/familyDeclaration.dart';
 import 'package:covid19/helpLine.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'globalVar.dart' as global;
 
@@ -17,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailEditor = new TextEditingController();
   TextEditingController passEditor = new TextEditingController();
   GoogleTranslator translator = new GoogleTranslator();
+
   @override
   void initState() {
     translator.translate("Welcome", to: 'hi').then((value) {
@@ -218,10 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 child: MaterialButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => HelpLine()));
+                                    login();
                                   },
                                   child: Text(
                                     "Login",
@@ -244,5 +247,31 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> login() async {
+    String url = "https://covid-mitrc.herokuapp.com/accounts/login";
+    var req = {
+      "username": "user",
+      "password": "pass"
+//      "password": passEditor.text
+    };
+    Response response = await post(
+      Uri.parse(url),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(req),
+    );
+    var res = json.decode(response.body);
+    if (response.statusCode == 200) {
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setString('aadhar', res['aadhar']);
+      prefs.setInt('id', res['id']);
+      print('User -> Aadhar : ${prefs.getString("aadhar")}, ID : ${prefs.getInt("id")}');
+      Fluttertoast.showToast(msg: "Login Succeed!");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HelpLine()));
+    } else {
+      Fluttertoast.showToast(msg: res['error']);
+    }
   }
 }
