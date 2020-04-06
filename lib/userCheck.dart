@@ -1,4 +1,5 @@
 import 'package:covid19/familyDeclaration.dart';
+import 'package:covid19/grid.dart';
 import 'package:covid19/languagePage.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +20,18 @@ class _CheckUserState extends State<CheckUser> {
   void initState() {
     getPrefs().then((value) {
       SharedPreferences prefs = value;
-      if (prefs.getString('username') != null) {
+      if (prefs.getString('aadhar') != null) {
         if (prefs.getBool('declared') == false ||
             prefs.getBool('declared') == null) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FamilyDeclaration()));
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => FamilyDeclaration()),
+              (_) => false);
         } else {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SelfDeclaration()));
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => DashBoard()),
+              (_) => false);
         }
       } else {
         Navigator.push(
