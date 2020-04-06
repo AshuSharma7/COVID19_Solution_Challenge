@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:covid19/familyDeclaration.dart';
+import 'package:covid19/grid.dart';
 import 'package:covid19/helpLine.dart';
+import 'package:covid19/registerVariables.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   List<String> users = ["Hospital", "Citizen"];
   String text;
   String selectedUser;
-  TextEditingController emailEditor = new TextEditingController();
+  TextEditingController adhharEditor = new TextEditingController();
   TextEditingController passEditor = new TextEditingController();
   GoogleTranslator translator = new GoogleTranslator();
 
@@ -117,89 +119,91 @@ class _LoginPageState extends State<LoginPage> {
                             child: Container(
                               padding: EdgeInsets.only(
                                   top: 15.0, left: 10.0, right: 10.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Center(
-                                    child: Text(
-                                      "LOGIN",
-                                      style: TextStyle(fontSize: 17.0),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: <Widget>[
+                                    Center(
                                       child: Text(
-                                        "Adhaar",
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.0),
-                                      )),
-                                  TextFormField(
-                                    obscureText: false,
-                                    controller: emailEditor,
-                                    decoration: InputDecoration(
-                                      //hintText: "E-Mail",
-                                      //prefixIcon: Icon(Icons.alternate_email),
-                                      //border: InputBorder.none,
-                                      fillColor: Colors.red,
+                                        "LOGIN",
+                                        style: TextStyle(fontSize: 17.0),
+                                      ),
                                     ),
-                                    //onSaved: (value) => ,
-                                  ),
-                                  // SizedBox(
-                                  //     height: 0.8,
-                                  //     child: Container(
-                                  //       height: 0.8,
-                                  //       width: 235.0,
-                                  //       color: Colors.black26,
-                                  //     )),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Password",
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.0),
-                                      )),
-                                  TextField(
-                                    obscureText: true,
-                                    controller: passEditor,
-                                    decoration: InputDecoration(
-                                        // labelText: "Password",
-                                        // prefixIcon: Icon(Icons.lock_outline),
-                                        //  border: InputBorder.none
-                                        ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  DropdownButton(
-                                    hint: Text('Select User type',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15.0)),
-                                    value: selectedUser,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        selectedUser = newValue;
-                                      });
-                                    },
-                                    items: users.map((location) {
-                                      return DropdownMenuItem(
-                                        child: new Text(location,
-                                            style:
-                                                TextStyle(color: Colors.black)),
-                                        value: location,
-                                      );
-                                    }).toList(),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Adhaar",
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.0),
+                                        )),
+                                    TextFormField(
+                                      obscureText: false,
+                                      controller: adhharEditor,
+                                      decoration: InputDecoration(
+                                        //hintText: "E-Mail",
+                                        //prefixIcon: Icon(Icons.alternate_email),
+                                        //border: InputBorder.none,
+                                        fillColor: Colors.red,
+                                      ),
+                                      //onSaved: (value) => ,
+                                    ),
+                                    // SizedBox(
+                                    //     height: 0.8,
+                                    //     child: Container(
+                                    //       height: 0.8,
+                                    //       width: 235.0,
+                                    //       color: Colors.black26,
+                                    //     )),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Password",
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.0),
+                                        )),
+                                    TextField(
+                                      obscureText: true,
+                                      controller: passEditor,
+                                      decoration: InputDecoration(
+                                          // labelText: "Password",
+                                          // prefixIcon: Icon(Icons.lock_outline),
+                                          //  border: InputBorder.none
+                                          ),
+                                    ),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    DropdownButton(
+                                      hint: Text('Select User type',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0)),
+                                      value: selectedUser,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          selectedUser = newValue;
+                                        });
+                                      },
+                                      items: users.map((location) {
+                                        return DropdownMenuItem(
+                                          child: new Text(location,
+                                              style: TextStyle(
+                                                  color: Colors.black)),
+                                          value: location,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -207,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 360.0),
+                          padding: const EdgeInsets.only(top: 270),
                           child: Column(
                             children: <Widget>[
                               Container(
@@ -224,7 +228,27 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 child: MaterialButton(
                                   onPressed: () {
-                                    login();
+                                    if (passEditor.text != "" &&
+                                        adhharEditor.text != "") {
+                                      login();
+                                    } else {
+                                      return showDialog(
+                                          context: (context),
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text("Failed"),
+                                              content: Text(
+                                                  "One or More fields are empty"),
+                                              actions: <Widget>[
+                                                IconButton(
+                                                    icon: Icon(Icons.done),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    })
+                                              ],
+                                            );
+                                          });
+                                    }
                                   },
                                   child: Text(
                                     "Login",
@@ -250,12 +274,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<dynamic> login() async {
+    print(adhharEditor.text);
+    print(passEditor.text);
     String url = "https://covid-mitrc.herokuapp.com/accounts/login";
-    var req = {
-      "username": "user",
-      "password": "pass"
-//      "password": passEditor.text
-    };
+    var req = {"username": adhharEditor.text, "password": passEditor.text};
     Response response = await post(
       Uri.parse(url),
       headers: {"Content-Type": "application/json"},
@@ -264,12 +286,15 @@ class _LoginPageState extends State<LoginPage> {
     var res = json.decode(response.body);
     if (response.statusCode == 200) {
       var prefs = await SharedPreferences.getInstance();
-      prefs.setString('aadhar', res['aadhar']);
-      prefs.setInt('id', res['id']);
-      print('User -> Aadhar : ${prefs.getString("aadhar")}, ID : ${prefs.getInt("id")}');
-      Fluttertoast.showToast(msg: "Login Succeed!");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HelpLine()));
+      if (res['aadhar'] != null || res['aadhar'] != "") {
+        prefs.setString('aadhar', res['aadhar']);
+        prefs.setInt('id', res['id']);
+        print(
+            'User -> Aadhar : ${prefs.getString("aadhar")}, ID : ${prefs.getInt("id")}');
+        Fluttertoast.showToast(msg: "Login Succeed!");
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => DashBoard()), (_) => false);
+      }
     } else {
       Fluttertoast.showToast(msg: res['error']);
     }
