@@ -1,5 +1,7 @@
+import 'package:covid19/homePage.dart';
 import 'package:covid19/splashPage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'globalVar.dart' as global;
 
 class LanguagePage extends StatelessWidget {
@@ -83,12 +85,14 @@ class LanguagePage extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {
-                          global.lang = lang2[index];
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString('lang', lang2[index]);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SplashPage()));
+                                  builder: (context) => HomePage()));
                         },
                         child: Container(
                           margin: EdgeInsets.all(10.0),

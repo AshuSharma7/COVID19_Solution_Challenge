@@ -159,7 +159,8 @@ class _stateList extends State<stateList> {
                     if (snapshot.hasData) {
                       List content = snapshot.data;
                       for (int i = 0; i < content.length; i++) {
-                        if (!states.contains(content[i]["state"])) {
+                        if (!states.contains(content[i]["state"]) &&
+                            content[i]["is_state"] == true) {
                           states.add(content[i]["state"]);
                         }
                       }

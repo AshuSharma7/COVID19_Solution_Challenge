@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:covid19/grid.dart';
 import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
@@ -566,6 +567,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                                   color: Colors.black26, blurRadius: 10.0),
                             ]),
                         child: TextField(
+                          maxLength: 12,
                           controller: declaration.adhharEditor[index],
                           decoration: InputDecoration(border: InputBorder.none),
                         ),
@@ -907,31 +909,31 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                   ]),
               child: MaterialButton(
                 onPressed: () async {
-                  for (int i = 0; i < members; i++) {
-                    if (declaration.haveSymptoms[i] == true) {
-                      if (declaration.symptoms[i]["fever"] == true) {}
-                    }
-                  }
+                  // for (int i = 0; i < members; i++) {
+                  //   if (declaration.haveSymptoms[i] == true) {
+                  //     if (declaration.symptoms[i]["fever"] == true) {}
+                  //   }
+                  // }
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
-                  for (int i = 0; i < members; i++) {
-                    declaration.makePost(
-                        prefs.getString('username'),
-                        declaration.editor[i].text,
-                        declaration.gender[i],
-                        declaration.adhharEditor[i].text,
-                        declaration.isInfected[i],
-                        declaration.haveSymptoms[i],
-                        declaration.haveTravelled[i],
-                        declaration.from[i],
-                        declaration.to[i]);
-                  }
-                  if (declaration.error != true) {
-                    prefs.setBool('declaration', true);
-                    Navigator.push(
+                  // for (int i = 0; i < members; i++) {
+                  //   declaration.makePost(
+                  //       prefs.getString('aadhar'),
+                  //       declaration.editor[i].text,
+                  //       declaration.gender[i],
+                  //       declaration.adhharEditor[i].text,
+                  //       declaration.isInfected[i],
+                  //       declaration.haveSymptoms[i],
+                  //       declaration.haveTravelled[i],
+                  //       declaration.from[i],
+                  //       declaration.to[i]);
+                  // }
+                  if (true) {
+                    prefs.setBool('declared', true);
+                    Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => SelfDeclaration()));
+                        MaterialPageRoute(builder: (context) => DashBoard()),
+                        (_) => false);
                   }
                 },
                 child: Text(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:covid19/dashBoardGoogleMap.dart' as dash;
 import 'package:covid19/familyDeclaration.dart';
 import 'package:covid19/ministrystate.dart';
+import 'package:covid19/trackingMap.dart';
 import 'dashBoardStates.dart' as dash;
 import 'package:covid19/selfchecker.dart';
 import 'package:flutter/foundation.dart';
@@ -673,7 +674,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     onTap: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => blackgrid(),
+                                          builder: (context) => TrackingPage(),
                                         ),
                                       );
                                     },
@@ -1337,17 +1338,6 @@ class labgrid extends StatelessWidget {
           title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
         ),
         body: testinggrid1());
-  }
-}
-
-class blackgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: MapPage());
   }
 }
 

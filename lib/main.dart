@@ -1,8 +1,13 @@
 import 'package:covid19/chart1.dart';
+import 'package:covid19/chatBot.dart';
 import 'package:covid19/googleMap.dart';
 import 'package:covid19/grid.dart';
 import 'package:covid19/homePage.dart';
+import 'package:covid19/loginPage.dart';
 import 'package:covid19/registerVariables.dart';
+import 'package:covid19/tracker.dart';
+import 'package:covid19/trackingMap.dart';
+import 'package:covid19/userCheck.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'ministrystate.dart' as ministry;
@@ -13,10 +18,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ministry.stateList(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: CheckUser());
   }
 }
 
