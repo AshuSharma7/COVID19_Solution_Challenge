@@ -228,7 +228,7 @@ class RegisterPage extends StatelessWidget {
                                                     Response response =
                                                         await makePost();
                                                     if (response.statusCode ==
-                                                        200) {
+                                                        201) {
                                                       SharedPreferences prefs =
                                                           await SharedPreferences
                                                               .getInstance();
