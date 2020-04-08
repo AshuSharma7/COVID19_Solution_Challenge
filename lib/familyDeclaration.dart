@@ -5,6 +5,7 @@ import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globalVar.dart' as global;
 import 'registerVariables.dart' as declaration;
@@ -14,7 +15,7 @@ class FamilyDeclaration extends StatefulWidget {
   @override
   _FamilyDeclarationState createState() => _FamilyDeclarationState();
 }
-
+ScrollController scroll = new ScrollController();
 AsyncSnapshot<Map<String, dynamic>> snapshot;
 String data;
 Map content;
@@ -22,8 +23,9 @@ int id = 0;
 TextEditingController nameEditor = new TextEditingController();
 TextEditingController fnameEditor = new TextEditingController();
 int members = 1;
+int tempMembers = 0;
 double height = 20;
-
+String submitText = "next";
 List<String> country = ["india", "china", "usa", "russia", "japan", "italy"];
 List<String> district = ["Alwar"];
 String selectedCountry;
@@ -39,9 +41,9 @@ List<String> states = [
   "Bihar",
   "TamilNadu"
 ];
-
+String selectedAge;
 class _FamilyDeclarationState extends State<FamilyDeclaration> {
-  String lat, long = '';
+  double lat, long;
   Position position;
   StreamSubscription<Position> positionStream;
   getLocation() async {
@@ -52,20 +54,119 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
     positionStream = geolocator
         .getPositionStream(locationOptions)
         .listen((Position position) {
-      // print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
       if (position != null) {
         setState(() {
-          lat = position.latitude.toString();
-          long = position.longitude.toString();
+          lat = position.latitude;
+          long = position.longitude;
         });
       } else {
         setState(() {
-          lat = 'Latitude';
-          long = 'Longitude';
+          lat = 0.0;
+          long = 0.0;
         });
       }
     });
   }
+
+  Widget submit(int index) {
+    if(index == members-1) {
+      return Container(
+              width: 150.0,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Color(0xFF3180e4),
+                    Color(0xFF564dc2),
+                  ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                  ]),
+              child: MaterialButton(
+                onPressed: () async {
+                 bool error=false;
+                   for(int i = 0; i < members; i++) {
+                     if(declaration.editor[i].text == "" || declaration.editor[i].text == null || declaration.adhharEditor[i].text == "" || declaration.adhharEditor[i].text == null) {
+                       error = true;
+                     }
+                   }
+                   SharedPreferences prefs =
+                       await SharedPreferences.getInstance();
+                       if(error == false) {
+                         for (int i = 0; i < members; i++) {
+                      if(declaration.symptoms[i]["attendJamat"] == true || declaration.symptoms[i]["metJamatis"] == true || declaration.symptoms[i]["metSomeoneAbroad"] || declaration.symptoms[i]["outbreakPlaceVisit"]) {
+                        declaration.haveSymptoms[i] = true;
+                      } else if(declaration.symptoms[i]["dizziness"]==true || declaration.symptoms[i]["cough"] == true && declaration.symptoms[i]["nose"]== true && declaration.symptoms[i]["fever"] == true) {
+                        declaration.haveSymptoms[i] = true;
+                      } else if(declaration.symptoms[i]["cough"] == true && declaration.symptoms[i]["nose"] == true && declaration.symptoms[i]["fever"] == true && declaration.symptoms[i]["throatchest"] == true) {
+                        declaration.haveSymptoms[i] = true;
+                      } else if(declaration.symptoms[i]["cough"] == true && declaration.symptoms[i]["nose"] == true && (declaration.symptoms[i]["pronounciation"] == true || declaration.symptoms[i]["breathing"] == true || declaration.symptoms[i]["diarrhea"] == true)) {
+                        declaration.haveSymptoms[i] = true;
+                      } else {
+                        declaration.haveSymptoms[i] = false;
+                      }
+                      if(members != 1) {
+                        Map content = await declaration.geoCoding(declaration.addressEditor[i].text);
+                        lat = content["results"][0]["geometry"]["location"]["lat"];
+                        long = content["results"][0]["geometry"]["location"]["lng"];
+
+                      }
+                      print(prefs.getString('aadhar'));
+                      declaration.makePost(
+                          int.parse(prefs.getString('aadhar')),
+                          declaration.editor[i].text,
+                          declaration.gender[i],
+                          declaration.adhharEditor[i].text,
+                          declaration.isInfected[i],
+                          declaration.haveSymptoms[i],
+                          declaration.isCured[i],
+                          declaration.district[i],
+                          declaration.state[i],
+                          declaration.haveTravelled[i],
+                          declaration.from[i],
+                          declaration.to[i],
+                          declaration.addressEditor[i].text,
+                          lat,
+                          long
+                          );
+                    }
+                       }  else {
+                         return showDialog(context: (context),
+                         builder: (context) {
+                           return AlertDialog(
+                             title: Text("Error"),
+                             content: Text("Any Field is missing"),
+                             actions: <Widget>[
+                               IconButton(icon: Icon(Icons.done), onPressed: () {
+                                 Navigator.pop(context);
+                               })
+                             ],
+                           );
+                         }
+                         );
+                       }
+                    
+                  if (declaration.error == false) {
+                    prefs.setBool('declared', true);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => DashBoard()),
+                        (_) => false);
+                  }
+                },
+                child: Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+    } else {
+      return SizedBox(
+        height: 0.0,
+      );
+    }
+  
+}
 
   Widget GetLocation(int i) {
     if (members == 1) {
@@ -83,7 +184,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                   BoxShadow(color: Colors.black26, blurRadius: 10.0),
                 ]),
             child: Text(
-              long,
+              long.toString(),
               style: TextStyle(color: Colors.black),
             ),
           ),
@@ -101,7 +202,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                   BoxShadow(color: Colors.black26, blurRadius: 10.0),
                 ]),
             child: Text(
-              lat,
+              lat.toString(),
               style: TextStyle(color: Colors.black),
             ),
           ),
@@ -145,7 +246,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                   BoxShadow(color: Colors.black26, blurRadius: 10.0),
                 ]),
             child: TextField(
-              controller: declaration.editor[i],
+              controller: declaration.addressEditor[i],
               decoration: InputDecoration(border: InputBorder.none),
             ),
           ),
@@ -166,7 +267,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
   }
 
   Widget symptoms(int i) {
-    if (declaration.haveSymptoms[i] == true) {
+    if (true) {
       return Column(
         children: <Widget>[
           Row(
@@ -265,7 +366,7 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                "Short Breathing??",
+                "Short Breathing?",
                 style: TextStyle(color: Colors.white),
               ),
               Container(
@@ -304,93 +405,48 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
               )
             ],
           ),
-        ],
-      );
-    } else {
-      return SizedBox(height: 0.0);
-    }
-  }
-
-  Widget travel(List<bool> travelled, int i) {
-    if (travelled[i] == false) {
-      return SizedBox(height: 0.0);
-    } else if (travelled[i] == true) {
-      return Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: DropdownButton(
-              hint: Text("Select Travelled country",
-                  style: TextStyle(color: Colors.black, fontSize: 15.0)),
-              value: selectedCountry,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedCountry = newValue;
-                });
-              },
-              items: country.map((location) {
-                return DropdownMenuItem(
-                  child:
-                      new Text(location, style: TextStyle(color: Colors.black)),
-                  value: location,
-                );
-              }).toList(),
-            ),
+          SizedBox(
+            height: 15.0,
           ),
-          SizedBox(height: 15.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                    ]),
-                child: MaterialButton(
-                  onPressed: () async {
-                    DateTime newDateTime = await showRoundedDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 1),
-                      lastDate: DateTime(DateTime.now().year + 1),
-                      borderRadius: 2,
-                    );
-                    if (newDateTime != null) {
-                      setState(() => dateTime = newDateTime);
-                      declaration.from[i] = dateTime.toString();
-                    }
-                  },
-                  child: Text("from"),
-                ),
+              Text(
+                "Running Nose?",
+                style: TextStyle(color: Colors.white),
               ),
               Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(color: Colors.black26, blurRadius: 10.0),
                     ]),
-                child: MaterialButton(
-                  onPressed: () async {
-                    DateTime newDateTime = await showRoundedDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 1),
-                      lastDate: DateTime(DateTime.now().year + 1),
-                      borderRadius: 2,
-                    );
-                    if (newDateTime != null) {
-                      setState(() => dateTime = newDateTime);
-                      declaration.to[i] = dateTime.toString();
-                    }
-                  },
-                  child: Text("to"),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["nose"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["nose"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["nose"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["nose"] = value;
+                          });
+                        }),
+                  ],
                 ),
               )
             ],
@@ -398,128 +454,380 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
           SizedBox(
             height: 15.0,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Have Dizziness?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["dizziness"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["dizziness"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["dizziness"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["dizziness"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Difficulty in Pronounciation?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["pronounciation"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["pronounciation"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["pronounciation"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["pronounciation"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Chest/Throat Pain?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["throatchest"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["throatchest"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["throatchest"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["throatchest"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Have Diarrhea?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["diarrhea"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["diarrhea"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["diarrhea"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["diarrhea"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Attended Jamat?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["attendJamat"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["attendJamat"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["attendJamat"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["attendJamat"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Met any Jamati?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["metJamatis"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["metJamatis"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["metJamatis"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["metJamatis"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Met someone \nwho visited abroad?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["metSomeoneAbroad"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["metSomeoneAbroad"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["metSomeoneAbroad"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["metSomeoneAbroad"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Visited Corona Outbreak Place?",
+                style: TextStyle(color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: declaration.symptoms[i]["outbreakPlaceVisit"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["outbreakPlaceVisit"] = value;
+                          });
+                        }),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: declaration.symptoms[i]["outbreakPlaceVisit"],
+                        onChanged: (value) {
+                          setState(() {
+                            declaration.symptoms[i]["outbreakPlaceVisit"] = value;
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ],
+          ),
         ],
       );
+    } else {
+      return SizedBox(height: 0.0);
     }
   }
 
-  DateTime dateTime;
-  Duration duration;
-  @override
-  void initState() {
-    getJson();
-    lat = 'Latitude';
-    long = 'Longitude';
-    dateTime = DateTime.now();
-    duration = Duration(minutes: 10);
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Family Declaration",
-          style: TextStyle(fontSize: 30.0),
-        ),
-        elevation: 0.0,
-        backgroundColor: Color(0xFF3180e4),
-        automaticallyImplyLeading: false,
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFF3180e4),
-          Color(0xFF564dc2),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Family Members",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 50.0,
-                  //padding: EdgeInsets.only(left: 10.0, right: 5.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                      ]),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Self"),
-                      new Radio(
-                          activeColor: Colors.black,
-                          value: 1,
-                          groupValue: members,
-                          onChanged: (value) {
-                            setState(() {
-                              members = value;
-                            });
-                          }),
-                      Text("2"),
-                      new Radio(
-                          activeColor: Colors.black,
-                          value: 2,
-                          groupValue: members,
-                          onChanged: (value) {
-                            setState(() {
-                              members = value;
-                            });
-                          }),
-                      Text("3"),
-                      new Radio(
-                          activeColor: Colors.black,
-                          value: 3,
-                          groupValue: members,
-                          onChanged: (value) {
-                            setState(() {
-                              members = value;
-                            });
-                          }),
-                      Text("4"),
-                      new Radio(
-                          activeColor: Colors.black,
-                          value: 4,
-                          groupValue: members,
-                          onChanged: (value) {
-                            setState(() {
-                              members = value;
-                            });
-                          }),
-                      Text("5"),
-                      new Radio(
-                          activeColor: Colors.black,
-                          value: 5,
-                          groupValue: members,
-                          onChanged: (value) {
-                            setState(() {
-                              members = value;
-                            });
-                          }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: members,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
+  Widget form(int index) {
+    return Column(
                     children: <Widget>[
                       SizedBox(
                         height: 10.0,
@@ -697,6 +1005,37 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                           )
                         ],
                       ),
+                      SizedBox(height: 15.0,),
+                      Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: DropdownButton(
+                              iconDisabledColor: Colors.black,
+                              hint: Text(
+                                "Select Age group",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 15.0),
+                              ),
+                              value: selectedAge,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedAge = newValue;
+                                  declaration.ageGroup[index] = newValue;
+                                });
+                              },
+                              items:
+                                  declaration.ageGroupList.map((location) {
+                                return DropdownMenuItem(
+                                  child: new Text(location,
+                                      style: TextStyle(color: Colors.black)),
+                                  value: location,
+                                );
+                              }).toList(),
+                            ),
+                          ),
                       SizedBox(
                         height: 15.0,
                       ),
@@ -744,55 +1083,6 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                           )
                         ],
                       ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(
-                            "Have Symptoms?",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(left: 10.0, right: 5.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26, blurRadius: 10.0),
-                                ]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Text("Yes"),
-                                new Radio(
-                                    activeColor: Colors.black,
-                                    value: true,
-                                    groupValue: declaration.haveSymptoms[index],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        declaration.haveSymptoms[index] = value;
-                                      });
-                                    }),
-                                Text("No"),
-                                new Radio(
-                                    activeColor: Colors.black,
-                                    value: false,
-                                    groupValue: declaration.haveSymptoms[index],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        declaration.haveSymptoms[index] = value;
-                                      });
-                                    }),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 15.0),
-                      symptoms(index),
                       SizedBox(height: 15.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -838,6 +1128,58 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                           )
                         ],
                       ),
+                      SizedBox(height: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            "Is Hospitalised?",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26, blurRadius: 10.0),
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text("Yes"),
+                                new Radio(
+                                    activeColor: Colors.black,
+                                    value: true,
+                                    groupValue: declaration.hospitalised[index],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        declaration.hospitalised[index] = value;
+                                      });
+                                    }),
+                                Text("No"),
+                                new Radio(
+                                    activeColor: Colors.black,
+                                    value: false,
+                                    groupValue: declaration.hospitalised[index],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        declaration.hospitalised[index] = value;
+                                      });
+                                    }),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      
+                      SizedBox(height: 15.0),
+                      symptoms(index),
+                      
                       SizedBox(height: 15.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -889,59 +1231,249 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                       ),
                       SizedBox(height: 5.0),
                       travel(declaration.haveTravelled, index),
-                      SizedBox(height: 20.0)
+                      SizedBox(height: 20.0),
+                      submit(index),
+                      SizedBox(height: 20.0),
                     ],
                   );
-                },
-              ),
+  }
+
+  Widget travel(List<bool> travelled, int i) {
+    if (travelled[i] == false) {
+      return SizedBox(height: 0.0);
+    } else if (travelled[i] == true) {
+      return Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
             ),
-            Container(
-              width: 150.0,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Color(0xFF3180e4),
-                    Color(0xFF564dc2),
-                  ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-                  borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black26, blurRadius: 10.0),
-                  ]),
-              child: MaterialButton(
-                onPressed: () async {
-                  // for (int i = 0; i < members; i++) {
-                  //   if (declaration.haveSymptoms[i] == true) {
-                  //     if (declaration.symptoms[i]["fever"] == true) {}
-                  //   }
-                  // }
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  // for (int i = 0; i < members; i++) {
-                  //   declaration.makePost(
-                  //       prefs.getString('aadhar'),
-                  //       declaration.editor[i].text,
-                  //       declaration.gender[i],
-                  //       declaration.adhharEditor[i].text,
-                  //       declaration.isInfected[i],
-                  //       declaration.haveSymptoms[i],
-                  //       declaration.haveTravelled[i],
-                  //       declaration.from[i],
-                  //       declaration.to[i]);
-                  // }
-                  if (true) {
-                    prefs.setBool('declared', true);
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => DashBoard()),
-                        (_) => false);
-                  }
-                },
-                child: Text(
-                  "submit",
-                  style: TextStyle(color: Colors.white),
+            child: DropdownButton(
+              hint: Text("Select Travelled country",
+                  style: TextStyle(color: Colors.black, fontSize: 15.0)),
+              value: selectedCountry,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedCountry = newValue;
+                });
+              },
+              items: country.map((location) {
+                return DropdownMenuItem(
+                  child:
+                      new Text(location, style: TextStyle(color: Colors.black)),
+                  value: location,
+                );
+              }).toList(),
+            ),
+          ),
+          SizedBox(height: 15.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: MaterialButton(
+                  onPressed: () async {
+                    DateTime newDateTime = await showRoundedDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(DateTime.now().year - 1),
+                      lastDate: DateTime(DateTime.now().year + 1),
+                      borderRadius: 2,
+                    );
+                    if (newDateTime != null) {
+                      setState(() => dateTime = newDateTime);
+                      declaration.from[i] = dateTime.toString();
+                    }
+                  },
+                  child: Text("from"),
                 ),
               ),
-            )
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                    ]),
+                child: MaterialButton(
+                  onPressed: () async {
+                    DateTime newDateTime = await showRoundedDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(DateTime.now().year - 1),
+                      lastDate: DateTime(DateTime.now().year + 1),
+                      borderRadius: 2,
+                    );
+                    if (newDateTime != null) {
+                      setState(() => dateTime = newDateTime);
+                      declaration.to[i] = dateTime.toString();
+                    }
+                  },
+                  child: Text("to"),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+        ],
+      );
+    }
+  }
+
+  DateTime dateTime;
+  Duration duration;
+  @override
+  void initState() {
+    getJson();
+    lat = 0.0;
+    long = 0.0;
+    dateTime = DateTime.now();
+    duration = Duration(minutes: 10);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30.0),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black45, blurRadius: 15.0),
+                      ]
+        ),
+        
+        child: IconButton(icon: Icon(Icons.skip_next), onPressed: () {
+          tempMembers++;
+          scroll.animateTo(MediaQuery.of(context).size.width*tempMembers, duration: Duration(milliseconds: 1000), curve: Curves.easeInOut);
+         
+          
+        }),
+      ),
+      appBar: AppBar(
+        title: Text(
+          "Family Declaration",
+          style: TextStyle(fontSize: 30.0),
+        ),
+        elevation: 0.0,
+        backgroundColor: Color(0xFF3180e4),
+        automaticallyImplyLeading: false,
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color(0xFF3180e4),
+          Color(0xFF564dc2),
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Family Members",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 50.0,
+                  //padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                      ]),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Self"),
+                      new Radio(
+                          activeColor: Colors.black,
+                          value: 1,
+                          groupValue: members,
+                          onChanged: (value) {
+                            setState(() {
+                              tempMembers=0;
+                              members = value;
+                            });
+                          }),
+                      Text("2"),
+                      new Radio(
+                          activeColor: Colors.black,
+                          value: 2,
+                          groupValue: members,
+                          onChanged: (value) {
+                            setState(() {
+                              tempMembers=0;
+                              members = value;
+                            });
+                          }),
+                      Text("3"),
+                      new Radio(
+                          activeColor: Colors.black,
+                          value: 3,
+                          groupValue: members,
+                          onChanged: (value) {
+                            setState(() {
+                              tempMembers=0;
+                              members = value;
+                            });
+                          }),
+                      Text("4"),
+                      new Radio(
+                          activeColor: Colors.black,
+                          value: 4,
+                          groupValue: members,
+                          onChanged: (value) {
+                            setState(() {
+                              tempMembers=0;
+                              members = value;
+                            });
+                          }),
+                      Text("5"),
+                      new Radio(
+                          activeColor: Colors.black,
+                          value: 5,
+                          groupValue: members,
+                          onChanged: (value) {
+                            setState(() {
+                              tempMembers=0;
+                              members = value;
+                            });
+                          }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: members,
+                  controller: scroll,
+                  itemBuilder: (BuildContext context, int index) {
+                  return SingleChildScrollView(child: form(index));
+                })
+                                  ),
+            
+            
           ],
         ),
       ),
