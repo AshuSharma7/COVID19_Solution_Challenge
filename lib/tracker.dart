@@ -40,7 +40,7 @@ class _Tracker extends State<Tracker> {
       icon: BitmapDescriptor.defaultMarker,
     ),
   };
-
+  SharedPreferences preferences;
   void _handleChange(namee) {
     setState(() {
       bug = namee;
@@ -52,21 +52,23 @@ class _Tracker extends State<Tracker> {
   //   name = bug;
   //   myInit();
   // }
-
+  String userName;
   @override
   void initState() {
     super.initState();
     _sPref().then((val) {
       setState(() {
         prefs = val;
-        name = val.getString("name");
+        name = val.getString('aadhar');
+        userName = val.get('name');
       });
-      if (name != null) {
+      if (userName != null) {
         myInit();
       }
     });
   }
 
+  TextEditingController editor = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +80,7 @@ class _Tracker extends State<Tracker> {
   }
 
   Widget getView() {
-    if (name == null) {
+    if (userName == null) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +89,7 @@ class _Tracker extends State<Tracker> {
               padding: EdgeInsets.all(20),
               child: TextFormField(
                 obscureText: false,
-                onChanged: _handleChange,
+                controller: editor,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   labelText: "Enter Infected Person Name:",
@@ -109,42 +111,46 @@ class _Tracker extends State<Tracker> {
             ),
             Column(
               children: <Widget>[
+                Text("Are you infected"),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Checkbox(
-                        value: val,
-                        onChanged: (bool value) {
+                    Text("Yes"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: true,
+                        groupValue: result,
+                        onChanged: (value) {
                           setState(() {
-                            val = value;
-                            result = "yes";
+                            result = value;
                           });
                         }),
-                    Text("Infected:"),
+                    Text("No"),
+                    new Radio(
+                        activeColor: Colors.black,
+                        value: false,
+                        groupValue: result,
+                        onChanged: (value) {
+                          setState(() {
+                            result = value;
+                          });
+                        }),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Checkbox(
-                        value: val2,
-                        onChanged: (bool value) {
-                          setState(() {
-                            val2 = value;
-                            result = "no";
-                          });
-                        }),
-                    Text(" Not Infected:")
-                  ],
-                )
               ],
             ),
             RaisedButton(
-              onPressed: () {
-                if (result == "yes") {
+              onPressed: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                preferences.setString('name', editor.text);
+                setState(() {
+                  userName = editor.text;
+                });
+                editor.clear();
+                if (result == true) {
                   Fluttertoast.showToast(
                       msg: "Done", toastLength: Toast.LENGTH_SHORT);
-                  // _handleSubmit;
-                  prefs.setString('name', bug);
-                  name = bug;
                   myInit();
                 } else {
                   Fluttertoast.showToast(
@@ -189,7 +195,7 @@ class _Tracker extends State<Tracker> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              keys[position],
+                              vals[position]['name'],
                               style: TextStyle(fontSize: 22.0),
                             ),
                             SizedBox(
@@ -244,8 +250,10 @@ class _Tracker extends State<Tracker> {
     return FirebaseDatabase.instance.reference();
   }
 
-  void write(lat, lon, name) {
-    databaseReference.child(name).set({'latitude': lat, 'longitude': lon});
+  void write(lat, lon, name, userName) {
+    databaseReference
+        .child(name)
+        .set({'name': userName, 'latitude': lat, 'longitude': lon});
   }
 
   Future<dynamic> read() {
@@ -306,7 +314,7 @@ class _Tracker extends State<Tracker> {
     _locationOptions().then((locOpt) {
       geolocator.getPositionStream(locOpt).listen((Position position) {
         if (position != null) {
-          write(position.latitude, position.longitude, name);
+          write(position.latitude, position.longitude, name, userName);
         }
       });
     });

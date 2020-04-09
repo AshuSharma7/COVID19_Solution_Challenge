@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "14893951835",
+    "firebase_url": "https://covid19-5deea.firebaseio.com",
+    "project_id": "covid19-5deea",
+    "storage_bucket": "covid19-5deea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14893951835:android:6fe503150448801ad6c87e",
+        "android_client_info": {
+          "package_name": "com.covid19helpline.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "14893951835-4gi1se62j7f4544kjh25dk82alooimkl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB98kO9bDMxs3lwULdSceAnDpeyBn5ruf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "14893951835-4gi1se62j7f4544kjh25dk82alooimkl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
