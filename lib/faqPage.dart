@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'globalVar.dart' as global;
 
 class FAQPage extends StatefulWidget {
@@ -35,37 +36,47 @@ class _FAQPageState extends State<FAQPage> {
                 return ListView.builder(
                   itemCount: content.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: EdgeInsets.all(10.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black26, blurRadius: 10.0)
-                        ],
-                        gradient: LinearGradient(
-                            colors: [
-                              Color(0xFF3180e4),
-                              Color(0xFF564dc2),
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            content[index]["id"].toString() +
-                                ". " +
-                                content[index]["que"],
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold),
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 700),
+                      child: SlideAnimation(
+                        horizontalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: Container(
+                            margin: EdgeInsets.all(10.0),
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black26, blurRadius: 10.0)
+                              ],
+                              gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF3180e4),
+                                    Color(0xFF564dc2),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  content[index]["id"].toString() +
+                                      ". " +
+                                      content[index]["que"],
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(content[index]["ans"],
+                                    style: TextStyle(color: Colors.white))
+                              ],
+                            ),
                           ),
-                          Text(content[index]["ans"],
-                              style: TextStyle(color: Colors.white))
-                        ],
+                        ),
                       ),
                     );
                   },
