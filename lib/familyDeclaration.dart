@@ -1176,7 +1176,53 @@ class _FamilyDeclarationState extends State<FamilyDeclaration> {
                       SizedBox(
                         height: 15.0,
                       ),
-                      
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            "Is Alive?",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26, blurRadius: 10.0),
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text("Yes"),
+                                new Radio(
+                                    activeColor: Colors.black,
+                                    value: false,
+                                    groupValue: declaration.isInfected[index],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        declaration.isDead[index] = value;
+                                      });
+                                    }),
+                                Text("No"),
+                                new Radio(
+                                    activeColor: Colors.black,
+                                    value: true,
+                                    groupValue: declaration.isInfected[index],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        declaration.isDead[index] = value;
+                                      });
+                                    }),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                       SizedBox(height: 15.0),
                       symptoms(index),
                       
