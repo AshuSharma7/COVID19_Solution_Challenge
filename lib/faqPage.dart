@@ -25,22 +25,25 @@ List<String> ans = [];
 
 class _FAQPageState extends State<FAQPage> {
   String text = "Loading...";
-  void translate(List temp) async {
-    for (int i = 0; i < temp.length; i++) {
-      String question = temp[i]["que"];
-      String answer = temp[i]["ans"];
-      String qurl =
-          "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$question";
-      http.Response qresponse = await http.post(qurl);
-      Map qcontent = json.decode(qresponse.body);
-      String aurl =
-          "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q={$question, $answer}";
-      http.Response aresponse = await http.post(qurl);
-      Map acontent = json.decode(aresponse.body);
-      // if (!data.contains(content["data"]["translations"][0]["translatedText"])) {
+  void translate(String q, String a) async {
+    String question = q;
+    String answer = a;
+    String qurl =
+        "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$question";
+    http.Response qresponse = await http.post(qurl);
+    Map qcontent = json.decode(qresponse.body);
+    String aurl =
+        "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$answer";
+    http.Response aresponse = await http.post(aurl);
+    Map acontent = json.decode(aresponse.body);
+    // if (!data.contains(content["data"]["translations"][0]["translatedText"])) {
+    if (!que.contains(qcontent["data"]["translations"][0]["translatedText"]) &&
+        qcontent["data"] != null) {
       que.add(qcontent["data"]["translations"][0]["translatedText"]);
-      ans.add(acontent["data"]["translations"][1]["translatedText"]);
-      //}
+    }
+    if (!ans.contains(acontent["data"]["translations"][0]["translatedText"]) &&
+        acontent["data"] != null) {
+      ans.add(acontent["data"]["translations"][0]["translatedText"]);
     }
     setState(() {});
   }
@@ -67,11 +70,11 @@ class _FAQPageState extends State<FAQPage> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               List content = snapshot.data;
-              translate(content);
-              if (que.isNotEmpty) {
-                return ListView.builder(
-                  itemCount: content.length,
-                  itemBuilder: (BuildContext context, int index) {
+              return ListView.builder(
+                itemCount: content.length,
+                itemBuilder: (BuildContext context, int index) {
+                  translate(content[index]["que"], content[index]["ans"]);
+                  if (que.length > index) {
                     return AnimationConfiguration.staggeredList(
                       position: index,
                       duration: const Duration(milliseconds: 700),
@@ -99,13 +102,20 @@ class _FAQPageState extends State<FAQPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  (index + 1).toString() + ". " + que[index],
+                                  (index + 1).toString() +
+                                      ". " +
+                                      (que[index] == null
+                                          ? "Loading..."
+                                          : que[index]),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(ans[index],
+                                Text(
+                                    ans[index] == null
+                                        ? "Loading...."
+                                        : ans[index],
                                     style: TextStyle(color: Colors.white))
                               ],
                             ),
@@ -113,13 +123,13 @@ class _FAQPageState extends State<FAQPage> {
                         ),
                       ),
                     );
-                  },
-                );
-              } else {
-                return Center(
-                  child: SpinKitChasingDots(color: Colors.black),
-                );
-              }
+                  } else {
+                    return SizedBox(
+                      height: 0.0,
+                    );
+                  }
+                },
+              );
             } else {
               return Container(
                 child: Center(
