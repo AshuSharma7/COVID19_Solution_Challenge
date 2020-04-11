@@ -224,7 +224,7 @@ class RegisterPage extends StatelessWidget {
                                                 if (adhharExists == false) {
                                                   if (adhharEditor
                                                           .text.length ==
-                                                      12) {
+                                                      1) {
                                                     Response response =
                                                         await makePost();
                                                     if (response.statusCode ==
