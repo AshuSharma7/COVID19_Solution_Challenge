@@ -1,7 +1,14 @@
+import 'package:covid19/aboutPage.dart';
+import 'package:covid19/advisory.dart';
 import 'package:covid19/chart1.dart';
 import 'package:covid19/chatBot.dart';
+import 'package:covid19/familyDeclaration.dart';
+import 'package:covid19/faqPage.dart';
 import 'package:covid19/googleMap.dart';
 import 'package:covid19/grid.dart';
+import 'package:covid19/quizPage.dart';
+import 'package:covid19/testingCentre.dart';
+import 'registerVariables.dart' as declaration;
 import 'package:covid19/homePage.dart';
 import 'package:covid19/loginPage.dart';
 import 'package:covid19/registerVariables.dart';
@@ -18,7 +25,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: CheckUser());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: FAQPage());
   }
 }
 
@@ -65,8 +72,9 @@ class _ApiHitState extends State<ApiHit> {
           width: 100,
           height: 100,
           child: MaterialButton(
-            onPressed: () {
-              makePost();
+            onPressed: () async {
+              Map c = await declaration.geoCoding("bhiwadi rajsthan");
+              print(c["results"][0]["geometry"]["location"]["lat"]);
             },
             child: Text("Post"),
           ),

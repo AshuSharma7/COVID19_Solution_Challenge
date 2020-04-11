@@ -15,6 +15,15 @@ Future<List<dynamic>> getUri() async {
   return json.decode(response.body);
 }
 
+List<Color> color1 = [
+  Color(0xFF11998e),
+  Color(0xFF38ef7d),
+];
+List<Color> color2 = [
+  Color(0xFFFF5F6D),
+  Color(0xFFFFC371),
+];
+
 double width;
 double height;
 List<String> states = [];
@@ -29,21 +38,16 @@ class _TestingCentreState extends State<TestingCentre> {
       appBar: AppBar(
         title: Text(
           "Testing Centre",
-          style: TextStyle(fontSize: 32.0),
+          style: TextStyle(fontSize: 32.0, color: Colors.black),
         ),
         elevation: 0.0,
-        backgroundColor: Color(0xFF3180e4),
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xFF3180e4),
-            Color(0xFF564dc2),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        ),
+        decoration: BoxDecoration(color: Colors.white),
         child: FutureBuilder(
             future: getUri(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -70,15 +74,22 @@ class _TestingCentreState extends State<TestingCentre> {
                         height: 60,
                         margin: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: [
-                              BoxShadow(color: Colors.black26, blurRadius: 10.0)
-                            ]),
+                          gradient: LinearGradient(
+                              colors: index % 2 == 0 ? color1 : color2,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight),
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black45,
+                                blurRadius: 15.0,
+                                offset: Offset.fromDirection(1.0, 10.0))
+                          ],
+                        ),
                         child: Center(
                             child: Text(
                           states[index],
-                          style: TextStyle(fontSize: 20.0),
+                          style: TextStyle(fontSize: 20.0, color: Colors.white),
                         )),
                       ),
                     );

@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  List<String> users = ["Hospital", "Citizen"];
+  List<String> users = ["Citizen", "Volunteer"];
   String text;
   String selectedUser;
   TextEditingController adhharEditor = new TextEditingController();
@@ -160,24 +160,6 @@ class _LoginPageState extends State<LoginPage> {
                                     //     )),
                                     SizedBox(
                                       height: 20.0,
-                                    ),
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Password",
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.0),
-                                        )),
-                                    TextField(
-                                      obscureText: true,
-                                      controller: passEditor,
-                                      decoration: InputDecoration(
-                                          // labelText: "Password",
-                                          // prefixIcon: Icon(Icons.lock_outline),
-                                          //  border: InputBorder.none
-                                          ),
                                     ),
                                     SizedBox(
                                       height: 10.0,

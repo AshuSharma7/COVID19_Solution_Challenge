@@ -46,8 +46,8 @@ class _AdvisoryPageState extends State<AdvisoryPage> {
                 itemCount: content.length,
                 itemBuilder: (BuildContext context, int index) {
                   textOriginal = content[index]["title"];
-                  translator.translate(textOriginal, to: "hi").then((value) {
-                    text = value;
+                  translator.translate("welcome", to: 'hi').then((value) {
+                    print(value);
                   });
 
                   return Container(
@@ -62,7 +62,7 @@ class _AdvisoryPageState extends State<AdvisoryPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          text,
+                          text == null ? "Question" : text,
                           style: TextStyle(
                               fontSize: 25.0, fontWeight: FontWeight.bold),
                         ),

@@ -356,7 +356,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    '$i',
+                                                    content["death"].toString(),
                                                     textDirection:
                                                         TextDirection.rtl,
                                                     style: TextStyle(
