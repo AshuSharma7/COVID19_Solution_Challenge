@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:covid19/dashBoardGoogleMap.dart' as dash;
-import 'package:covid19/familyDeclaration.dart';
-import 'package:covid19/ministrystate.dart';
-import 'package:covid19/trackingMap.dart';
+import 'dashBoardGoogleMap.dart' as dash;
+import 'ministrystate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'dashBoardStates.dart' as dash;
-import 'package:covid19/selfchecker.dart';
+import 'selfchecker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'adviceinner.dart';
@@ -366,14 +364,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                             ),
                                             margin: EdgeInsets.only(left: 10),
                                           ),
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TrackingPage(),
-                                              ),
-                                            );
-                                          },
+                                          onTap: () {},
                                         ),
                                       ),
                                       Expanded(
