@@ -1,7 +1,12 @@
 import 'dart:io';
 
-import 'package:covid19/advisoryUpdate.dart';
-import 'package:covid19/familyDeclaration.dart';
+// import 'advisoryUpdate.dart';
+import 'package:flutter_localization_master/pages/PatientReport.dart';
+import 'package:flutter_localization_master/pages/coronaMonitor.dart';
+
+import 'LoginPage.dart';
+import 'package:flutter_localization_master/localization/language_constants.dart';
+import 'DeclarationForm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth.dart' as auth;
@@ -39,7 +44,10 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Register"),
+          title: Text(
+            // "Register"
+            getTranslated(context, 'register'),
+          ),
           automaticallyImplyLeading: false,
         ),
         body: Container(
@@ -86,7 +94,8 @@ class RegisterPage extends StatelessWidget {
                                     children: <Widget>[
                                       Center(
                                         child: Text(
-                                          "REGISTER",
+                                          // "REGISTER",
+                                          getTranslated(context, 'register'),
                                           style: TextStyle(
                                               fontSize: 17.0,
                                               fontWeight: FontWeight.bold),
@@ -98,7 +107,8 @@ class RegisterPage extends StatelessWidget {
                                       Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "First Name",
+                                            // "First Name",
+                                            getTranslated(context, 'fname'),
                                             style: TextStyle(
                                                 color: Colors.blue,
                                                 fontWeight: FontWeight.bold,
@@ -118,7 +128,8 @@ class RegisterPage extends StatelessWidget {
                                       Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "Adhhar No.",
+                                            // "Adhhar No.",
+                                            getTranslated(context, 'adhaar'),
                                             style: TextStyle(
                                                 color: Colors.blue,
                                                 fontWeight: FontWeight.bold,
@@ -126,7 +137,7 @@ class RegisterPage extends StatelessWidget {
                                           )),
                                       TextField(
                                         keyboardType: TextInputType.number,
-                                        maxLength: 12,
+                                        maxLength: 10,
                                         obscureText: false,
                                         controller: adhharEditor,
                                         decoration: InputDecoration(),
@@ -137,7 +148,8 @@ class RegisterPage extends StatelessWidget {
                                       Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "Password",
+                                            // "Password",
+                                            getTranslated(context, 'password'),
                                             style: TextStyle(
                                                 color: Colors.blue,
                                                 fontWeight: FontWeight.bold,
@@ -154,9 +166,9 @@ class RegisterPage extends StatelessWidget {
                                         height: 30.0,
                                       ),
 
-                                      SizedBox(
-                                        height: 30.0,
-                                      ),
+                                      // SizedBox(
+                                      //   height: 30.0,
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -165,7 +177,7 @@ class RegisterPage extends StatelessWidget {
                           ),
                           Center(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 320.0),
+                              padding: const EdgeInsets.only(top: 350.0),
                               child: Column(
                                 children: <Widget>[
                                   FutureBuilder(
@@ -203,9 +215,16 @@ class RegisterPage extends StatelessWidget {
                                                       builder: (context) {
                                                         return AlertDialog(
                                                           title: Text(
-                                                              "Adhhar No. exists!"),
+                                                            // "Adhhar No. exists!"
+                                                            getTranslated(
+                                                                context,
+                                                                'exsist'),
+                                                          ),
                                                           content: Text(
-                                                              "this adhhar no. is already registered"),
+                                                              // "this adhhar no. is already registered"
+                                                              getTranslated(
+                                                                  context,
+                                                                  'already_reg')),
                                                           actions: <Widget>[
                                                             IconButton(
                                                                 icon: Icon(
@@ -224,7 +243,7 @@ class RegisterPage extends StatelessWidget {
                                                 if (adhharExists == false) {
                                                   if (adhharEditor
                                                           .text.length ==
-                                                      1) {
+                                                      10) {
                                                     Response response =
                                                         await makePost();
                                                     if (response.statusCode ==
@@ -242,17 +261,23 @@ class RegisterPage extends StatelessWidget {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  FamilyDeclaration()),
+                                                                  CoronaMonitor()),
                                                           (route) => false);
                                                     } else {
                                                       return showDialog(
                                                         context: context,
                                                         builder: (context) {
                                                           return AlertDialog(
-                                                            title:
-                                                                Text("Error"),
+                                                            title: Text(
+                                                                // "Error"
+                                                                getTranslated(
+                                                                    context,
+                                                                    'error')),
                                                             content: Text(
-                                                                "Check Your Internet Connection"),
+                                                                // "Check Your Internet Connection"
+                                                                getTranslated(
+                                                                    context,
+                                                                    'connection')),
                                                             actions: <Widget>[
                                                               IconButton(
                                                                   icon: Icon(
@@ -273,9 +298,16 @@ class RegisterPage extends StatelessWidget {
                                                       context: context,
                                                       builder: (context) {
                                                         return AlertDialog(
-                                                          title: Text("Error"),
+                                                          title: Text(
+                                                              // "Error"
+                                                              getTranslated(
+                                                                  context,
+                                                                  'error')),
                                                           content: Text(
-                                                              "Please Type valid Adhhar No."),
+                                                              // "Please Type valid Adhhar No."
+                                                              getTranslated(
+                                                                  context,
+                                                                  'valid_adhaar')),
                                                           actions: <Widget>[
                                                             IconButton(
                                                                 icon: Icon(
@@ -295,10 +327,16 @@ class RegisterPage extends StatelessWidget {
                                                     context: context,
                                                     builder: (context) {
                                                       return AlertDialog(
-                                                        title:
-                                                            Text("Empty Field"),
+                                                        title: Text(
+                                                          // "Empty Field"
+                                                          getTranslated(context,
+                                                              'empty_field'),
+                                                        ),
                                                         content: Text(
-                                                            "Either one or More Fields are empty"),
+                                                          // "Either one or More Fields are empty"
+                                                          getTranslated(context,
+                                                              'one_or_more'),
+                                                        ),
                                                         actions: <Widget>[
                                                           IconButton(
                                                               icon: Icon(
@@ -313,7 +351,9 @@ class RegisterPage extends StatelessWidget {
                                               }
                                             },
                                             child: Text(
-                                              "Register",
+                                              // "Register",
+                                              getTranslated(
+                                                  context, 'register'),
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -321,7 +361,6 @@ class RegisterPage extends StatelessWidget {
                                         );
                                       }),
                                   SizedBox(height: 20.0),
-                                  Text("Already Have an Account?  Login")
                                 ],
                               ),
                             ),
