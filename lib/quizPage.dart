@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_localization_master/pages/getLangCode.dart' as lang;
+import 'package:flutter_localization_master/pages/globalVar.dart';
 import 'package:translator/translator.dart';
 
 import 'googleMap.dart';
@@ -56,6 +58,7 @@ List<Color> color3 = [Color(0xFFEECDA3), Color(0xFFEF629F)];
 class _QuizState extends State<Quiz> {
   List<String> que = [];
   String text;
+  String langCode = lang.langCode;
   void translate(List data) async {
     for (int i = 0; i < data.length; i++) {
       String title = data[i]["title"];
@@ -66,6 +69,13 @@ class _QuizState extends State<Quiz> {
       que.add(content["data"]["translations"][0]["translatedText"]);
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    lang.prefs();
   }
 
   @override

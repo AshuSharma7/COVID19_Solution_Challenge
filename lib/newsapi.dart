@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
+import 'getLangCode.dart' as lang;
 
 class NewsApi extends StatefulWidget {
   @override
@@ -59,10 +60,11 @@ TextEditingController queryEditor = new TextEditingController();
 class _NewsApi extends State<NewsApi> {
   List<String> news = [];
   void translate(Map data) async {
+    String langCode = lang.langCode;
     for (int i = 0; i < data['articles'].length; i++) {
       String text = data['articles'][i]["title"];
       String url =
-          "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$text";
+          "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$text";
       http.Response response = await http.get(url);
       Map content = json.decode(response.body);
       if (!news
@@ -71,6 +73,13 @@ class _NewsApi extends State<NewsApi> {
       }
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    lang.prefs();
   }
 
   @override

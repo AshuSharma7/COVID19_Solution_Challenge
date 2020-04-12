@@ -1,11 +1,13 @@
-import 'package:covid19/registerVariables.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'registerVariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'globalVar.dart' as global;
-import 'translateAPI.dart' as translate;
+import 'getLangCode.dart' as lang;
 
 class FAQPage extends StatefulWidget {
   @override
@@ -26,14 +28,15 @@ List<String> ans = [];
 class _FAQPageState extends State<FAQPage> {
   String text = "Loading...";
   void translate(String q, String a) async {
+    String langCode = lang.langCode;
     String question = q;
     String answer = a;
     String qurl =
-        "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$question";
+        "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$question";
     http.Response qresponse = await http.post(qurl);
     Map qcontent = json.decode(qresponse.body);
     String aurl =
-        "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$answer";
+        "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$answer";
     http.Response aresponse = await http.post(aurl);
     Map acontent = json.decode(aresponse.body);
     // if (!data.contains(content["data"]["translations"][0]["translatedText"])) {
@@ -46,6 +49,13 @@ class _FAQPageState extends State<FAQPage> {
       ans.add(acontent["data"]["translations"][0]["translatedText"]);
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    lang.prefs();
   }
 
   @override
