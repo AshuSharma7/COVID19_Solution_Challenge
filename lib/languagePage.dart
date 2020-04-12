@@ -1,26 +1,36 @@
-import 'package:covid19/homePage.dart';
-import 'package:covid19/splashPage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization_master/classes/language.dart';
+import 'package:flutter_localization_master/localization/language_constants.dart';
+import 'package:flutter_localization_master/main.dart';
+import 'package:flutter_localization_master/pages/LoginPage.dart';
+import 'package:flutter_localization_master/pages/homePage.dart';
+import 'package:flutter_localization_master/pages/splashPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'globalVar.dart' as global;
+// import 'package:flutter_localization_master/router/route_constants.dart';
 
-class LanguagePage extends StatelessWidget {
-  List<String> lang = ["english", "hindi", "punjabi", "bengali"];
-  List<String> lang2 = ["odiya", "telugu", "marathi", "kannada", "tamil"];
+class LanguagePage extends StatefulWidget {
+  LanguagePage({Key key}) : super(key: key);
+
+  @override
+  _LanguagePage createState() => _LanguagePage();
+}
+
+class _LanguagePage extends State<LanguagePage> {
+  Language language;
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  void _changeLanguage(Language language) async {
+    Locale _locale = await setLocale(language.languageCode);
+    MyApp.setLocale(context, _locale);
+  }
+
+  void _showSuccessDialog() {
+    showTimePicker(context: context, initialTime: TimeOfDay.now());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            "Welcome",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 30.0),
-          ),
-        ),
-        elevation: 0.0,
-        backgroundColor: Color(0xFFFF9933),
-      ),
+      appBar: AppBar(title: Text("Covid-19")),
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
@@ -31,101 +41,73 @@ class LanguagePage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Center(
-              child: Text(
-                "Please Select Your Language\nकृपया अपनी भाषा चुनें",
-                style: TextStyle(fontSize: 22.0),
-                textAlign: TextAlign.center,
-              ),
+            Text(
+              "\nPlease Select Your Language\nकृपया अपनी भाषा चुनें",
+              style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: lang.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          global.lang = lang[index];
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SplashPage()));
+            SizedBox(height: 40.0),
+            Image(image: AssetImage('images/flag.gif')),
+            SizedBox(height: 40.0),
+            Padding(
+                padding: EdgeInsets.all(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    child: Center(
+                      child: DropdownButton<Language>(
+                        underline: SizedBox(),
+                        onChanged: (Language language) {
+                          _changeLanguage(language);
                         },
-                        child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26, blurRadius: 10.0),
-                              ],
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.white
-                              // gradient: LinearGradient(
-                              //     colors: [
-                              //       Color(0xFF3180e4),
-                              //       Color(0xFF564dc2),
-                              //     ],
-                              //     begin: Alignment.topCenter,
-                              //     end: Alignment.bottomCenter)
+                        items: Language.languageList()
+                            .map<DropdownMenuItem<Language>>(
+                              (e) => DropdownMenuItem<Language>(
+                                value: e,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      e.name,
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               ),
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: MediaQuery.of(context).size.width * 0.4,
-                          child: Center(
-                              child: Text(
-                            lang[index],
-                            style:
-                                TextStyle(fontSize: 30.0, color: Colors.black),
-                          )),
-                        ),
+                            )
+                            .toList(),
                       ),
-                      GestureDetector(
-                        onTap: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.setString('lang', lang2[index]);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26, blurRadius: 10.0),
-                              ],
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.white
-                              // gradient: LinearGradient(
-                              //     colors: [
-                              //       Color(0xFF3180e4),
-                              //       Color(0xFF564dc2),
-                              //     ],
-                              //     begin: Alignment.topCenter,
-                              //     end: Alignment.bottomCenter)
-                              ),
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: MediaQuery.of(context).size.width * 0.4,
-                          child: Center(
-                              child: Text(
-                            lang2[index],
-                            style:
-                                TextStyle(fontSize: 30.0, color: Colors.black),
-                          )),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            )
+                    ),
+                  ),
+                )),
+            Padding(
+                padding: EdgeInsets.all(40),
+                child: MaterialButton(
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    // To close the Drawer
+                    // Navigator.pop(context);
+                    // Navigating to About Page
+                    // Navigator.pushNamed(context, 'splashR');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  },
+                  height: 50,
+                  shape: StadiumBorder(),
+                  color: Theme.of(context).primaryColor,
+                  child: Center(
+                    child: Text(
+                      // "Next",
+                      getTranslated(context, 'next'),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ))
           ],
         ),
       ),
