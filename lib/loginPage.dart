@@ -1,11 +1,13 @@
 import 'dart:convert';
 
-import 'package:covid19/familyDeclaration.dart';
-import 'package:covid19/grid.dart';
-import 'package:covid19/helpLine.dart';
-import 'package:covid19/registerVariables.dart';
-import 'package:covid19/slefDeclaration.dart';
+// import 'package:covid19/familyDeclaration.dart';
+// import 'package:covid19/grid.dart';
+// import 'package:covid19/helpLine.dart';
+// import 'package:covid19/registerVariables.dart';
+// import 'package:covid19/slefDeclaration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization_master/localization/language_constants.dart';
+import 'package:flutter_localization_master/pages/coronaMonitor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  List<String> users = ["Citizen", "Volunteer"];
+  List<String> users = ["Hospital", "Citizen"];
   String text;
   String selectedUser;
   TextEditingController adhharEditor = new TextEditingController();
@@ -26,22 +28,13 @@ class _LoginPageState extends State<LoginPage> {
   GoogleTranslator translator = new GoogleTranslator();
 
   @override
-  void initState() {
-    translator.translate("Welcome", to: 'hi').then((value) {
-      setState(() {
-        text = value;
-      });
-    });
-
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text(
+          // "Login",
+          getTranslated(context, 'login'),
+        ),
         backgroundColor: Color(0xFF426bd7),
         elevation: 0.0,
         automaticallyImplyLeading: false,
@@ -68,29 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter)),
-                  // child: Center(
-                  //     child: Column(children: <Widget>[
-                  //   Center(
-                  //     child: Text(
-                  //       "#IndiaFightsCorona",
-                  //       textAlign: TextAlign.center,
-                  //       style: TextStyle(
-                  //           fontSize: 29.0,
-                  //           color: Colors.yellow,
-                  //           fontWeight: FontWeight.bold),
-                  //     ),
-                  //   ),
-                  //   Center(
-                  //     child: Text(
-                  //       "Fight of India With Corona\n",
-                  //       textAlign: TextAlign.center,
-                  //       style: TextStyle(fontSize: 18.0, color: Colors.white),
-                  //     ),
-                  //   ),
-                  //   Image(
-                  //       width: 350,
-                  //       image: AssetImage("assets/images/covid19.png")),
-                  // ])),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -124,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                                   children: <Widget>[
                                     Center(
                                       child: Text(
-                                        "LOGIN",
+                                        // "LOGIN",
+                                        getTranslated(context, 'login'),
                                         style: TextStyle(fontSize: 17.0),
                                       ),
                                     ),
@@ -134,7 +105,8 @@ class _LoginPageState extends State<LoginPage> {
                                     Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          "Adhaar",
+                                          // "Adhaar",
+                                          getTranslated(context, 'adhaar'),
                                           style: TextStyle(
                                               color: Colors.blue,
                                               fontWeight: FontWeight.bold,
@@ -160,6 +132,25 @@ class _LoginPageState extends State<LoginPage> {
                                     //     )),
                                     SizedBox(
                                       height: 20.0,
+                                    ),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          // "Password"
+                                          getTranslated(context, 'password'),
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.0),
+                                        )),
+                                    TextField(
+                                      obscureText: true,
+                                      controller: passEditor,
+                                      decoration: InputDecoration(
+                                          // labelText: "Password",
+                                          // prefixIcon: Icon(Icons.lock_outline),
+                                          //  border: InputBorder.none
+                                          ),
                                     ),
                                     SizedBox(
                                       height: 10.0,
@@ -218,9 +209,16 @@ class _LoginPageState extends State<LoginPage> {
                                           context: (context),
                                           builder: (context) {
                                             return AlertDialog(
-                                              title: Text("Failed"),
+                                              title: Text(
+                                                // "Failed",
+                                                getTranslated(
+                                                    context, 'failed'),
+                                              ),
                                               content: Text(
-                                                  "One or More fields are empty"),
+                                                // "One or More fields are empty"
+                                                getTranslated(
+                                                    context, 'one_or_more'),
+                                              ),
                                               actions: <Widget>[
                                                 IconButton(
                                                     icon: Icon(Icons.done),
@@ -233,13 +231,13 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                   },
                                   child: Text(
-                                    "Login",
+                                    // "Login"
+                                    getTranslated(context, 'login'),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
                               SizedBox(height: 20.0),
-                              Text("Don't Have an Account?")
                             ],
                           ),
                         ),
@@ -270,12 +268,15 @@ class _LoginPageState extends State<LoginPage> {
       var prefs = await SharedPreferences.getInstance();
       if (res['aadhar'] != null || res['aadhar'] != "") {
         prefs.setString('aadhar', res['aadhar']);
+        prefs.setBool('declared', true);
         prefs.setInt('id', res['id']);
         print(
             'User -> Aadhar : ${prefs.getString("aadhar")}, ID : ${prefs.getInt("id")}');
         Fluttertoast.showToast(msg: "Login Succeed!");
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) => DashBoard()), (_) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => CoronaMonitor()),
+            (_) => false);
       }
     } else {
       Fluttertoast.showToast(msg: res['error']);
