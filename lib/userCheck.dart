@@ -1,7 +1,8 @@
-import 'package:covid19/familyDeclaration.dart';
-import 'package:covid19/grid.dart';
-import 'package:covid19/languagePage.dart';
-import 'package:covid19/slefDeclaration.dart';
+import 'DeclarationForm.dart';
+import 'MyHomePage.dart';
+import 'grid.dart';
+import 'LanguagePage.dart';
+import 'slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,12 +31,14 @@ class _CheckUserState extends State<CheckUser> {
         } else {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => DashBoard()),
+              MaterialPageRoute(builder: (context) => mainBoard()),
               (_) => false);
         }
       } else {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LanguagePage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LanguagePage()),
+            (_) => false);
       }
     });
 
