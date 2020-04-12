@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_localization_master/pages/testingCentre.dart';
+
 import 'dashBoardGoogleMap.dart' as dash;
 import 'ministrystate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -204,7 +206,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      hospitalgrid()),
+                                                      hospitalinner()),
                                             );
                                           },
                                         ),
@@ -259,8 +261,11 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                             margin: EdgeInsets.only(left: 10),
                                           ),
                                           onTap: () {
-                                            Navigator.of(context)
-                                                .push(createRoute(helpgrid()));
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VideoPage()));
                                           },
                                         ),
                                       ),
@@ -310,7 +315,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      labgrid()),
+                                                      TestingCentre()),
                                             );
                                           },
                                         ),
@@ -414,7 +419,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      videogrid()),
+                                                      VideoPage()),
                                             );
                                           },
                                         ),
@@ -524,7 +529,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      secondgrid()),
+                                                      deathgrid()),
                                             );
                                           },
                                         ),
@@ -583,7 +588,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      awaregrid()),
+                                                      Awareness()),
                                             );
                                           },
                                         ),
@@ -634,7 +639,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      advicegrid()),
+                                                      AdviceInner()),
                                             );
                                           },
                                         ),
@@ -693,7 +698,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      faqgrid()),
+                                                      FAQPage()),
                                             );
                                           },
                                         ),
@@ -744,7 +749,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      audiogrid()),
+                                                      audiodata()),
                                             );
                                           },
                                         ),
@@ -913,7 +918,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      usergrid()),
+                                                      userReq()),
                                             );
                                           },
                                         ),
@@ -963,8 +968,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      infogrid()),
+                                                  builder: (context) => Info()),
                                             );
                                           },
                                         ),
@@ -1065,50 +1069,6 @@ class _ContState extends State<Cont> with TickerProviderStateMixin {
   }
 }
 
-class secondgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: deathgrid());
-  }
-}
-
-class hospitalgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: hospitalinner());
-  }
-}
-
-class videogrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: VideoPage());
-  }
-}
-
-class faqgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: FAQPage());
-  }
-}
-
 class precautiongrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -1120,43 +1080,10 @@ class precautiongrid extends StatelessWidget {
   }
 }
 
-class awaregrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: Awareness());
-  }
-}
-
-class advicegrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: AdviceInner());
-  }
-}
-
 class helpgrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: HelpLine());
-  }
-}
-
-class labgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: testinggrid1());
   }
 }
 
@@ -1168,38 +1095,5 @@ class ministrygrid extends StatelessWidget {
           title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
         ),
         body: Ministry());
-  }
-}
-
-class audiogrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: audiodata());
-  }
-}
-
-class usergrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: userReq());
-  }
-}
-
-class infogrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: Info());
   }
 }
