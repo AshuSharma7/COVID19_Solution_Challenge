@@ -1,10 +1,13 @@
-import 'package:covid19/googleMap.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shimmer/shimmer.dart';
+
+import 'googleMap.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'getLangCode.dart' as lang;
 import 'districtListMinistry.dart';
 
 class stateList extends StatefulWidget {
@@ -23,133 +26,119 @@ Future<List<dynamic>> getUri() async {
   return json.decode(response.body);
 }
 
-List<String> states = [];
+List<Map<String, dynamic>> states = [];
+
+List<Color> color1 = [
+  Color(0xFF11998e),
+  Color(0xFF38ef7d),
+];
+List<Color> color2 = [
+  Color(0xFF8E2DE2),
+  Color(0xFF4A00E0),
+];
+
+class SubscriberSeries {
+  final String year;
+  final int subscribers;
+  final charts.Color barColor;
+
+  SubscriberSeries(
+      {@required this.year,
+      @required this.subscribers,
+      @required this.barColor});
+}
+
 double width;
 
 double height;
-List<charts.Series<Task, String>> _seriesPieData;
-List<charts.Series<Sales, int>> _seriesLineData;
+List<SubscriberSeries> data;
 
-_generateData(double cases, double deaths, double cured) {
-  var piedata = [
-    new Task('Total Cases', cases, Color(0xff3366cc)),
-    new Task('Total Deaths', deaths, Color(0xff990099)),
-    new Task('Total Cured', cured, Color(0xff109618)),
+void generate(List content, String state) {
+  data = [
+    SubscriberSeries(
+      year: "",
+      subscribers: 0,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    )
   ];
-
-  var linesalesdata = [
-    new Sales(0, 45),
-    new Sales(1, 56),
-    new Sales(2, 55),
-    new Sales(3, 60),
-    new Sales(4, 61),
-    new Sales(5, 80),
-    new Sales(6, 45),
-    new Sales(7, 56),
-    new Sales(8, 55),
-    new Sales(9, 60),
-    new Sales(10, 61),
-  ];
-  var linesalesdata1 = [
-    new Sales(0, 35),
-    new Sales(1, 46),
-    new Sales(2, 45),
-    new Sales(3, 50),
-    new Sales(4, 51),
-    new Sales(5, 60),
-    new Sales(6, 35),
-    new Sales(7, 46),
-    new Sales(8, 45),
-    new Sales(9, 50),
-    new Sales(10, 51),
-  ];
-
-  var linesalesdata2 = [
-    new Sales(0, 20),
-    new Sales(1, 24),
-    new Sales(2, 25),
-    new Sales(3, 40),
-    new Sales(4, 45),
-    new Sales(5, 60),
-    new Sales(6, 20),
-    new Sales(7, 24),
-    new Sales(8, 25),
-    new Sales(9, 40),
-    new Sales(10, 45),
-  ];
-
-  _seriesPieData.clear();
-  _seriesPieData.add(
-    charts.Series(
-      domainFn: (Task task, _) => task.task,
-      measureFn: (Task task, _) => task.taskvalue,
-      colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.colorval),
-      id: 'Air Pollution',
-      data: piedata,
-      labelAccessorFn: (Task row, _) => '${row.taskvalue}',
-    ),
-  );
-
-  _seriesLineData.add(
-    charts.Series(
-      colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff990099)),
-      id: 'Air Pollution',
-      data: linesalesdata,
-      domainFn: (Sales sales, _) => sales.yearval,
-      measureFn: (Sales sales, _) => sales.salesval,
-    ),
-  );
-  _seriesLineData.add(
-    charts.Series(
-      colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff109618)),
-      id: 'Air Pollution',
-      data: linesalesdata1,
-      domainFn: (Sales sales, _) => sales.yearval,
-      measureFn: (Sales sales, _) => sales.salesval,
-    ),
-  );
-  _seriesLineData.add(
-    charts.Series(
-      colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xffff9900)),
-      id: 'Air Pollution',
-      data: linesalesdata2,
-      domainFn: (Sales sales, _) => sales.yearval,
-      measureFn: (Sales sales, _) => sales.salesval,
-    ),
-  );
+  int count = 0;
+  for (int i = 0; i < content.length; i++) {
+    if (content[i]["state"].toString().toLowerCase() == state.toLowerCase() &&
+        content[i]["is_state"] == false) {
+      count++;
+      data.add(SubscriberSeries(
+        year: content[i]["district"],
+        subscribers: content[i]["cases"],
+        barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+      ));
+    }
+    if (count == 4) {
+      break;
+    }
+  }
 }
 
+bool f = true;
+List<Map<String, dynamic>> translatedStates = [];
+
 class _stateList extends State<stateList> {
+  void translate() async {
+    String langCode = await lang.prefs();
+    for (int i = 0; i < states.length; i++) {
+      String state = states[i]["state"].toString().toLowerCase();
+      String url =
+          "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$state";
+      http.Response response = await http.get(url);
+      Map content = json.decode(response.body);
+      if (!translatedStates.contains({
+        "state": content["data"]["translations"][0]["translatedText"],
+      })) {
+        translatedStates.add({
+          "state": content["data"]["translations"][0]["translatedText"],
+        });
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("States"),
+          automaticallyImplyLeading: false,
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          title: Text(
+            "States",
+            style: TextStyle(fontSize: 30.0, color: Colors.black),
+          ),
           bottom: TabBar(
             indicatorColor: Color(0xff9962D0),
             tabs: [
               Tab(
-                  text: "State List",
+                  child: Text(
+                    "State List",
+                    style: TextStyle(color: Colors.black),
+                  ),
                   icon: Icon(
-                    FontAwesomeIcons.paragraph,
+                    FontAwesomeIcons.list,
+                    color: Colors.black,
                   )),
-              Tab(text: "State Map", icon: Icon(FontAwesomeIcons.map)),
-              Tab(text: "District Map", icon: Icon(FontAwesomeIcons.map)),
+              Tab(
+                  child: Text(
+                    "State Map",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  icon: Icon(FontAwesomeIcons.map, color: Colors.black)),
             ],
           ),
         ),
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color(0xFFFF9933),
-              Color(0xFFFFFFFF),
-              Color(0xFF138808),
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-          ),
+          decoration: BoxDecoration(color: Colors.white),
           child: TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
@@ -158,15 +147,28 @@ class _stateList extends State<stateList> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       List content = snapshot.data;
+                      bool flag = false;
                       for (int i = 0; i < content.length; i++) {
-                        if (!states.contains(content[i]["state"]) &&
-                            content[i]["is_state"] == true) {
-                          states.add(content[i]["state"]);
+                        flag = false;
+                        if (content[i]["is_state"] == true) {
+                          for (int j = 0; j < states.length; j++) {
+                            if (states[j]["state"].toString().toLowerCase() ==
+                                content[i]["state"].toString().toLowerCase()) {
+                              flag = true;
+                            }
+                          }
+                          if (flag == false) {
+                            states.add({
+                              "state": content[i]["state"],
+                              "cases": content[i]["cases"],
+                              "cured": content[i]["cured"],
+                              "death": content[i]["death"]
+                            });
+                          }
                         }
                       }
-                      states
-                          .sort((a, b) => a.toString().compareTo(b.toString()));
-
+                      states.sort((a, b) => a["state"].compareTo(b["state"]));
+                      translate();
                       return ListView.builder(
                         itemCount: states.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -175,45 +177,115 @@ class _stateList extends State<stateList> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          stateDetails(states[index])));
+                                      builder: (context) => stateDetails(
+                                          states[index]["state"])));
                             },
                             child: Container(
-                              height: 60,
+                              // height: 60,
                               margin: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(10.0),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26, blurRadius: 10.0)
-                                  ]),
+                                gradient: LinearGradient(
+                                    colors: index % 2 == 0 ? color1 : color2,
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight),
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black45,
+                                      blurRadius: 5.0,
+                                      offset: Offset.fromDirection(1.0, 3.0))
+                                ],
+                              ),
                               child: Center(
-                                  child: Text(
-                                states[index],
-                                style: TextStyle(fontSize: 20.0),
-                              )),
+                                  child: translatedStates.isEmpty
+                                      ? Shimmer.fromColors(
+                                          child: Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 15.0,
+                                                  color: Colors.white54,
+                                                ),
+                                                const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 2.0),
+                                                ),
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 15.0,
+                                                  color: Colors.white54,
+                                                ),
+                                                const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 2.0),
+                                                ),
+                                                Container(
+                                                  width: 40.0,
+                                                  height: 15.0,
+                                                  color: Colors.white54,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          baseColor: Colors.grey[300],
+                                          highlightColor: Colors.grey[50])
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              translatedStates[index]["state"],
+                                              style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              "Total Cases: " +
+                                                  states[index]["cases"]
+                                                      .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              "Total Cured: " +
+                                                  states[index]["cured"]
+                                                      .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              "Total Deaths: " +
+                                                  states[index]["death"]
+                                                      .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )),
                             ),
                           );
                         },
                       );
                     } else {
                       return Container(
+                        color: Colors.white,
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.0,
-                          ),
+                          child: SpinKitChasingDots(color: Colors.black),
                         ),
                       );
                     }
                   }),
               MapPage(
                 boo: true,
-              ),
-              MapPage(
-                boo: false,
               ),
             ],
           ),
@@ -226,8 +298,6 @@ class _stateList extends State<stateList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _seriesPieData = List<charts.Series<Task, String>>();
-    _seriesLineData = List<charts.Series<Sales, int>>();
   }
 }
 
@@ -238,32 +308,47 @@ Widget stateDetails(String state) {
       length: 3,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Color(0xff1976d2),
+            elevation: 0.0,
             // backgroundColor: Color(0xff308e1c),
             bottom: TabBar(
+              isScrollable: false,
               indicatorColor: Color(0xff9962D0),
               tabs: [
                 Tab(
-                  text: "District List",
-                  icon: Icon(Icons.menu),
+                  child: Text("District List",
+                      style: TextStyle(
+                        color: Colors.black,
+                      )),
+                  icon: Icon(Icons.menu, color: Colors.black),
                 ),
                 Tab(
-                    text: "Pie Chart",
-                    icon: Icon(
-                      FontAwesomeIcons.chartPie,
-                    )),
+                  child: Text("District Map",
+                      style: TextStyle(
+                        color: Colors.black,
+                      )),
+                  icon: Icon(Icons.menu, color: Colors.black),
+                ),
                 Tab(
-                    text: "Graph Chart",
-                    icon: Icon(FontAwesomeIcons.chartLine)),
+                    child: Text("Chart",
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
+                    icon: Icon(FontAwesomeIcons.map, color: Colors.black)),
               ],
             ),
-            title: Text(state),
+            title: Text(
+              state,
+              style: TextStyle(color: Colors.black, fontSize: 30.0),
+            ),
+            backgroundColor: Colors.white,
+            automaticallyImplyLeading: false,
           ),
           body: FutureBuilder(
             future: getUri(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 List content = snapshot.data;
+
                 int index;
                 for (int i = 0; i < content.length; i++) {
                   if (content[i]["state"] == state &&
@@ -271,72 +356,19 @@ Widget stateDetails(String state) {
                     index = i;
                   }
                 }
-                _generateData(
-                    content[index]["cases"].toDouble(),
-                    content[index]["death"].toDouble(),
-                    content[index]["cured"].toDouble());
-                return TabBarView(children: [
-                  DistrictList(state: state),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: charts.PieChart(_seriesPieData,
-                        animate: true,
-                        animationDuration: Duration(seconds: 5),
-                        behaviors: [
-                          new charts.DatumLegend(
-                            outsideJustification:
-                                charts.OutsideJustification.endDrawArea,
-                            horizontalFirst: false,
-                            desiredMaxRows: 2,
-                            cellPadding:
-                                new EdgeInsets.only(right: 4.0, bottom: 4.0),
-                            entryTextStyle: charts.TextStyleSpec(
-                                color:
-                                    charts.MaterialPalette.purple.shadeDefault,
-                                fontFamily: 'Georgia',
-                                fontSize: 11),
-                          )
-                        ],
-                        defaultRenderer: new charts.ArcRendererConfig(
-                            arcWidth: 100,
-                            arcRendererDecorators: [
-                              new charts.ArcLabelDecorator(
-                                  labelPosition: charts.ArcLabelPosition.inside)
-                            ])),
-                  ),
-                  ListView.builder(
-                      itemCount: 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: charts.LineChart(_seriesLineData,
-                              defaultRenderer: new charts.LineRendererConfig(
-                                  includeArea: true, stacked: true),
-                              animate: true,
-                              animationDuration: Duration(seconds: 5),
-                              behaviors: [
-                                new charts.ChartTitle('दिन',
-                                    behaviorPosition:
-                                        charts.BehaviorPosition.bottom,
-                                    titleOutsideJustification: charts
-                                        .OutsideJustification.middleDrawArea),
-                                new charts.ChartTitle('ठीक ',
-                                    behaviorPosition:
-                                        charts.BehaviorPosition.start,
-                                    titleOutsideJustification: charts
-                                        .OutsideJustification.middleDrawArea),
-                                new charts.ChartTitle(
-                                  'संगरोध',
-                                  behaviorPosition: charts.BehaviorPosition.end,
-                                  titleOutsideJustification: charts
-                                      .OutsideJustification.middleDrawArea,
-                                )
-                              ]),
-                        );
-                      }),
-                ]);
+                generate(content, state);
+                return TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      DistrictList(state: state),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: SubscriberChart(
+                          data: data,
+                        ),
+                      ),
+                      MapPage(boo: false)
+                    ]);
               } else {
                 return Center(
                   child: CircularProgressIndicator(
@@ -350,17 +382,41 @@ Widget stateDetails(String state) {
   );
 }
 
-class Task {
-  String task;
-  double taskvalue;
-  Color colorval;
+class SubscriberChart extends StatelessWidget {
+  final List<SubscriberSeries> data;
 
-  Task(this.task, this.taskvalue, this.colorval);
-}
+  SubscriberChart({@required this.data});
+  @override
+  Widget build(BuildContext context) {
+    List<charts.Series<SubscriberSeries, String>> series = [
+      charts.Series(
+          id: "Subscribers",
+          data: data,
+          domainFn: (SubscriberSeries series, _) => series.year,
+          measureFn: (SubscriberSeries series, _) => series.subscribers,
+          colorFn: (SubscriberSeries series, _) => series.barColor)
+    ];
 
-class Sales {
-  int yearval;
-  int salesval;
-
-  Sales(this.yearval, this.salesval);
+    return Container(
+      height: 500,
+      width: 1000,
+      //padding: EdgeInsets.all(20),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Corona Cases",
+                style: Theme.of(context).textTheme.body2,
+              ),
+              Expanded(
+                child: charts.BarChart(series, animate: true),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
