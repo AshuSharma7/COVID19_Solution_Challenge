@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'registerVariables.dart';
 import 'package:flutter/material.dart';
@@ -84,60 +85,89 @@ class _FAQPageState extends State<FAQPage> {
                 itemCount: content.length,
                 itemBuilder: (BuildContext context, int index) {
                   translate(content[index]["que"], content[index]["ans"]);
-                  if (que.length > index) {
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: const Duration(milliseconds: 700),
-                      child: SlideAnimation(
-                        horizontalOffset: 70.0,
-                        verticalOffset: 70.0,
-                        child: FadeInAnimation(
-                          child: Container(
-                            margin: EdgeInsets.all(10.0),
-                            padding: EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  colors: index % 2 == 0 ? color1 : color2,
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight),
-                              borderRadius: BorderRadius.circular(15.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black45,
-                                    blurRadius: 15.0,
-                                    offset: Offset.fromDirection(1.0, 10.0))
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  (index + 1).toString() +
-                                      ". " +
-                                      (que[index] == null
-                                          ? "Loading..."
-                                          : que[index]),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                    ans[index] == null
-                                        ? "Loading...."
-                                        : ans[index],
-                                    style: TextStyle(color: Colors.white))
-                              ],
-                            ),
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 700),
+                    child: SlideAnimation(
+                      horizontalOffset: 70.0,
+                      verticalOffset: 70.0,
+                      child: FadeInAnimation(
+                        child: Container(
+                          margin: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: index % 2 == 0 ? color1 : color2,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black45,
+                                  blurRadius: 15.0,
+                                  offset: Offset.fromDirection(1.0, 10.0))
+                            ],
                           ),
+                          child: que.isEmpty
+                              ? Shimmer.fromColors(
+                                  child: Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          width: double.infinity,
+                                          height: 15.0,
+                                          color: Colors.white54,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.0),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 15.0,
+                                          color: Colors.white54,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.0),
+                                        ),
+                                        Container(
+                                          width: 40.0,
+                                          height: 15.0,
+                                          color: Colors.white54,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[50])
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      (index + 1).toString() +
+                                          ". " +
+                                          (que.isEmpty
+                                              ? "Loading..."
+                                              : que[index]),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        ans.isEmpty
+                                            ? "Loading...."
+                                            : ans[index],
+                                        style: TextStyle(color: Colors.white))
+                                  ],
+                                ),
                         ),
                       ),
-                    );
-                  } else {
-                    return SizedBox(
-                      height: 0.0,
-                    );
-                  }
+                    ),
+                  );
                 },
               );
             } else {

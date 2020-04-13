@@ -1,3 +1,5 @@
+import 'package:shimmer/shimmer.dart';
+
 import 'searchPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -119,49 +121,84 @@ class _NewsApi extends State<NewsApi> {
                       position: index,
                       duration: const Duration(milliseconds: 800),
                       child: SlideAnimation(
-                        horizontalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => newsDetails(
-                                          content['articles'][index]
-                                              ["title"])));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: index % 2 == 0 ? color1 : color2,
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight),
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black45,
-                                      blurRadius: 15.0,
-                                      offset: Offset.fromDirection(1.0, 10.0))
-                                ],
-                              ),
-                              margin: EdgeInsets.all(10.0),
-                              width: 300,
-                              height: 100,
-                              child: Center(
+                          horizontalOffset: 50.0,
+                          child: FadeInAnimation(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => newsDetails(
+                                            content['articles'][index]
+                                                ["title"])));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: index % 2 == 0 ? color1 : color2,
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black45,
+                                        blurRadius: 15.0,
+                                        offset: Offset.fromDirection(1.0, 10.0))
+                                  ],
+                                ),
+                                margin: EdgeInsets.all(10.0),
+                                width: 300,
+                                height: 100,
+                                child: Center(
                                   child: Padding(
                                       padding: EdgeInsets.all(10),
-                                      child: Text(
-                                        news.isEmpty
-                                            ? "Loading...."
-                                            : news[index],
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color: Colors.white),
-                                      ))),
+                                      child: news.isEmpty
+                                          ? Shimmer.fromColors(
+                                              child: Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height: 15.0,
+                                                      color: Colors.white54,
+                                                    ),
+                                                    const Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 2.0),
+                                                    ),
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height: 15.0,
+                                                      color: Colors.white54,
+                                                    ),
+                                                    const Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 2.0),
+                                                    ),
+                                                    Container(
+                                                      width: 40.0,
+                                                      height: 15.0,
+                                                      color: Colors.white54,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              baseColor: Colors.grey[300],
+                                              highlightColor: Colors.grey[50])
+                                          : Text(
+                                              news[index],
+                                              style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Colors.white),
+                                            )),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
+                          )),
                     );
                   },
                 );
