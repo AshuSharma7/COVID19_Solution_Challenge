@@ -82,7 +82,7 @@ Widget messages(int index) {
 
 class _ChatBotState extends State<ChatBot> {
   Future<http.Response> sendMessage(String m) async {
-    String url = "https://mitrccovid.herokuapp.com/webhooks/rest/webhook";
+    String url = "https://covidchatbot.herokuapp.com/webhooks/rest/webhook";
     var body = {
       "message": m,
     };
