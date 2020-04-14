@@ -108,7 +108,7 @@ class _FAQPageState extends State<FAQPage> {
                                   offset: Offset.fromDirection(1.0, 10.0))
                             ],
                           ),
-                          child: que.isEmpty
+                          child: que.isEmpty && ans.isEmpty
                               ? Shimmer.fromColors(
                                   child: Expanded(
                                     child: Column(
