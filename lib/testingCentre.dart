@@ -36,18 +36,19 @@ class _TestingCentreState extends State<TestingCentre> {
   List<String> translatedState = [];
   void translate() async {
     String langCode = await lang.prefs();
-    for(int i = 0; i < states.length;i++) {
+    for (int i = 0; i < states.length; i++) {
       String text = states[i];
-      String url = "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$text";
+      String url =
+          "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$text";
       http.Response response = await http.get(url);
       Map content = json.decode(response.body);
-      if(!translatedState.contains(content["data"]["translations"][0]["translatedText"])) {
-        translatedState.add(content["data"]["translations"][0]["translatedText"]);
+      if (!translatedState
+          .contains(content["data"]["translations"][0]["translatedText"])) {
+        translatedState
+            .add(content["data"]["translations"][0]["translatedText"]);
       }
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -80,59 +81,62 @@ class _TestingCentreState extends State<TestingCentre> {
                 }
                 states.sort((a, b) => a.toString().compareTo(b.toString()));
                 translate();
-                if(translatedState.isNotEmpty) {
+                if (true) {
                   return ListView.builder(
-                  itemCount: translatedState.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return AnimationConfiguration.staggeredList(
-                      duration: Duration(milliseconds: 600),
-                      position: index,
-                      child: SlideAnimation(
-                        horizontalOffset: 50.0,
-                        verticalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          testingCentresDetails(
-                                              states[index])));
-                            },
-                            child: Container(
-                              height: 60,
-                              margin: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: index % 2 == 0 ? color1 : color2,
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight),
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black45,
-                                      blurRadius: 15.0,
-                                      offset: Offset.fromDirection(1.0, 10.0))
-                                ],
+                    itemCount: states.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return AnimationConfiguration.staggeredList(
+                        duration: Duration(milliseconds: 600),
+                        position: index,
+                        child: SlideAnimation(
+                          horizontalOffset: 50.0,
+                          verticalOffset: 50.0,
+                          child: FadeInAnimation(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            testingCentresDetails(
+                                                states[index])));
+                              },
+                              child: Container(
+                                height: 60,
+                                margin: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: index % 2 == 0 ? color1 : color2,
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black45,
+                                        blurRadius: 15.0,
+                                        offset: Offset.fromDirection(1.0, 10.0))
+                                  ],
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  states[index],
+                                  style: TextStyle(
+                                      fontSize: 20.0, color: Colors.white),
+                                )),
                               ),
-                              child: Center(
-                                  child: Text(
-                                translatedState[index],
-                                style: TextStyle(
-                                    fontSize: 20.0, color: Colors.white),
-                              )),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    },
+                  );
                 } else {
-                  return Center(child: SpinKitChasingDots(color: Colors.black,),);
+                  return Center(
+                    child: SpinKitChasingDots(
+                      color: Colors.black,
+                    ),
+                  );
                 }
-                
               } else {
                 return Container(
                   width: MediaQuery.of(context).size.width,
@@ -153,7 +157,7 @@ class _TestingCentreState extends State<TestingCentre> {
 Widget testingCentresDetails(String state) {
   void translate() async {
     String langCode = await lang.prefs();
-    String title 
+    String title;
   }
 
   return Scaffold(
