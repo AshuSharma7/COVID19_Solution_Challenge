@@ -1,6 +1,9 @@
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shimmer/shimmer.dart';
+
 import 'dashBoardGoogleMap.dart' as dash;
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'getLangCode.dart' as lang;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -23,128 +26,76 @@ List<String> states = [];
 double width;
 
 double height;
-List<charts.Series<Task, String>> _seriesPieData;
-List<charts.Series<Sales, int>> _seriesLineData;
 
-_generateData(double cases, double deaths, double cured) {
-  var piedata = [
-    new Task('Total Cases', cases, Color(0xff3366cc)),
-    new Task('Total Deaths', deaths, Color(0xff990099)),
-    new Task('Total Cured', cured, Color(0xff109618)),
-  ];
-
-  var linesalesdata = [
-    new Sales(0, 45),
-    new Sales(1, 56),
-    new Sales(2, 55),
-    new Sales(3, 60),
-    new Sales(4, 61),
-    new Sales(5, 80),
-    new Sales(6, 45),
-    new Sales(7, 56),
-    new Sales(8, 55),
-    new Sales(9, 60),
-    new Sales(10, 61),
-  ];
-  var linesalesdata1 = [
-    new Sales(0, 35),
-    new Sales(1, 46),
-    new Sales(2, 45),
-    new Sales(3, 50),
-    new Sales(4, 51),
-    new Sales(5, 60),
-    new Sales(6, 35),
-    new Sales(7, 46),
-    new Sales(8, 45),
-    new Sales(9, 50),
-    new Sales(10, 51),
-  ];
-
-  var linesalesdata2 = [
-    new Sales(0, 20),
-    new Sales(1, 24),
-    new Sales(2, 25),
-    new Sales(3, 40),
-    new Sales(4, 45),
-    new Sales(5, 60),
-    new Sales(6, 20),
-    new Sales(7, 24),
-    new Sales(8, 25),
-    new Sales(9, 40),
-    new Sales(10, 45),
-  ];
-
-  _seriesPieData.clear();
-  _seriesPieData.add(
-    charts.Series(
-      domainFn: (Task task, _) => task.task,
-      measureFn: (Task task, _) => task.taskvalue,
-      colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.colorval),
-      id: 'Air Pollution',
-      data: piedata,
-      labelAccessorFn: (Task row, _) => '${row.taskvalue}',
-    ),
-  );
-
-  _seriesLineData.add(
-    charts.Series(
-      colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff990099)),
-      id: 'Air Pollution',
-      data: linesalesdata,
-      domainFn: (Sales sales, _) => sales.yearval,
-      measureFn: (Sales sales, _) => sales.salesval,
-    ),
-  );
-  _seriesLineData.add(
-    charts.Series(
-      colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff109618)),
-      id: 'Air Pollution',
-      data: linesalesdata1,
-      domainFn: (Sales sales, _) => sales.yearval,
-      measureFn: (Sales sales, _) => sales.salesval,
-    ),
-  );
-  _seriesLineData.add(
-    charts.Series(
-      colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xffff9900)),
-      id: 'Air Pollution',
-      data: linesalesdata2,
-      domainFn: (Sales sales, _) => sales.yearval,
-      measureFn: (Sales sales, _) => sales.salesval,
-    ),
-  );
-}
+List<Color> color1 = [
+  Color(0xFF11998e),
+  Color(0xFF38ef7d),
+];
+List<Color> color2 = [
+  Color(0xFFFF5F6D),
+  Color(0xFFFFC371),
+];
 
 class _stateList extends State<stateList> {
+  List<String> translatedStates = [];
+  void translate() async {
+    String langCode = await lang.prefs();
+    for (int i = 0; i < states.length; i++) {
+      String text = states[i];
+      String url =
+          "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$text";
+      http.Response response = await http.get(url);
+      Map content = json.decode(response.body);
+      if (!translatedStates
+          .contains(content["data"]["translations"][0]["translatedText"])) {
+        translatedStates
+            .add(content["data"]["translations"][0]["translatedText"]);
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("States"),
+          automaticallyImplyLeading: false,
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          title: Text(
+            "States",
+            style: TextStyle(fontSize: 30.0, color: Colors.black),
+          ),
           bottom: TabBar(
             indicatorColor: Color(0xff9962D0),
             tabs: [
               Tab(
-                  text: "State List",
+                  child: Text(
+                    "State List",
+                    style: TextStyle(color: Colors.black),
+                  ),
                   icon: Icon(
-                    FontAwesomeIcons.hamburger,
+                    FontAwesomeIcons.list,
+                    color: Colors.black,
                   )),
-              Tab(text: "State Map", icon: Icon(FontAwesomeIcons.map)),
+              Tab(
+                  child: Text(
+                    "State Chart",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  icon: Icon(
+                    FontAwesomeIcons.map,
+                    color: Colors.black,
+                  )),
             ],
           ),
         ),
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color(0xFFFF9933),
-              Color(0xFFFFFFFF),
-              Color(0xFF138808),
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-          ),
+          color: Colors.white,
           child: TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
@@ -161,7 +112,7 @@ class _stateList extends State<stateList> {
                       }
                       states
                           .sort((a, b) => a.toString().compareTo(b.toString()));
-
+                      translate();
                       return ListView.builder(
                         itemCount: states.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -176,18 +127,53 @@ class _stateList extends State<stateList> {
                             child: Container(
                               height: 60,
                               margin: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(10.0),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26, blurRadius: 10.0)
-                                  ]),
+                                gradient: LinearGradient(
+                                    colors: index % 2 == 0 ? color1 : color2,
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight),
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black45,
+                                      blurRadius: 5.0,
+                                      offset: Offset.fromDirection(1.0, 3.0))
+                                ],
+                              ),
                               child: Center(
-                                  child: Text(
-                                states[index],
-                                style: TextStyle(fontSize: 20.0),
-                              )),
+                                  child: translatedStates.isEmpty
+                                      ? Shimmer.fromColors(
+                                          child: Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 15.0,
+                                                  color: Colors.white54,
+                                                ),
+                                                const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 2.0),
+                                                ),
+                                                Container(
+                                                  width: 40.0,
+                                                  height: 15.0,
+                                                  color: Colors.white54,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          baseColor: Colors.grey[300],
+                                          highlightColor: Colors.grey[50])
+                                      : Text(
+                                          translatedStates[index],
+                                          style: TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.white),
+                                        )),
                             ),
                           );
                         },
@@ -197,8 +183,8 @@ class _stateList extends State<stateList> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.0,
+                          child: SpinKitChasingDots(
+                            color: Colors.black,
                           ),
                         ),
                       );
@@ -218,8 +204,6 @@ class _stateList extends State<stateList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _seriesPieData = List<charts.Series<Task, String>>();
-    _seriesLineData = List<charts.Series<Sales, int>>();
   }
 }
 
@@ -237,19 +221,4 @@ Widget stateDetails(String state, String para) {
           para: para,
         ),
       ));
-}
-
-class Task {
-  String task;
-  double taskvalue;
-  Color colorval;
-
-  Task(this.task, this.taskvalue, this.colorval);
-}
-
-class Sales {
-  int yearval;
-  int salesval;
-
-  Sales(this.yearval, this.salesval);
 }
