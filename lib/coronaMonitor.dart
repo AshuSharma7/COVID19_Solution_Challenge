@@ -24,6 +24,15 @@ Future<dynamic> getUri() async {
   return json.decode(response.body);
 }
 
+List<Color> color1 = [
+  Color(0xFF11998e),
+  Color(0xFF38ef7d),
+];
+List<Color> color2 = [
+  Color(0xFFFF5F6D),
+  Color(0xFFFFC371),
+];
+
 class _CoronaMonitorState extends State<CoronaMonitor> {
   @override
   Widget build(BuildContext context) {
@@ -37,28 +46,16 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
             // "कोरोना मॉनिटर",
             getTranslated(context, 'corona_monitor'),
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 28.0),
+            style: TextStyle(fontSize: 28.0, color: Colors.black),
           ),
         ),
+        backgroundColor: Colors.white,
         elevation: 0.0,
-        backgroundColor: Color(0xFFFF9933),
-        actions: <Widget>[
-          // Padding(
-          //     padding: EdgeInsets.only(right: 0.0),
-          //     child: Image(image: AssetImage('images/flag.gif')))
-          //     padding: EdgeInsets.only(right: 0.0),
-          //     child: Image(image: AssetImage('images/flag.gif'))),
-        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFFFF9933),
-          Color(0xFFFFFFFF),
-          Color(0xFF138808),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        color: Colors.white,
         child: FutureBuilder(
             future: getUri(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -71,20 +68,17 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                       child: Container(
                         width: MediaQuery.of(context).size.width - 20,
                         height: 530,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(color: Colors.black26, blurRadius: 10.0)
-                            ]),
+                        color: Colors.white,
                         child: Stack(
                           children: <Widget>[
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  content["countries_stat"][41]["country_name"],
-                                  style: TextStyle(fontSize: 28.0),
+                                  content["countries_stat"][21]["country_name"]
+                                      .toString()
+                                      .toUpperCase(),
+                                  style: TextStyle(fontSize: 30.0),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(20),
@@ -101,15 +95,24 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                       2,
                                                   height: 100,
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      color: Color(0xFFe0e3e3),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: Colors.black,
-                                                            blurRadius: 3.0)
-                                                      ]),
+                                                    gradient: LinearGradient(
+                                                        colors: color1,
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.black45,
+                                                          blurRadius: 5.0,
+                                                          offset: Offset
+                                                              .fromDirection(
+                                                                  1.0, 3.0))
+                                                    ],
+                                                  ),
                                                   child: Align(
                                                     alignment: Alignment.center,
                                                     child: Text(
@@ -118,14 +121,13 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                               'total_infected') +
                                                           "\n" +
                                                           content["countries_stat"]
-                                                              [41]["cases"],
+                                                              [21]["cases"],
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                      ),
                                                     ),
                                                   )))),
                                       Expanded(
@@ -138,14 +140,21 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                 2,
                                             height: 100,
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                color: Color(0xFFe0e3e3),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.black,
-                                                      blurRadius: 3.0)
-                                                ]),
+                                              gradient: LinearGradient(
+                                                  colors: color2,
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black45,
+                                                    blurRadius: 5.0,
+                                                    offset:
+                                                        Offset.fromDirection(
+                                                            1.0, 3.0))
+                                              ],
+                                            ),
                                             child: Align(
                                               alignment: Alignment.center,
                                               child: Text(
@@ -154,13 +163,12 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         'total_death') +
                                                     "\n" +
                                                     content["countries_stat"]
-                                                        [41]["deaths"],
+                                                        [21]["deaths"],
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                    color: Color(0xFFfa1515),
-                                                    fontSize: 20.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                ),
                                               ),
                                             )),
                                       ))
@@ -182,15 +190,24 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                       2,
                                                   height: 100,
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      color: Color(0xFFe0e3e3),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: Colors.black,
-                                                            blurRadius: 3.0)
-                                                      ]),
+                                                    gradient: LinearGradient(
+                                                        colors: color1,
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.black45,
+                                                          blurRadius: 5.0,
+                                                          offset: Offset
+                                                              .fromDirection(
+                                                                  1.0, 3.0))
+                                                    ],
+                                                  ),
                                                   child: Align(
                                                     alignment: Alignment.center,
                                                     child: Text(
@@ -199,15 +216,14 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                               'total_cured') +
                                                           "\n" +
                                                           content["countries_stat"]
-                                                                  [41][
+                                                                  [21][
                                                               "total_recovered"],
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                      ),
                                                     ),
                                                   )))),
                                       Expanded(
@@ -220,14 +236,21 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                 2,
                                             height: 100,
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                color: Color(0xFFe0e3e3),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.black,
-                                                      blurRadius: 3.0)
-                                                ]),
+                                              gradient: LinearGradient(
+                                                  colors: color2,
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black45,
+                                                    blurRadius: 5.0,
+                                                    offset:
+                                                        Offset.fromDirection(
+                                                            1.0, 3.0))
+                                              ],
+                                            ),
                                             child: Align(
                                               alignment: Alignment.center,
                                               child: Text(
@@ -236,14 +259,13 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         context, 'new_cases') +
                                                     "\n" +
                                                     content["countries_stat"][
-                                                            41] //new_deaths":"2","new_cases":"121","serious_critical":"0","active_cases":"602","total_cases_per_1m_population":"0.5
+                                                            21] //new_deaths":"2","new_cases":"121","serious_critical":"0","active_cases":"602","total_cases_per_1m_population":"0.5
                                                         ["new_cases"],
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontSize: 20.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                ),
                                               ),
                                             )),
                                       )),
@@ -265,15 +287,24 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                       2,
                                                   height: 100,
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      color: Color(0xFFe0e3e3),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: Colors.black,
-                                                            blurRadius: 3.0)
-                                                      ]),
+                                                    gradient: LinearGradient(
+                                                        colors: color1,
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.black45,
+                                                          blurRadius: 5.0,
+                                                          offset: Offset
+                                                              .fromDirection(
+                                                                  1.0, 3.0))
+                                                    ],
+                                                  ),
                                                   child: Align(
                                                       alignment:
                                                           Alignment.center,
@@ -283,15 +314,13 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                                 'critical') +
                                                             "\n" +
                                                             content["countries_stat"]
-                                                                    [41][
+                                                                    [21][
                                                                 "serious_critical"],
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
-                                                          color: Colors.blue,
+                                                          color: Colors.white,
                                                           fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
                                                         ),
                                                       ))))),
                                       Expanded(
@@ -304,14 +333,21 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                 2,
                                             height: 100,
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                color: Color(0xFFe0e3e3),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.black,
-                                                      blurRadius: 3.0)
-                                                ]),
+                                              gradient: LinearGradient(
+                                                  colors: color2,
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black45,
+                                                    blurRadius: 5.0,
+                                                    offset:
+                                                        Offset.fromDirection(
+                                                            1.0, 3.0))
+                                              ],
+                                            ),
                                             child: Align(
                                               alignment: Alignment.center,
                                               child: Text(
@@ -320,13 +356,12 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         'active_cases') +
                                                     "\n" +
                                                     content["countries_stat"]
-                                                        [41]["active_cases"],
+                                                        [21]["active_cases"],
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontSize: 20.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                ),
                                               ),
                                             )),
                                       ))
@@ -336,7 +371,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                 Text(
                                   // "प्रति 10 लाख लोगों पर कुल मामले: "
                                   getTranslated(context, 'total_cases_per') +
-                                      content["countries_stat"][41]
+                                      content["countries_stat"][21]
                                           ["total_cases_per_1m_population"],
                                   style: TextStyle(
                                       fontSize: 20.0,
@@ -357,12 +392,21 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                             width: MediaQuery.of(context).size.width - 40,
                             height: 170.0,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26, blurRadius: 10.0)
-                                ]),
+                              gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF8E2DE2),
+                                    Color(0xFF4A00E0),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight),
+                              borderRadius: BorderRadius.circular(15.0),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    blurRadius: 5.0,
+                                    offset: Offset.fromDirection(1.0, 3.0))
+                              ],
+                            ),
                             child: Align(
                               alignment: Alignment.center,
                               child: Column(
@@ -371,7 +415,8 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                   Text(
                                     // "विश्व के आंकड़े कोरोना पर",
                                     getTranslated(context, 'world_figure'),
-                                    style: TextStyle(fontSize: 25.0),
+                                    style: TextStyle(
+                                        fontSize: 25.0, color: Colors.white),
                                   ),
                                   SizedBox(
                                     height: 15.0,
@@ -390,23 +435,26 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         .spaceBetween,
                                                 children: <Widget>[
                                                   Text(
-                                                    "देश का नाम",
+                                                    "Country Name",
                                                     style: TextStyle(
                                                         fontSize: 16.0,
+                                                        color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    "कुल मामले",
+                                                    "Total Cases",
                                                     style: TextStyle(
                                                         fontSize: 16.0,
+                                                        color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    "कुल मौतें",
+                                                    "Total deaths",
                                                     style: TextStyle(
                                                         fontSize: 16.0,
+                                                        color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -422,21 +470,24 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         .spaceBetween,
                                                 children: <Widget>[
                                                   Text(
-                                                    content["countries_stat"][0]
+                                                    content["countries_stat"][3]
                                                         ["country_name"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                   Text(
-                                                    content["countries_stat"][0]
+                                                    content["countries_stat"][3]
                                                         ["cases"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                   Text(
-                                                    content["countries_stat"][0]
+                                                    content["countries_stat"][3]
                                                         ["deaths"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                 ],
@@ -454,18 +505,21 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                     content["countries_stat"][1]
                                                         ["country_name"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                   Text(
                                                     content["countries_stat"][1]
                                                         ["cases"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                   Text(
                                                     content["countries_stat"][1]
                                                         ["deaths"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                 ],
@@ -493,18 +547,21 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                     content["countries_stat"][2]
                                                         ["country_name"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                   Text(
                                                     content["countries_stat"][2]
                                                         ["cases"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   ),
                                                   Text(
                                                     content["countries_stat"][2]
                                                         ["deaths"],
                                                     style: TextStyle(
+                                                        color: Colors.white,
                                                         fontSize: 18.0),
                                                   )
                                                 ],
