@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:http/http.dart' as http;
 
 class ChatBot extends StatefulWidget {
@@ -128,7 +129,15 @@ class _ChatBotState extends State<ChatBot> {
                 controller: scroll,
                 itemCount: message.length == 0 ? 1 : message.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return messages(index);
+                  return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: Duration(milliseconds: 500),
+                      child: SlideAnimation(
+                          horizontalOffset: message.isNotEmpty
+                              ? (message[index]["me"] ? -50.0 : 50)
+                              : 50.0,
+                          verticalOffset: 50.0,
+                          child: FadeInAnimation(child: messages(index))));
                 },
               ),
             ),
@@ -178,6 +187,12 @@ class _ChatBotState extends State<ChatBot> {
                           http.Response r = await sendMessage(m);
                           if (r.statusCode == 200) {
                             List data = json.decode(r.body);
+                            if (data.toString() == "[]") {
+                              message.add({
+                                "message": "Sorry! i didn't understand you ☹️",
+                                "me": false
+                              });
+                            }
                             for (int i = 0; i < data.length; i++) {
                               message.add(
                                   {"message": data[i]["text"], "me": false});
