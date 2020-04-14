@@ -63,7 +63,7 @@ class _QuizState extends State<Quiz> {
     for (int i = 0; i < data.length; i++) {
       String title = data[i]["title"];
       String url =
-          "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$title";
+          "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$title";
       http.Response response = await http.get(url);
       Map content = json.decode(response.body);
       que.add(content["data"]["translations"][0]["translatedText"]);
@@ -205,11 +205,12 @@ class _QuizPageState extends State<QuizPage> {
   List<String> title = [];
   List<List<String>> options = [];
   void translate() async {
+    String langCode = await lang.prefs();
     for (int i = 0; i < widget.length; i++) {
       List data = widget.content;
       String temp = data[widget.index]["questions"][i]["question"];
       String url =
-          "https://translation.googleapis.com/language/translate/v2?target=hi&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$temp";
+          "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$temp";
       http.Response response = await http.get(url);
       Map content = json.decode(response.body);
       title.add(content["data"]["translations"][0]["translatedText"]);
