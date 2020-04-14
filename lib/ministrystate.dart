@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'getLangCode.dart' as lang;
 import 'districtListMinistry.dart';
+import 'districtMap.dart' as district;
 
 class stateList extends StatefulWidget {
   final Widget child;
@@ -33,8 +34,8 @@ List<Color> color1 = [
   Color(0xFF38ef7d),
 ];
 List<Color> color2 = [
-  Color(0xFF8E2DE2),
-  Color(0xFF4A00E0),
+  Color(0xFFFF5F6D),
+  Color(0xFFFFC371),
 ];
 
 class SubscriberSeries {
@@ -72,9 +73,6 @@ void generate(List content, String state) {
         barColor: charts.ColorUtil.fromDartColor(Colors.blue),
       ));
     }
-    if (count == 4) {
-      break;
-    }
   }
 }
 
@@ -107,6 +105,54 @@ class _stateList extends State<stateList> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.info,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  return showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0)),
+                          child: Container(
+                              height: 200,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Tap on Each State to Know More",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.0,
+                                  ),
+                                  RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0)),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Ok",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    color: const Color(0xFF1BC0C5),
+                                  ),
+                                ],
+                              )),
+                        );
+                      });
+                })
+          ],
           automaticallyImplyLeading: false,
           elevation: 0.0,
           backgroundColor: Colors.white,
@@ -322,14 +368,14 @@ Widget stateDetails(String state) {
                   icon: Icon(Icons.menu, color: Colors.black),
                 ),
                 Tab(
-                  child: Text("District Map",
+                  child: Text("Chart",
                       style: TextStyle(
                         color: Colors.black,
                       )),
                   icon: Icon(Icons.menu, color: Colors.black),
                 ),
                 Tab(
-                    child: Text("Chart",
+                    child: Text("District Map",
                         style: TextStyle(
                           color: Colors.black,
                         )),
@@ -367,7 +413,9 @@ Widget stateDetails(String state) {
                           data: data,
                         ),
                       ),
-                      MapPage(boo: false)
+                      district.MapPage(
+                        state: state,
+                      )
                     ]);
               } else {
                 return Center(
@@ -398,7 +446,7 @@ class SubscriberChart extends StatelessWidget {
     ];
 
     return Container(
-      height: 500,
+      height: MediaQuery.of(context).size.height,
       width: 1000,
       //padding: EdgeInsets.all(20),
       child: Card(
@@ -411,7 +459,11 @@ class SubscriberChart extends StatelessWidget {
                 style: Theme.of(context).textTheme.body2,
               ),
               Expanded(
-                child: charts.BarChart(series, animate: true),
+                child: charts.BarChart(
+                  series,
+                  animate: true,
+                  vertical: false,
+                ),
               )
             ],
           ),

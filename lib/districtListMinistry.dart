@@ -22,14 +22,14 @@ List<Color> color1 = [
   Color(0xFF38ef7d),
 ];
 List<Color> color2 = [
-  Color(0xFF8E2DE2),
-  Color(0xFF4A00E0),
+  Color(0xFFFF5F6D),
+  Color(0xFFFFC371),
 ];
 
 bool flag = true;
-List<Map<String, dynamic>> district = [];
 
 class _DistrictListState extends State<DistrictList> {
+  List<Map<String, dynamic>> district = [];
   void translate(
     List content,
   ) async {
