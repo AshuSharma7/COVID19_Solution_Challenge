@@ -821,12 +821,12 @@ Map<String, int> statesID = {
 
 List<String> firstName = [];
 List<bool> haveTravelled = [false, false, false, false, false];
+List<bool> isDead = [false, false, false, false, false];
 List<String> from = ["", "", "", "", ""];
 List<String> to = ["", "", "", "", ""];
 List<bool> isInfected = [false, false, false, false, false];
 List<bool> haveSymptoms = [false, false, false, false, false];
 List<bool> isCured = [false, false, false, false, false];
-List<bool> isDead = [false, false, false, false, false];
 List<bool> hospitalised = [false, false, false, false, false];
 List<String> ageGroup = ["", "", "", "", ""];
 List<String> ageGroupList = [
@@ -996,8 +996,8 @@ void makePost(
     "symptoms": symptoms,
     "cured": cured,
     "travelled": travel,
-    "state": district,
-    "district": state,
+    "state": state,
+    "district": district,
     "address": address,
     "latitude": lat,
     "longitude": lng
