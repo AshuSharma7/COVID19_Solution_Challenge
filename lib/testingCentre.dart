@@ -98,8 +98,8 @@ class _TestingCentreState extends State<TestingCentre> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            testingCentresDetails(
-                                                states[index])));
+                                            TestingCenterDetail(
+                                                state: states[index])));
                               },
                               child: Container(
                                 height: 60,
@@ -154,83 +154,114 @@ class _TestingCentreState extends State<TestingCentre> {
   }
 }
 
-Widget testingCentresDetails(String state) {
-  void translate() async {
+class TestingCenterDetail extends StatefulWidget {
+  String state;
+  TestingCenterDetail({Key key, @required this.state}) : super(key: key);
+  @override
+  _TestingCenterDetailState createState() => _TestingCenterDetailState();
+}
+
+class _TestingCenterDetailState extends State<TestingCenterDetail> {
+  List<String> name = [];
+  List<String> detail = [];
+  void translate(List content) async {
     String langCode = await lang.prefs();
-    String title;
+    for (int i = 0; i < content.length; i++) {
+      if (content[i]["state"] == widget.state) {
+        String title = content[i]["name"];
+        String data = content[i]["detail"];
+        String durl =
+            "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$data";
+        String turl =
+            "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$title";
+        http.Response dr = await http.get(durl);
+        http.Response tr = await http.get(turl);
+        Map dc = json.decode(dr.body);
+        Map tc = json.decode(tr.body);
+        if (!name.contains(tc["data"]["translations"][0]["translatedText"])) {
+          name.add(tc["data"]["translations"][0]["translatedText"]);
+          detail.add(dc["data"]["translations"][0]["translatedText"]);
+        }
+      }
+    }
+    setState(() {});
   }
 
-  return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.white,
-      title: Text(
-        state,
-        style: TextStyle(fontSize: 30.0, color: Colors.black),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          widget.state,
+          style: TextStyle(fontSize: 30.0, color: Colors.black),
+        ),
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
       ),
-      elevation: 0.0,
-      automaticallyImplyLeading: false,
-    ),
-    body: Container(
-        width: width,
-        height: height,
-        color: Colors.white,
-        child: FutureBuilder(
-          future: getUri(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              List content = snapshot.data;
-              return ListView.builder(
-                itemCount: content.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (content[index]["state"] == state) {
-                    return Container(
-                      margin: EdgeInsets.all(10.0),
-                      //height: 100.0,
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: index % 2 == 0 ? color1 : color2,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight),
-                        borderRadius: BorderRadius.circular(15.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black45,
-                              blurRadius: 5.0,
-                              offset: Offset.fromDirection(1.0, 3.0))
-                        ],
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            content[index]["name"],
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            content[index]["detail"],
-                            style:
-                                TextStyle(fontSize: 14.0, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              );
-            } else {
-              return Center(
-                child: SpinKitChasingDots(
-                  color: Colors.black,
-                ),
-              );
-            }
-          },
-        )),
-  );
+      body: Container(
+          width: width,
+          height: height,
+          color: Colors.white,
+          child: FutureBuilder(
+            future: getUri(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                List content = snapshot.data;
+                translate(content);
+                if (name.isNotEmpty) {
+                  return ListView.builder(
+                    itemCount: name.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: EdgeInsets.all(10.0),
+                        //height: 100.0,
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: index % 2 == 0 ? color1 : color2,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight),
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black45,
+                                blurRadius: 5.0,
+                                offset: Offset.fromDirection(1.0, 3.0))
+                          ],
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              name[index],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            Text(
+                              detail[index],
+                              style: TextStyle(
+                                  fontSize: 14.0, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return Center(child: SpinKitChasingDots(color: Colors.black));
+                }
+              } else {
+                return Center(
+                  child: SpinKitChasingDots(
+                    color: Colors.black,
+                  ),
+                );
+              }
+            },
+          )),
+    );
+  }
 }
