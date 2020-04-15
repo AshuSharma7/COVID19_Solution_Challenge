@@ -1,4 +1,8 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter_localization_master/pages/advisory.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:translator/translator.dart';
 
 import 'searchPage.dart';
 import 'package:flutter/material.dart';
@@ -58,11 +62,12 @@ List<String> states = [];
 List<int> centres = [];
 String searchQuery;
 TextEditingController queryEditor = new TextEditingController();
+String langCode;
 
 class _NewsApi extends State<NewsApi> {
   List<String> news = [];
   void translate(Map data) async {
-    String langCode = lang.langCode;
+    langCode = lang.langCode;
     for (int i = 0; i < data['articles'].length; i++) {
       String text = data['articles'][i]["title"];
       String url =
@@ -128,9 +133,10 @@ class _NewsApi extends State<NewsApi> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => newsDetails(
-                                            content['articles'][index]
-                                                ["title"])));
+                                        builder: (context) => NewsDetails(
+                                              content: content,
+                                              index: index,
+                                            )));
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -147,8 +153,6 @@ class _NewsApi extends State<NewsApi> {
                                   ],
                                 ),
                                 margin: EdgeInsets.all(10.0),
-                                width: 300,
-                                height: 100,
                                 child: Center(
                                   child: Padding(
                                       padding: EdgeInsets.all(10),
@@ -224,111 +228,137 @@ Future<void> _onOpen(LinkableElement link) async {
   }
 }
 
-Widget newsDetails(String title) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-    ),
-    body: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xFFFF9933),
-            Color(0xFFFFFFFF),
-            Color(0xFF138808),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        ),
-        child: FutureBuilder(
-          future: getUri(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              Map content = snapshot.data;
-              return ListView.builder(
-                itemCount: content['articles'].length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (content['articles'][index]["title"] == title) {
-                    return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        child: Column(children: <Widget>[
-                          SizedBox(height: 30),
-                          Text(
-                            content['articles'][index]["title"].toString(),
-                            style: TextStyle(
-                                fontSize: 25.0, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 30),
-                          Card(
-                              elevation: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Center(
-                                    child: Column(
-                                  children: <Widget>[
-                                    Image.network(
-                                        '${content['articles'][index]["urlToImage"]}'),
-                                  ],
-                                )),
-                              )),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Linkify(
-                            textScaleFactor: 1.1,
-                            onOpen: _onOpen,
-                            text: "${content['articles'][index]["url"]}",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Center(
-                            child: Text(
-                              content['articles'][index]["description"]
-                                  .toString(),
-                              style: TextStyle(fontSize: 20.0),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text(
-                              "Published Time:" +
-                                  content['articles'][index]["publishedAt"]
-                                      .toString(),
-                              style: TextStyle(fontSize: 15.0),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
+class NewsDetails extends StatefulWidget {
+  Map content;
+  int index;
+  NewsDetails({Key key, @required this.content, @required this.index})
+      : super(key: key);
+  @override
+  _NewsDetailsState createState() => _NewsDetailsState();
+}
 
-                          // Card(
-                          //     elevation: 10,
-                          //     child: Container(
-                          //       height: 90,
-                          //       child:
-                          //     ))
-                        ]));
-                  } else {
-                    return Container();
-                  }
-                },
-              );
-            } else {
-              return Center(
-                child: SpinKitChasingDots(
-                  color: Colors.black,
-                  size: 50.0,
-                ),
-              );
-            }
-          },
-        )),
-  );
+class _NewsDetailsState extends State<NewsDetails> {
+  GoogleTranslator translator = new GoogleTranslator();
+  String title = "";
+  String detail = "";
+
+  @override
+  void initState() {
+    translator
+        .translate(widget.content["articles"][widget.index]["title"],
+            to: langCode)
+        .then((value) {
+      setState(() {
+        title = value;
+      });
+    });
+    translator
+        .translate(widget.content["articles"][widget.index]["description"],
+            to: langCode)
+        .then((value) {
+      setState(() {
+        detail = value;
+      });
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+              widget.content["articles"][widget.index]["source"]["name"]
+                  .toString()
+                  .toUpperCase(),
+              style: TextStyle(color: Colors.black, fontSize: 30.0)),
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+        ),
+        body: title != ""
+            ? Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black38,
+                              blurRadius: 10.0,
+                              offset: Offset.fromDirection(1.0, 4.0))
+                        ],
+                        image: DecorationImage(
+                            image: NetworkImage(
+                          widget.content["articles"][widget.index]["urlToImage"]
+                              .toString(),
+                        )),
+                        borderRadius: BorderRadius.circular(15.0)),
+                    child: Container(
+                      child: Image.network(
+                        widget.content["articles"][widget.index]["urlToImage"]
+                            .toString(),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    title,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Expanded(
+                      child: Container(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            widget.content["articles"][widget.index]
+                                        ["description"] ==
+                                    null
+                                ? "We didn't find any description"
+                                : widget.content["articles"][widget.index]
+                                    ["description"],
+                            style: TextStyle(fontSize: 18.0),
+                          ))),
+                  Container(
+                    width: 200,
+                    height: 60.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.blueAccent,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.blueAccent[100],
+                            blurRadius: 10.0,
+                            offset: Offset.fromDirection(1.0, 4.0))
+                      ],
+                    ),
+                    child: Center(
+                      child: Expanded(
+                          child: RichText(
+                              text: TextSpan(
+                        text: "Click here to Read Full Article",
+                        style: TextStyle(fontSize: 15.0),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launch(widget.content["articles"][widget.index]
+                                ["url"]);
+                          },
+                      ))),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                ],
+              )
+            : Center(
+                child: SpinKitChasingDots(color: Colors.black),
+              ));
+  }
 }
