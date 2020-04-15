@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization_master/localization/language_constants.dart';
 import 'deathgrid.dart';
 import 'depart.dart';
+import 'pcr.dart';
+import 'samplecollection.dart';
+import 'testingCentre.dart';
 
 class testinggrid1 extends StatefulWidget {
   @override
@@ -36,7 +40,9 @@ class _testinggrid1 extends State<testinggrid1>
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => firstgrid()),
+                                      builder: (context) => TestingCentre(
+                                            para: "TC",
+                                          )),
                                 );
                               },
                               child: Card(
@@ -55,7 +61,9 @@ class _testinggrid1 extends State<testinggrid1>
                                               AssetImage('images/center.png')),
                                       Center(
                                         child: Text(
-                                          "परीक्षण केंद्र",
+                                          getTranslated(
+                                              context, 'testing_center'),
+                                          // "परीक्षण केंद्र",
                                           textAlign: TextAlign.center,
                                           textDirection: TextDirection.ltr,
                                           style: TextStyle(
@@ -85,7 +93,8 @@ class _testinggrid1 extends State<testinggrid1>
                                   Image(image: AssetImage('images/pcr.png')),
                                   Center(
                                     child: Text(
-                                      "पीसीआर मशीन",
+                                      getTranslated(context, 'pcr'),
+                                      // "पीसीआर मशीन",
                                       textAlign: TextAlign.center,
                                       textDirection: TextDirection.ltr,
                                       style: TextStyle(
@@ -104,7 +113,9 @@ class _testinggrid1 extends State<testinggrid1>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => secondgrid()),
+                                  builder: (context) => TestingCentre(
+                                        para: "PR",
+                                      )),
                             );
                           },
                         ),
@@ -120,33 +131,45 @@ class _testinggrid1 extends State<testinggrid1>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Expanded(
-                          child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0)),
-                        elevation: 10.0,
-                        color: Color(0xFFFFFFFF),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height / 5,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Image(image: AssetImage('images/sample.png')),
-                              Center(
-                                child: Text(
-                                  "नमूना संग्रह",
-                                  textAlign: TextAlign.center,
-                                  textDirection: TextDirection.ltr,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.blue,
+                          child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TestingCentre(
+                                      para: "SC",
+                                    )),
+                          );
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
+                          elevation: 10.0,
+                          color: Color(0xFFFFFFFF),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height / 5,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image(image: AssetImage('images/sample.png')),
+                                Center(
+                                  child: Text(
+                                    getTranslated(context, 'sample_coll'),
+                                    // "नमूना संग्रह",
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: Colors.blue,
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
+                          margin: EdgeInsets.only(left: 10),
                         ),
-                        margin: EdgeInsets.only(left: 10),
                       )),
                       Expanded(
                         child: GestureDetector(
@@ -163,7 +186,8 @@ class _testinggrid1 extends State<testinggrid1>
                                   Image(image: AssetImage('images/inform.png')),
                                   Center(
                                     child: Text(
-                                      "\nदिशा निर्देशों",
+                                      getTranslated(context, 'guidlines'),
+                                      // "\nदिशा निर्देशों",
                                       textAlign: TextAlign.center,
                                       textDirection: TextDirection.ltr,
                                       style: TextStyle(
@@ -190,27 +214,5 @@ class _testinggrid1 extends State<testinggrid1>
                     ],
                   ))
             ])));
-  }
-}
-
-class secondgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: deathgrid());
-  }
-}
-
-class firstgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: department());
   }
 }

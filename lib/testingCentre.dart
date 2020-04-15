@@ -8,6 +8,8 @@ import 'dart:convert';
 import 'getLangCode.dart' as lang;
 
 class TestingCentre extends StatefulWidget {
+  String para;
+  TestingCentre({Key key, @required this.para}) : super(key: key);
   @override
   _TestingCentreState createState() => _TestingCentreState();
 }
@@ -29,10 +31,10 @@ List<Color> color2 = [
 
 double width;
 double height;
-List<String> states = [];
-List<int> centres = [];
 
 class _TestingCentreState extends State<TestingCentre> {
+  List<String> states = [];
+  List<int> centres = [];
   List<String> translatedState = [];
   void translate() async {
     String langCode = await lang.prefs();
@@ -75,7 +77,8 @@ class _TestingCentreState extends State<TestingCentre> {
               if (snapshot.hasData) {
                 List content = snapshot.data;
                 for (int i = 0; i < content.length; i++) {
-                  if (!states.contains(content[i]["state"])) {
+                  if (!states.contains(content[i]["state"]) &&
+                      content[i]["cat"] == widget.para) {
                     states.add(content[i]["state"]);
                   }
                 }
@@ -99,7 +102,9 @@ class _TestingCentreState extends State<TestingCentre> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             TestingCenterDetail(
-                                                state: states[index])));
+                                              state: states[index],
+                                              para: widget.para,
+                                            )));
                               },
                               child: Container(
                                 height: 60,
@@ -156,7 +161,9 @@ class _TestingCentreState extends State<TestingCentre> {
 
 class TestingCenterDetail extends StatefulWidget {
   String state;
-  TestingCenterDetail({Key key, @required this.state}) : super(key: key);
+  String para;
+  TestingCenterDetail({Key key, @required this.state, @required this.para})
+      : super(key: key);
   @override
   _TestingCenterDetailState createState() => _TestingCenterDetailState();
 }
@@ -167,7 +174,8 @@ class _TestingCenterDetailState extends State<TestingCenterDetail> {
   void translate(List content) async {
     String langCode = await lang.prefs();
     for (int i = 0; i < content.length; i++) {
-      if (content[i]["state"] == widget.state) {
+      if (content[i]["state"] == widget.state &&
+          content[i]["cat"] == widget.para) {
         String title = content[i]["name"];
         String data = content[i]["detail"];
         String durl =
