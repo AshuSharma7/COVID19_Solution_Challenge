@@ -54,6 +54,7 @@ Route createRoute(Widget name) {
 
 Color shadowColor = Colors.black45;
 List<Color> color3 = [Color(0xFFEECDA3), Color(0xFFEF629F)];
+List<Color> shadow = [Colors.green[300], Colors.red[300]];
 
 class _QuizState extends State<Quiz> {
   List<String> que = [];
@@ -113,9 +114,7 @@ class _QuizState extends State<Quiz> {
                         child: FadeInAnimation(
                           child: GestureDetector(
                             onTap: () {
-                              setState(() {
-                                shadow[index] = Colors.black87;
-                              });
+                              setState(() {});
                               Navigator.of(context).push(createRoute(QuizPage(
                                 index: index,
                                 content: content,
@@ -123,9 +122,7 @@ class _QuizState extends State<Quiz> {
                               )));
                             },
                             child: AnimatedContainer(
-                              onEnd: () {
-                                shadow[index] = Colors.black45;
-                              },
+                              onEnd: () {},
                               duration: Duration(milliseconds: 500),
                               curve: Curves.easeIn,
                               decoration: BoxDecoration(
@@ -194,7 +191,6 @@ class QuizPage extends StatefulWidget {
   _QuizPageState createState() => _QuizPageState();
 }
 
-List<Color> shadow = [Colors.black45, Colors.black45, Colors.black45];
 double blur = 15.0;
 double width = 300;
 double height = 150;
@@ -318,9 +314,9 @@ class _QuizPageState extends State<QuizPage> {
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 15.0,
-                  offset: Offset.fromDirection(1.0, 5.0))
+                  color: Colors.blue[900],
+                  blurRadius: 10.0,
+                  offset: Offset.fromDirection(1.0, 4.0))
             ],
           ),
           child: Center(
