@@ -113,12 +113,6 @@ class _NewsApi extends State<NewsApi> {
               if (snapshot.hasData) {
                 Map content = snapshot.data;
                 translate(content);
-                // for (int i = 0; i < content.length; i++) {
-                //   if (!states.contains(content[i]["state"])) {
-                //     states.add(content[i]["state"]);
-                //   }
-                // }
-                // states.sort((a, b) => a.toString().compareTo(b.toString()));
                 return ListView.builder(
                   itemCount: content['articles'].length,
                   itemBuilder: (BuildContext context, int index) {
@@ -153,52 +147,51 @@ class _NewsApi extends State<NewsApi> {
                                   ],
                                 ),
                                 margin: EdgeInsets.all(10.0),
+                                padding: EdgeInsets.all(10.0),
                                 child: Center(
-                                  child: Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: news.isEmpty
-                                          ? Shimmer.fromColors(
-                                              child: Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 15.0,
-                                                      color: Colors.white54,
-                                                    ),
-                                                    const Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 2.0),
-                                                    ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 15.0,
-                                                      color: Colors.white54,
-                                                    ),
-                                                    const Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 2.0),
-                                                    ),
-                                                    Container(
-                                                      width: 40.0,
-                                                      height: 15.0,
-                                                      color: Colors.white54,
-                                                    ),
-                                                  ],
-                                                ),
+                                  child: news.isEmpty
+                                      ? Shimmer.fromColors(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 15.0,
+                                                color: Colors.white54,
                                               ),
-                                              baseColor: Colors.grey[300],
-                                              highlightColor: Colors.grey[50])
-                                          : Text(
-                                              news[index],
-                                              style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  color: Colors.white),
-                                            )),
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 2.0),
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 15.0,
+                                                color: Colors.white54,
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 2.0),
+                                              ),
+                                              Container(
+                                                width: 40.0,
+                                                height: 15.0,
+                                                color: Colors.white54,
+                                              ),
+                                            ],
+                                          ),
+                                          baseColor: Colors.grey[300],
+                                          highlightColor: Colors.grey[50])
+                                      : Text(
+                                          news[index],
+                                          style: TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.white),
+                                        ),
                                 ),
                               ),
                             ),
