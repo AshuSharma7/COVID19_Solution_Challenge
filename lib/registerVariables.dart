@@ -820,15 +820,15 @@ Map<String, int> statesID = {
 };
 
 List<String> firstName = [];
-List<bool> haveTravelled = [false, false, false, false, false];
-List<bool> isDead = [false, false, false, false, false];
-List<String> from = ["", "", "", "", ""];
-List<String> to = ["", "", "", "", ""];
-List<bool> isInfected = [false, false, false, false, false];
-List<bool> haveSymptoms = [false, false, false, false, false];
-List<bool> isCured = [false, false, false, false, false];
-List<bool> hospitalised = [false, false, false, false, false];
-List<String> ageGroup = ["", "", "", "", ""];
+List<bool> haveTravelled = [false, false, false, false, false, false, false];
+List<bool> isDead = [false, false, false, false, false, false, false];
+List<String> from = ["", "", "", "", "", "", ""];
+List<String> to = ["", "", "", "", "", "", ""];
+List<bool> isInfected = [false, false, false, false, false, false, false];
+List<bool> haveSymptoms = [false, false, false, false, false, false, false];
+List<bool> isCured = [false, false, false, false, false, false, false];
+List<bool> hospitalised = [false, false, false, false, false, false, false];
+List<String> ageGroup = ["", "", "", "", "", "", ""];
 List<String> ageGroupList = [
   "0-10",
   "10-20",
@@ -839,13 +839,15 @@ List<String> ageGroupList = [
   "60-70",
   "70+"
 ];
-List<int> adhhar = [0, 0, 0, 0, 0];
-List<String> country = ["", "", "", "", ""];
-List<String> district = ["", "", "", "", ""];
+List<int> adhhar = [0, 0, 0, 0, 0, 0, 0];
+List<String> country = ["", "", "", "", "", "", ""];
+List<String> district = ["", "", "", "", "", "", ""];
 List<String> fromDate = [];
 List<String> toDate = [];
-List<String> address = ["", "", "", "", ""];
+List<String> address = ["", "", "", "", "", "", ""];
 List<String> state = [
+  "Select State",
+  "Select State",
   "Select State",
   "Select State",
   "Select State",
@@ -926,33 +928,67 @@ List<Map<String, bool>> symptoms = [
     "metSomeoneAbroad": false,
     "outbreakPlaceVisit": false
   },
+  {
+    "fever": false,
+    "cough": false,
+    "breathing": false,
+    "nose": false,
+    "dizziness": false,
+    "pronounciation": false,
+    "throatchest": false,
+    "diarrhea": false,
+    "attendJamat": false,
+    "metJamatis": false,
+    "metSomeoneAbroad": false,
+    "outbreakPlaceVisit": false
+  },
+  {
+    "fever": false,
+    "cough": false,
+    "breathing": false,
+    "nose": false,
+    "dizziness": false,
+    "pronounciation": false,
+    "throatchest": false,
+    "diarrhea": false,
+    "attendJamat": false,
+    "metJamatis": false,
+    "metSomeoneAbroad": false,
+    "outbreakPlaceVisit": false
+  },
 ];
-List<String> gender = ["", "", "", "", ""];
+List<String> gender = ["g", "g", "g", "g", "g"];
 TextEditingController name1Editor = new TextEditingController();
 TextEditingController name2Editor = new TextEditingController();
 TextEditingController name3Editor = new TextEditingController();
 TextEditingController name4Editor = new TextEditingController();
 TextEditingController name5Editor = new TextEditingController();
 TextEditingController name6Editor = new TextEditingController();
+TextEditingController name7Editor = new TextEditingController();
 List<TextEditingController> editor = [
   name1Editor,
   name2Editor,
   name3Editor,
   name4Editor,
   name5Editor,
-  name6Editor
+  name6Editor,
+  name7Editor
 ];
 TextEditingController a1Editor = new TextEditingController();
 TextEditingController a2Editor = new TextEditingController();
 TextEditingController a3Editor = new TextEditingController();
 TextEditingController a4Editor = new TextEditingController();
 TextEditingController a5Editor = new TextEditingController();
+TextEditingController a6Editor = new TextEditingController();
+TextEditingController a7Editor = new TextEditingController();
 List<TextEditingController> adhharEditor = [
   a1Editor,
   a2Editor,
   a3Editor,
   a4Editor,
-  a5Editor
+  a5Editor,
+  a6Editor,
+  a7Editor
 ];
 
 TextEditingController add1Editor = new TextEditingController();
@@ -960,12 +996,16 @@ TextEditingController add2Editor = new TextEditingController();
 TextEditingController add3Editor = new TextEditingController();
 TextEditingController add4Editor = new TextEditingController();
 TextEditingController add5Editor = new TextEditingController();
+TextEditingController add6Editor = new TextEditingController();
+TextEditingController add7Editor = new TextEditingController();
 List<TextEditingController> addressEditor = [
   add1Editor,
   add2Editor,
   add3Editor,
   add4Editor,
-  add5Editor
+  add5Editor,
+  add6Editor,
+  add7Editor
 ];
 
 void makePost(
