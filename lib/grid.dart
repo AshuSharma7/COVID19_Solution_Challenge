@@ -1,44 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter_localization_master/pages/testingCentre.dart';
+// import 'package:flutter_localization_master/pages/zkcm.dart';
 
-import 'dashBoardGoogleMap.dart' as dash;
+import 'package:flutter_localization_master/pages/DailyBasis.dart';
+import 'package:line_icons/line_icons.dart';
+
 import 'ministrystate.dart';
+import 'package:flutter_localization_master/localization/language_constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'dashBoardStates.dart' as dash;
 import 'selfchecker.dart';
 import 'package:flutter/foundation.dart';
+import 'pointClass.dart' as point;
 import 'package:flutter/material.dart';
-import 'adviceinner.dart';
-import 'audiodata.dart';
-import 'awareness.dart';
-import 'deathgrid.dart';
-import 'faqPage.dart';
-import 'googleMap.dart';
 import 'package:http/http.dart' as http;
-import 'helpLine.dart';
-import 'hospitalinner.dart';
-import 'info.dart';
-import 'ministry.dart';
-import 'testinggrid.dart';
 import 'tracker.dart';
-import 'userrequire.dart';
-import 'videoPage.dart';
-
-class DashBoard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            appBar: AppBar(
-                title: Text("कोविड-19"),
-                elevation: 0.0,
-                backgroundColor: Color(0xFFFF9933)),
-            body: LogoApp()));
-  }
-}
 
 class LogoApp extends StatefulWidget {
   @override
@@ -51,26 +27,26 @@ Future<Map> getUri() async {
   return json.decode(response.body);
 }
 
-Route createRoute(Widget name) {
-  return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => name,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset.zero;
-        var curve = Curves.easeInOutQuad;
+// Route createRoute(Widget name) {
+//   return PageRouteBuilder(
+//       pageBuilder: (context, animation, secondaryAnimation) => name,
+//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//         var begin = Offset(0.0, 1.0);
+//         var end = Offset.zero;
+//         var curve = Curves.easeInOutQuad;
 
-        var tween = Tween(begin: begin, end: end);
-        var curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: curve,
-        );
+//         var tween = Tween(begin: begin, end: end);
+//         var curvedAnimation = CurvedAnimation(
+//           parent: animation,
+//           curve: curve,
+//         );
 
-        return SlideTransition(
-          position: tween.animate(curvedAnimation),
-          child: child,
-        );
-      });
-}
+//         return SlideTransition(
+//           position: tween.animate(curvedAnimation),
+//           child: child,
+//         );
+//       });
+// }
 
 class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
   @override
@@ -87,12 +63,13 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Center(
         child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Color(0xFFFF9933),
-              Color(0xFFFFFFFF),
-              Color(0xFF138808),
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+            decoration: BoxDecoration(color: Colors.white
+                //     gradient: LinearGradient(colors: [
+                //   Color(0xFFFF9933),
+                //   Color(0xFFFFFFFF),
+                //   Color(0xFF138808),
+                // ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
+                ),
             child: FutureBuilder(
               future: getUri(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -116,11 +93,17 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Cont(
-                                          end: content['registered'].toDouble(),
-                                          text: "कुल उपयोगकर्ता रजिस्टर"),
+                                        end: content['registered'].toDouble(),
+                                        text: getTranslated(
+                                            context, 'total_register'),
+                                        // "कुल उपयोगकर्ता रजिस्टर"
+                                      ),
                                       Cont(
-                                          end: content['infected'].toDouble(),
-                                          text: "कुल संक्रमित व्यक्ति"),
+                                        end: content['infected'].toDouble(),
+                                        text: getTranslated(
+                                            context, 'total_infected'),
+                                        //  "कुल संक्रमित व्यक्ति"
+                                      ),
                                     ],
                                   )),
                               SizedBox(
@@ -132,11 +115,17 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Cont(
-                                          end: content['symptoms'].toDouble(),
-                                          text: "संदिग्ध मामलाा"),
+                                        end: content['symptoms'].toDouble(),
+                                        text:
+                                            getTranslated(context, 'suspected'),
+                                        // "संदिग्ध मामलाा"
+                                      ),
                                       Cont(
                                           end: 7.0,
-                                          text: "कुल व्यक्ति ठीक हो गया")
+                                          text: getTranslated(
+                                              context, 'total_cured')
+                                          // "कुल व्यक्ति ठीक हो गया"
+                                          )
                                     ],
                                   )),
                               SizedBox(
@@ -147,10 +136,18 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      Cont(end: 3.0, text: "कुल मौत"),
                                       Cont(
                                           end: 3.0,
-                                          text: "कुल लोगों को अलग कर दिया")
+                                          text: getTranslated(
+                                              context, 'total_death')
+                                          //  "कुल मौत"
+                                          ),
+                                      Cont(
+                                          end: 3.0,
+                                          text: getTranslated(
+                                              context, 'total_isolated')
+                                          // "कुल लोगों को अलग कर दिया"
+                                          )
                                     ],
                                   )),
                               Padding(
@@ -178,22 +175,23 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/hospital.png')),
+                                                  Icon(LineIcons.hospital_o,
+                                                      size: 60),
                                                   Center(
                                                     child: Text(
-                                                      "\nअस्पताल",
+                                                      getTranslated(
+                                                          context, 'hospital'),
+                                                      // "\nअस्पताल",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
                                                           TextDirection.ltr,
                                                       style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20,
-                                                        color: Colors.blue,
-                                                      ),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20,
+                                                          color:
+                                                              Colors.black87),
                                                     ),
                                                   )
                                                 ],
@@ -206,7 +204,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      hospitalinner()),
+                                                      point.hospitalgrid()),
                                             );
                                           },
                                         ),
@@ -237,12 +235,15 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/headset.png')),
+                                                  Icon(
+                                                    LineIcons.phone,
+                                                    size: 60,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "\nहेल्पलाइन",
+                                                      // "\nहेल्पलाइन",
+                                                      getTranslated(
+                                                          context, 'helpline'),
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -251,7 +252,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -261,11 +262,10 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                             margin: EdgeInsets.only(left: 10),
                                           ),
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
+                                            Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        VideoPage()));
+                                                        point.helpgrid()));
                                           },
                                         ),
                                       ),
@@ -287,12 +287,15 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/lab_items.png')),
+                                                  Icon(
+                                                    LineIcons.flask,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "\nपरीक्षण प्रयोगशाला",
+                                                      getTranslated(context,
+                                                          'testing_labs'),
+                                                      // "\nपरीक्षण प्रयोगशाला",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -301,7 +304,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 20,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -315,7 +318,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      TestingCentre()),
+                                                      point.labgrid()),
                                             );
                                           },
                                         ),
@@ -346,12 +349,15 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/blackspot.png')),
+                                                  Icon(
+                                                    LineIcons.map_marker,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "मानचित्र ",
+                                                      getTranslated(
+                                                          context, 'blackspot'),
+                                                      // "मानचित्र ",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -360,7 +366,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 20,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -390,20 +396,22 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                    image: AssetImage(
-                                                        'images/youtube.png'),
+                                                  Icon(
+                                                    LineIcons.youtube_play,
+                                                    size: 60.0,
                                                   ),
                                                   Center(
                                                     child: Text(
-                                                      "\nवीडियो",
+                                                      getTranslated(
+                                                          context, 'video'),
+                                                      // "\nवीडियो",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
                                                           TextDirection.ltr,
                                                       style: TextStyle(
                                                         fontSize: 20,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -419,7 +427,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      VideoPage()),
+                                                      point.videogrid()),
                                             );
                                           },
                                         ),
@@ -450,12 +458,13 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/ministry.png')),
+                                                  Icon(LineIcons.heart_o,
+                                                      size: 60.0),
                                                   Center(
                                                     child: Text(
-                                                      "स्वास्थ्य मंत्रालय",
+                                                      getTranslated(context,
+                                                          'health_ministry'),
+                                                      // "स्वास्थ्य मंत्रालय",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -463,8 +472,8 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 20,
-                                                        color: Colors.blue,
+                                                        fontSize: 18,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -501,19 +510,22 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/warning.png')),
+                                                  Icon(
+                                                    LineIcons.shield,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "\nसावधानियां",
+                                                      getTranslated(context,
+                                                          'precaution'),
+                                                      // "\nसावधानियां",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
                                                           TextDirection.ltr,
                                                       style: TextStyle(
                                                         fontSize: 20,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -529,7 +541,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      deathgrid()),
+                                                      point.secondgrid()),
                                             );
                                           },
                                         ),
@@ -560,12 +572,15 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/aware.png')),
+                                                  Icon(
+                                                    LineIcons.warning,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "जागरूकता",
+                                                      getTranslated(
+                                                          context, 'awareness'),
+                                                      // "जागरूकता",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -574,7 +589,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -588,7 +603,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      Awareness()),
+                                                      point.awaregrid()),
                                             );
                                           },
                                         ),
@@ -611,18 +626,21 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/advice.png')),
+                                                  Icon(
+                                                    LineIcons.commenting,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "\nसलाहकार",
+                                                      getTranslated(
+                                                          context, 'advisory'),
+                                                      // "\nसलाहकार",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
                                                           TextDirection.ltr,
                                                       style: TextStyle(
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 20,
@@ -639,7 +657,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      AdviceInner()),
+                                                      point.advicegrid()
+                                                  // LocalAudio(),
+                                                  ),
                                             );
                                           },
                                         ),
@@ -670,12 +690,16 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/faq.png')),
+                                                  Icon(
+                                                    LineIcons.question_circle,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "\nसामान्य प्रश्न",
+                                                      "\n" +
+                                                          getTranslated(
+                                                              context, 'faq'),
+                                                      // "\nसामान्य प्रश्न",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -684,7 +708,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -698,7 +722,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      FAQPage()),
+                                                      point.faqgrid()),
                                             );
                                           },
                                         ),
@@ -721,19 +745,20 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/audio.png')),
+                                                  Icon(LineIcons.microphone,
+                                                      size: 60.0),
                                                   Center(
                                                     child: Text(
-                                                      "ऑडियो नमूना",
+                                                      getTranslated(context,
+                                                          'audio_sample'),
+                                                      // "ऑडियो नमूना",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
                                                           TextDirection.ltr,
                                                       style: TextStyle(
                                                         fontSize: 20,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -749,7 +774,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      audiodata()),
+                                                      point.audiogrid()),
                                             );
                                           },
                                         ),
@@ -780,12 +805,14 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/selfcheck.png')),
+                                                  Icon(
+                                                      LineIcons.arrow_circle_up,
+                                                      size: 60.0),
                                                   Center(
                                                     child: Text(
-                                                      "स्वयं जाँचकर्ता",
+                                                      getTranslated(context,
+                                                          'self_checker'),
+                                                      // "स्वयं जाँचकर्ता",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -794,7 +821,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -808,7 +835,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      selfcheck2()),
+                                                      checker()),
                                             );
                                           },
                                         ),
@@ -836,14 +863,17 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                           'images/virus.png')),
                                                   Center(
                                                     child: Text(
-                                                      "\nकोरोना ट्रैकर",
+                                                      "\n" +
+                                                          getTranslated(context,
+                                                              'corona_tracker'),
+                                                      // "\nकोरोना ट्रैकर",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
                                                           TextDirection.ltr,
                                                       style: TextStyle(
                                                         fontSize: 20,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -890,12 +920,15 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/require.png')),
+                                                  Icon(
+                                                    LineIcons.user,
+                                                    size: 60.0,
+                                                  ),
                                                   Center(
                                                     child: Text(
-                                                      "लोगों की जरुरत",
+                                                      getTranslated(context,
+                                                          'user_requrirement'),
+                                                      // "लोगों की जरुरत",
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -904,7 +937,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 18.0,
-                                                        color: Colors.blue,
+                                                        color: Colors.black87,
                                                       ),
                                                     ),
                                                   )
@@ -918,7 +951,124 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      userReq()),
+                                                      point.usergrid()),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            elevation: 10.0,
+                                            color: Color(0xFFFFFFFF),
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  5,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Icon(
+                                                    LineIcons.list,
+                                                    size: 60.0,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      getTranslated(context,
+                                                          'people_info'),
+                                                      // "\nअन्य व्यक्ति की जानकारी",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      textDirection:
+                                                          TextDirection.ltr,
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            margin: EdgeInsets.only(left: 10),
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      point.infogrid()),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  )),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 20, left: 20, right: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: GestureDetector(
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            elevation: 10.0,
+                                            color: Color(0xFFFFFFFF),
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  5,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Icon(
+                                                    LineIcons.database,
+                                                    size: 60.0,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      // "\nबाहरी स्रोत से डेटा",
+                                                      // "\n" +
+                                                      getTranslated(context,
+                                                          'external_soc'),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      textDirection:
+                                                          TextDirection.ltr,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18.0,
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            margin: EdgeInsets.only(left: 10),
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      point.outgrid()),
                                             );
                                           },
                                         ),
@@ -943,10 +1093,12 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                 children: <Widget>[
                                                   Image(
                                                       image: AssetImage(
-                                                          'images/inform.png')),
+                                                          'images/elab.png')),
                                                   Center(
                                                     child: Text(
-                                                      "\nअन्य व्यक्ति की जानकारी",
+                                                      // "बाहरी स्रोत से परीक्षण केंद्र डेटा",
+                                                      getTranslated(context,
+                                                          'external_lab'),
                                                       textAlign:
                                                           TextAlign.center,
                                                       textDirection:
@@ -968,7 +1120,123 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => Info()),
+                                                  builder: (context) =>
+                                                      point.exterTestgrid()),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  )),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 20, left: 20, right: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: GestureDetector(
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            elevation: 10.0,
+                                            color: Color(0xFFFFFFFF),
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  5,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  // Image(
+                                                  //     image: AssetImage(
+                                                  //         'images/file.png')),
+                                                  Center(
+                                                    child: Text(
+                                                      "Daily Basis",
+                                                      // "\n" +
+                                                      // getTranslated(context,
+                                                      //     'external_soc'),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      textDirection:
+                                                          TextDirection.ltr,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18.0,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            margin: EdgeInsets.only(left: 10),
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DailyBasis()),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            elevation: 10.0,
+                                            color: Color(0xFFFFFFFF),
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  5,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  // Image(
+                                                  //     image: AssetImage(
+                                                  //         'images/elab.png')),
+                                                  Center(
+                                                    child: Text(
+                                                      "About App",
+                                                      // getTranslated(context,
+                                                      //     'external_lab'),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      textDirection:
+                                                          TextDirection.ltr,
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            margin: EdgeInsets.only(left: 10),
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      point.exterTestgrid()),
                                             );
                                           },
                                         ),
@@ -1034,66 +1302,47 @@ class _ContState extends State<Cont> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      elevation: 10.0,
-      color: Color(0xFFFFFFFF),
-      child: Container(
-        height: MediaQuery.of(context).size.height / 5,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$i',
-              textDirection: TextDirection.rtl,
-              style: TextStyle(
-                  fontSize: 50, color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-            Center(
-              child: Text(
-                '${widget.text}',
-                textAlign: TextAlign.center,
-                textDirection: TextDirection.ltr,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.blue,
-                ),
-              ),
-            )
-          ],
-        ),
+        child: Container(
+      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        gradient: LinearGradient(
+            colors: [Colors.orange[300], Colors.white, Colors.green[200]],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black45,
+              blurRadius: 10.0,
+              offset: Offset.fromDirection(4.5, -5.0))
+        ],
       ),
-      margin: EdgeInsets.only(left: 10),
+      height: MediaQuery.of(context).size.height / 5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            '$i',
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+                fontSize: 50,
+                color: Colors.black54,
+                fontWeight: FontWeight.bold),
+          ),
+          Center(
+            child: Text(
+              '${widget.text}',
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.black54,
+              ),
+            ),
+          )
+        ],
+      ),
     ));
-  }
-}
-
-class precautiongrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: deathgrid());
-  }
-}
-
-class helpgrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: HelpLine());
-  }
-}
-
-class ministrygrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("कोरोना के खिलाफ भारत की लड़ाई"),
-        ),
-        body: Ministry());
   }
 }
