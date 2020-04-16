@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -84,7 +82,7 @@ class _TestingCentreState extends State<TestingCentre> {
                 }
                 states.sort((a, b) => a.toString().compareTo(b.toString()));
                 translate();
-                if (true) {
+                if (translatedState.isNotEmpty) {
                   return ListView.builder(
                     itemCount: states.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -124,7 +122,7 @@ class _TestingCentreState extends State<TestingCentre> {
                                 ),
                                 child: Center(
                                     child: Text(
-                                  states[index],
+                                  translatedState[index],
                                   style: TextStyle(
                                       fontSize: 20.0, color: Colors.white),
                                 )),
