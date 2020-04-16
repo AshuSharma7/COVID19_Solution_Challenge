@@ -1,3 +1,5 @@
+import 'bottomNavBar.dart';
+
 import 'DeclarationForm.dart';
 import 'MyHomePage.dart';
 import 'grid.dart';
@@ -31,7 +33,7 @@ class _CheckUserState extends State<CheckUser> {
         } else {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => mainBoard()),
+              MaterialPageRoute(builder: (context) => BottomnavBar()),
               (_) => false);
         }
       } else {
