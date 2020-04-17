@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/pages/chatBot.dart';
+import 'package:flutter_localization_master/pages/grid.dart';
 import 'package:flutter_localization_master/pages/newDeclaration.dart';
 import 'package:flutter_localization_master/pages/newsapi.dart';
 import 'package:flutter_localization_master/pages/quizPage.dart';
@@ -11,6 +12,13 @@ class BottomnavBar extends StatefulWidget {
   _BottomnavBarState createState() => _BottomnavBarState();
 }
 
+List<Color> blue = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
+List<Color> sweet = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
+List<Color> purple = [
+  Color(0xFFf80759),
+  Color(0xFFbc4e9c),
+];
+
 class _BottomnavBarState extends State<BottomnavBar> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -19,7 +27,7 @@ class _BottomnavBarState extends State<BottomnavBar> {
     Quiz(),
     NewsApi(),
     ChatBot(),
-    SelectMembers(),
+    LogoApp(),
   ];
 
   @override
@@ -41,7 +49,11 @@ class _BottomnavBarState extends State<BottomnavBar> {
                 iconSize: 24,
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 duration: Duration(milliseconds: 800),
-                tabBackgroundColor: Colors.grey[800],
+                tabBackgroundGradient: LinearGradient(
+                  colors: _selectedIndex % 2 == 0 ? blue : sweet,
+                  begin: Alignment.bottomRight,
+                  end: Alignment.topLeft,
+                ),
                 tabs: [
                   GButton(
                     icon: LineIcons.graduation_cap,
