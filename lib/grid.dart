@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter_localization_master/pages/DailyBasis.dart';
 import 'package:line_icons/line_icons.dart';
-
+import 'dashBoardStates.dart' as dash;
 import 'ministrystate.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -27,26 +27,13 @@ Future<Map> getUri() async {
   return json.decode(response.body);
 }
 
-// Route createRoute(Widget name) {
-//   return PageRouteBuilder(
-//       pageBuilder: (context, animation, secondaryAnimation) => name,
-//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//         var begin = Offset(0.0, 1.0);
-//         var end = Offset.zero;
-//         var curve = Curves.easeInOutQuad;
-
-//         var tween = Tween(begin: begin, end: end);
-//         var curvedAnimation = CurvedAnimation(
-//           parent: animation,
-//           curve: curve,
-//         );
-
-//         return SlideTransition(
-//           position: tween.animate(curvedAnimation),
-//           child: child,
-//         );
-//       });
-// }
+List<Color> orange = [Color(0xFFff9966), Color(0xFFff5e62)];
+List<Color> blue = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
+List<Color> sweet = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
+List<Color> purple = [
+  Color(0xFFf80759),
+  Color(0xFFbc4e9c),
+];
 
 class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
   @override
@@ -63,13 +50,8 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Center(
         child: Container(
-            decoration: BoxDecoration(color: Colors.white
-                //     gradient: LinearGradient(colors: [
-                //   Color(0xFFFF9933),
-                //   Color(0xFFFFFFFF),
-                //   Color(0xFF138808),
-                // ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
-                ),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(color: Colors.white),
             child: FutureBuilder(
               future: getUri(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -77,7 +59,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                   Map content = snapshot.data;
                   return AnimationConfiguration.staggeredList(
                     position: 1,
-                    duration: const Duration(milliseconds: 1075),
+                    duration: const Duration(milliseconds: 875),
                     child: SlideAnimation(
                       verticalOffset: 150.0,
                       child: FadeInAnimation(
@@ -88,24 +70,29 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                           Column(
                             children: <Widget>[
                               Padding(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Cont(
-                                        end: content['registered'].toDouble(),
-                                        text: getTranslated(
-                                            context, 'total_register'),
-                                        // "कुल उपयोगकर्ता रजिस्टर"
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Cont(
+                                      end: content['registered'].toDouble(),
+                                      text: getTranslated(
+                                          context, 'total_register'),
+
+                                      // "कुल उपयोगकर्ता रजिस्टर"
+                                    ),
+                                    Cont(
+                                      end: content['infected'].toDouble(),
+                                      text: getTranslated(
+                                          context, 'total_infected'),
+                                      page: dash.stateList(
+                                        para: "is_infected",
                                       ),
-                                      Cont(
-                                        end: content['infected'].toDouble(),
-                                        text: getTranslated(
-                                            context, 'total_infected'),
-                                        //  "कुल संक्रमित व्यक्ति"
-                                      ),
-                                    ],
-                                  )),
+                                      //  "कुल संक्रमित व्यक्ति"
+                                    ),
+                                  ],
+                                ),
+                              ),
                               SizedBox(
                                 height: 30,
                               ),
@@ -118,14 +105,20 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                         end: content['symptoms'].toDouble(),
                                         text:
                                             getTranslated(context, 'suspected'),
+                                        page: dash.stateList(
+                                          para: "symptoms",
+                                        ),
                                         // "संदिग्ध मामलाा"
                                       ),
                                       Cont(
-                                          end: 7.0,
-                                          text: getTranslated(
-                                              context, 'total_cured')
-                                          // "कुल व्यक्ति ठीक हो गया"
-                                          )
+                                        end: 7.0,
+                                        text: getTranslated(
+                                            context, 'total_cured'),
+                                        // "कुल व्यक्ति ठीक हो गया"
+                                        page: dash.stateList(
+                                          para: "cured",
+                                        ),
+                                      )
                                     ],
                                   )),
                               SizedBox(
@@ -137,17 +130,23 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Cont(
-                                          end: 3.0,
-                                          text: getTranslated(
-                                              context, 'total_death')
-                                          //  "कुल मौत"
-                                          ),
+                                        end: 3.0,
+                                        text: getTranslated(
+                                            context, 'total_death'),
+                                        page: dash.stateList(
+                                          para: "death",
+                                        ),
+                                        //  "कुल मौत"
+                                      ),
                                       Cont(
-                                          end: 3.0,
-                                          text: getTranslated(
-                                              context, 'total_isolated')
-                                          // "कुल लोगों को अलग कर दिया"
-                                          )
+                                        end: 3.0,
+                                        text: getTranslated(
+                                            context, 'total_isolated'),
+                                        page: dash.stateList(
+                                          para: "isolated",
+                                        ),
+                                        // "कुल लोगों को अलग कर दिया"
+                                      )
                                     ],
                                   )),
                               Padding(
@@ -159,13 +158,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       Cont(end: 2.0, text: "कुल लोग बरामद"),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
+                                          child: Container(
+                                            decoration: decorate(
+                                                orange, Colors.deepOrange[200]),
                                             child: Container(
                                               height: MediaQuery.of(context)
                                                       .size
@@ -219,14 +214,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
+                                          child: Container(
+                                              decoration: decorate(
+                                                  blue, Colors.blue[300]),
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height /
@@ -258,9 +248,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                   )
                                                 ],
                                               ),
-                                            ),
-                                            margin: EdgeInsets.only(left: 10),
-                                          ),
+                                              margin: EdgeInsets.all(10.0)),
                                           onTap: () {
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(
@@ -271,47 +259,40 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.flask,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'testing_labs'),
-                                                      // "\nपरीक्षण प्रयोगशाला",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                sweet, Colors.deepOrange[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.flask,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'testing_labs'),
+                                                    // "\nपरीक्षण प्रयोगशाला",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -333,94 +314,80 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.map_marker,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(
-                                                          context, 'blackspot'),
-                                                      // "मानचित्र ",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                purple, Colors.pink[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.map_marker,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(
+                                                        context, 'blackspot'),
+                                                    // "मानचित्र ",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {},
                                         ),
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.youtube_play,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(
-                                                          context, 'video'),
-                                                      // "\nवीडियो",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                blue, Colors.blue[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.youtube_play,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(
+                                                        context, 'video'),
+                                                    // "\nवीडियो",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.black87,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -442,45 +409,38 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(LineIcons.heart_o,
-                                                      size: 60.0),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'health_ministry'),
-                                                      // "स्वास्थ्य मंत्रालय",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                sweet, Colors.deepOrange[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(LineIcons.heart_o,
+                                                    size: 60.0),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'health_ministry'),
+                                                    // "स्वास्थ्य मंत्रालय",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -494,47 +454,40 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.shield,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'precaution'),
-                                                      // "\nसावधानियां",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                purple, Colors.pink[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.shield,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(
+                                                        context, 'precaution'),
+                                                    // "\nसावधानियां",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.black87,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -556,47 +509,40 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.warning,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(
-                                                          context, 'awareness'),
-                                                      // "जागरूकता",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                blue, Colors.blue[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.warning,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(
+                                                        context, 'awareness'),
+                                                    // "जागरूकता",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -610,47 +556,40 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.commenting,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(
-                                                          context, 'advisory'),
-                                                      // "\nसलाहकार",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                sweet, Colors.deepOrange[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.commenting,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(
+                                                        context, 'advisory'),
+                                                    // "\nसलाहकार",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      color: Colors.black87,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -674,48 +613,41 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.question_circle,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      "\n" +
-                                                          getTranslated(
-                                                              context, 'faq'),
-                                                      // "\nसामान्य प्रश्न",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                purple, Colors.pink[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.question_circle,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    "\n" +
+                                                        getTranslated(
+                                                            context, 'faq'),
+                                                    // "\nसामान्य प्रश्न",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -729,45 +661,38 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(LineIcons.microphone,
-                                                      size: 60.0),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'audio_sample'),
-                                                      // "ऑडियो नमूना",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                blue, Colors.blue[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(LineIcons.microphone,
+                                                    size: 60.0),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'audio_sample'),
+                                                    // "ऑडियो नमूना",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.black87,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -789,46 +714,38 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                      LineIcons.arrow_circle_up,
-                                                      size: 60.0),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'self_checker'),
-                                                      // "स्वयं जाँचकर्ता",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                sweet, Colors.deepOrange[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(LineIcons.arrow_circle_up,
+                                                    size: 60.0),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'self_checker'),
+                                                    // "स्वयं जाँचकर्ता",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -842,47 +759,39 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/virus.png')),
-                                                  Center(
-                                                    child: Text(
-                                                      "\n" +
-                                                          getTranslated(context,
-                                                              'corona_tracker'),
-                                                      // "\nकोरोना ट्रैकर",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                purple, Colors.pink[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Image(
+                                                    image: AssetImage(
+                                                        'images/virus.png')),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'corona_tracker'),
+                                                    // "\nकोरोना ट्रैकर",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.black87,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -904,47 +813,40 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.user,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'user_requrirement'),
-                                                      // "लोगों की जरुरत",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18.0,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                blue, Colors.blue[200]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.user,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'user_requrirement'),
+                                                    // "लोगों की जरुरत",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18.0,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -958,47 +860,40 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.list,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      getTranslated(context,
-                                                          'people_info'),
-                                                      // "\nअन्य व्यक्ति की जानकारी",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                sweet, Colors.deepOrange[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.list,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(
+                                                        context, 'people_info'),
+                                                    // "\nअन्य व्यक्ति की जानकारी",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -1020,48 +915,39 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    LineIcons.database,
-                                                    size: 60.0,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      // "\nबाहरी स्रोत से डेटा",
-                                                      // "\n" +
-                                                      getTranslated(context,
-                                                          'external_soc'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18.0,
-                                                        color: Colors.black87,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                purple, Colors.pink[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  LineIcons.database,
+                                                  size: 60.0,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'external_soc'),
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18.0,
+                                                      color: Colors.black87,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -1075,46 +961,39 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Image(
-                                                      image: AssetImage(
-                                                          'images/elab.png')),
-                                                  Center(
-                                                    child: Text(
-                                                      // "बाहरी स्रोत से परीक्षण केंद्र डेटा",
-                                                      getTranslated(context,
-                                                          'external_lab'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.blue,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                blue, Colors.blue[200]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Image(
+                                                    image: AssetImage(
+                                                        'images/elab.png')),
+                                                Center(
+                                                  child: Text(
+                                                    // "बाहरी स्रोत से परीक्षण केंद्र डेटा",
+                                                    getTranslated(context,
+                                                        'external_lab'),
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -1136,47 +1015,34 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                     children: <Widget>[
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  // Image(
-                                                  //     image: AssetImage(
-                                                  //         'images/file.png')),
-                                                  Center(
-                                                    child: Text(
-                                                      "Daily Basis",
-                                                      // "\n" +
-                                                      // getTranslated(context,
-                                                      //     'external_soc'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18.0,
-                                                        color: Colors.blue,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                blue, Colors.blue[200]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Text(
+                                                    "Daily Basis",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18.0,
+                                                      color: Colors.black,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -1190,46 +1056,36 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            elevation: 10.0,
-                                            color: Color(0xFFFFFFFF),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  5,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  // Image(
-                                                  //     image: AssetImage(
-                                                  //         'images/elab.png')),
-                                                  Center(
-                                                    child: Text(
-                                                      "About App",
-                                                      // getTranslated(context,
-                                                      //     'external_lab'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.blue,
-                                                      ),
+                                          child: Container(
+                                            decoration: decorate(
+                                                sweet, Colors.deepOrange[300]),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                5,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(LineIcons.info_circle,
+                                                    size: 60.0),
+                                                Center(
+                                                  child: Text(
+                                                    "About App",
+                                                    textAlign: TextAlign.center,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            margin: EdgeInsets.only(left: 10),
+                                            margin: EdgeInsets.all(10.0),
                                           ),
                                           onTap: () {
                                             Navigator.push(
@@ -1240,9 +1096,12 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                             );
                                           },
                                         ),
-                                      )
+                                      ),
                                     ],
-                                  ))
+                                  )),
+                              SizedBox(
+                                height: 20.0,
+                              )
                             ],
                           )
                         ]),
@@ -1267,8 +1126,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
 class Cont extends StatefulWidget {
   final double end;
   final String text;
+  final Widget page;
 
-  const Cont({Key key, this.end, this.text}) : super(key: key);
+  const Cont({Key key, this.end, this.text, this.page}) : super(key: key);
 
   @override
   _ContState createState() => _ContState();
@@ -1302,47 +1162,74 @@ class _ContState extends State<Cont> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Container(
-      margin: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
-        gradient: LinearGradient(
-            colors: [Colors.orange[300], Colors.white, Colors.green[200]],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black45,
-              blurRadius: 10.0,
-              offset: Offset.fromDirection(4.5, -5.0))
-        ],
-      ),
-      height: MediaQuery.of(context).size.height / 5,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            '$i',
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-                fontSize: 50,
-                color: Colors.black54,
-                fontWeight: FontWeight.bold),
-          ),
-          Center(
-            child: Text(
-              '${widget.text}',
-              textAlign: TextAlign.center,
-              textDirection: TextDirection.ltr,
+        child: GestureDetector(
+      onTap: widget.page == null
+          ? () {}
+          : () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => widget.page));
+            },
+      child: Container(
+        margin: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          gradient: LinearGradient(colors: [
+            Color(0xFFff6a00),
+            Colors.orange[100],
+            Color(0xFF56ab2f)
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 10.0,
+                offset: Offset.fromDirection(4.5, -5.0))
+          ],
+        ),
+        height: MediaQuery.of(context).size.height / 5,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              '$i',
+              textDirection: TextDirection.rtl,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.black54,
-              ),
+                  fontSize: 50,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold),
             ),
-          )
-        ],
+            Center(
+              child: Text(
+                '${widget.text}',
+                textAlign: TextAlign.center,
+                textDirection: TextDirection.ltr,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black87,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     ));
   }
+}
+
+BoxDecoration decorate(List<Color> color, Color shadow) {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(10.0),
+    gradient: LinearGradient(
+      colors: color,
+      begin: Alignment.bottomRight,
+      end: Alignment.topLeft,
+    ),
+    boxShadow: [
+      BoxShadow(
+          color: shadow,
+          blurRadius: 20.0,
+          spreadRadius: 0.1,
+          offset: Offset.fromDirection(4.0, -10.0))
+    ],
+  );
 }
