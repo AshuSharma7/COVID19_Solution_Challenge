@@ -2,6 +2,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'dashBoardGoogleMap.dart' as dash;
+import 'dashBoardDistrict.dart' as d;
 import 'package:flutter/material.dart';
 import 'getLangCode.dart' as lang;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -121,8 +122,10 @@ class _stateList extends State<stateList> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => stateDetails(
-                                          states[index], widget.para)));
+                                    builder: (context) => d.DistrictList(
+                                      state: states[index],
+                                    ),
+                                  ));
                             },
                             child: Container(
                               height: 60,
@@ -205,20 +208,4 @@ class _stateList extends State<stateList> {
     // TODO: implement initState
     super.initState();
   }
-}
-
-Widget stateDetails(String state, String para) {
-  return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff1976d2),
-        // backgroundColor: Color(0xff308e1c),
-
-        title: Text(state),
-      ),
-      body: Container(
-        child: dash.DistrictList(
-          state: state,
-          para: para,
-        ),
-      ));
 }

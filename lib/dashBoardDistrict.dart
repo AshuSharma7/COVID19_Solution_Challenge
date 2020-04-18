@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'getLangCode.dart' as lang;
 
 class DistrictList extends StatefulWidget {
   @override
   String state;
-  String para;
-  DistrictList({Key key, @required this.state, @required this.para})
-      : super(key: key);
+  DistrictList({Key key, @required this.state}) : super(key: key);
   _DistrictListState createState() => _DistrictListState();
 }
 
@@ -17,50 +17,87 @@ Future<List<dynamic>> getUri() async {
   return json.decode(response.body);
 }
 
+List<Color> color1 = [
+  Color(0xFF11998e),
+  Color(0xFF38ef7d),
+];
+List<Color> color2 = [
+  Color(0xFFFF5F6D),
+  Color(0xFFFFC371),
+];
+
+bool flag = true;
+
 class _DistrictListState extends State<DistrictList> {
+  List<String> district = [];
+  void translate(
+    List content,
+  ) async {
+    String langCode = await lang.prefs();
+    for (int i = 0; i < content.length; i++) {
+      if (content[i]["state"] == widget.state) {
+        String text = content[i]["district"];
+        String url =
+            "https://translation.googleapis.com/language/translate/v2?target=$langCode&key=AIzaSyAu7bUrwnWzbfN2lK-zGxdf-KHbzvm-PNA&q=$text";
+        http.Response response = await http.get(url);
+        Map data = json.decode(response.body);
+        if (!district
+            .contains(data["data"]["translations"][0]["translatedText"])) {
+          district.add(data["data"]["translations"][0]["translatedText"]);
+        }
+      }
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xFFFF9933),
-            Color(0xFFFFFFFF),
-            Color(0xFF138808),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        ),
+        color: Colors.white,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
             future: getUri(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
+                //print(widget.state.toLowerCase());
                 List content = snapshot.data;
-                return ListView.builder(
-                    itemCount: content.length,
-                    itemBuilder: (BuildContextcontext, int index) {
-                      print(content[index]["state"]);
-                      if (content[index]["state"] == widget.state &&
-                          content[index][widget.para] == true) {
+                translate(content);
+                if (district.isNotEmpty) {
+                  return ListView.builder(
+                      itemCount: district.length,
+                      itemBuilder: (BuildContext, int index) {
                         return Container(
                           margin: EdgeInsets.all(10.0),
                           padding: EdgeInsets.all(10.0),
                           width: MediaQuery.of(context).size.width - 100,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.white),
+                            gradient: LinearGradient(
+                                colors: index % 2 == 0 ? color1 : color2,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black45,
+                                  blurRadius: 5.0,
+                                  offset: Offset.fromDirection(1.0, 3.0))
+                            ],
+                          ),
                           child: Text(
-                            content[index]["district"],
+                            district[index],
                             style:
-                                TextStyle(color: Colors.black, fontSize: 20.0),
+                                TextStyle(color: Colors.white, fontSize: 20.0),
                           ),
                         );
-                      } else {
-                        return SizedBox(
-                          height: 0.0,
-                        );
-                      }
-                    });
+                      });
+                } else {
+                  return Center(
+                    child: SpinKitChasingDots(color: Colors.black),
+                  );
+                }
               } else {
                 return Center(
                   child: CircularProgressIndicator(
