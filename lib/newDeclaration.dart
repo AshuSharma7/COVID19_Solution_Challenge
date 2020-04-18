@@ -98,7 +98,7 @@ class _DeclarationState extends State<Declaration>
     {"color": color5, "shadow": Colors.deepOrange[300]},
     {"color": color5, "shadow": Colors.deepOrange[300]},
     {"color": color5, "shadow": Colors.deepOrange[300]},
-    {"color": color5, "shadow": Colors.deepOrange[300]},
+    {"color": color5, "shadow": Colors.black54},
     {"color": color6, "shadow": Colors.black54},
     {"color": color6, "shadow": Colors.black54},
   ];
@@ -170,26 +170,24 @@ class _DeclarationState extends State<Declaration>
                         ],
                       ),
                       child: Center(
-                        child: Expanded(
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            controller: declaration.editor[widget.memberIndex],
-                            cursorColor: Colors.white,
-                            focusNode: FocusNode(canRequestFocus: false),
-                            textCapitalization: TextCapitalization.sentences,
-                            style: TextStyle(
-                                color: Colors.white60, fontSize: 30.0),
-                            decoration: InputDecoration(
-                                hintText: "Enter Name",
-                                hintStyle: TextStyle(
-                                  fontSize: 20.0,
-                                ),
-                                border: InputBorder.none,
-                                fillColor: Colors.white,
-                                focusColor: Colors.white,
-                                labelStyle: TextStyle(color: Colors.white)),
-                          ),
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          controller: declaration.editor[widget.memberIndex],
+                          cursorColor: Colors.white,
+                          focusNode: FocusNode(canRequestFocus: false),
+                          textCapitalization: TextCapitalization.sentences,
+                          style:
+                              TextStyle(color: Colors.white60, fontSize: 30.0),
+                          decoration: InputDecoration(
+                              hintText: "Enter Name",
+                              hintStyle: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                              border: InputBorder.none,
+                              fillColor: Colors.white,
+                              focusColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.white)),
                         ),
                       ),
                     ),
@@ -215,31 +213,28 @@ class _DeclarationState extends State<Declaration>
                         ],
                       ),
                       child: Center(
-                        child: Expanded(
-                          child: TextField(
-                            cursorColor: Colors.white,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            maxLength: 12,
-                            focusNode: FocusNode(canRequestFocus: false),
-                            keyboardType:
-                                TextInputType.numberWithOptions(signed: false),
-                            controller:
-                                declaration.adhharEditor[widget.memberIndex],
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 30.0),
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(10.0),
-                                hintText: "Enter Aadhar No.",
-                                counterText: "",
-                                hintStyle: TextStyle(
-                                  fontSize: 20.0,
-                                ),
-                                border: InputBorder.none,
-                                fillColor: Colors.white,
-                                focusColor: Colors.white,
-                                labelStyle: TextStyle(color: Colors.white)),
-                          ),
+                        child: TextField(
+                          cursorColor: Colors.white,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          maxLength: 12,
+                          focusNode: FocusNode(canRequestFocus: false),
+                          keyboardType:
+                              TextInputType.numberWithOptions(signed: false),
+                          controller:
+                              declaration.adhharEditor[widget.memberIndex],
+                          style: TextStyle(color: Colors.white, fontSize: 30.0),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10.0),
+                              hintText: "Enter Aadhar No.",
+                              counterText: "",
+                              hintStyle: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                              border: InputBorder.none,
+                              fillColor: Colors.white,
+                              focusColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.white)),
                         ),
                       ),
                     )
@@ -819,821 +814,813 @@ class _DeclarationState extends State<Declaration>
                                       builder: (context, setState) {
                                     return Dialog(
                                       backgroundColor: Colors.transparent,
-                                      child: Expanded(
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              gradient: LinearGradient(
-                                                  colors: [
-                                                    Color(0xFF0F2027),
-                                                    Color(0xFF203A43),
-                                                    Color(0xFF2C5364)
-                                                  ],
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight),
-                                            ),
-                                            margin: EdgeInsets.all(10.0),
-                                            padding: EdgeInsets.all(10.0),
-                                            height: 400,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                50,
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    "Select Options",
-                                                    style: TextStyle(
-                                                        color: Colors.white70,
-                                                        fontSize: 20.0),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Fever?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["fever"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "fever"] = value;
-                                                              ;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["fever"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "fever"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Cough?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["cough"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "cough"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["cough"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "cough"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Short Breath?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["breathing"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "breathing"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["breathing"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "breathing"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Running \nNose?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["nose"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "nose"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["nose"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "nose"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Dizziness?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["dizziness"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "dizziness"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["dizziness"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "dizziness"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Difficulty\nin\npronounciation?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70,
-                                                            fontSize: 12),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 8.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              [
-                                                              "pronounciation"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "pronounciation"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              [
-                                                              "pronounciation"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "pronounciation"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Chest/Throat\nPain?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["throatchest"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "throatchest"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["throatchest"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "throatchest"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Diarrhea?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["diarrhea"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "diarrhea"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["diarrhea"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "diarrhea"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Attended \njamat?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["attendJamat"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "attendJamat"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["attendJamat"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "attendJamat"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Met\nany\njamati?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["metJamatis"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "metJamatis"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              ["metJamatis"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "metJamatis"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Met someone\nwho\nvisited\nabroad?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              [
-                                                              "metSomeoneAbroad"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "metSomeoneAbroad"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              [
-                                                              "metSomeoneAbroad"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "metSomeoneAbroad"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Visited any\ncorona\noutbreak\nplace?",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: true,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              [
-                                                              "outbreakPlaceVisit"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "outbreakPlaceVisit"] = value;
-                                                            });
-                                                          }),
-                                                      Text(
-                                                        "No",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white70),
-                                                      ),
-                                                      Radio(
-                                                          value: false,
-                                                          groupValue: declaration
-                                                                      .symptoms[
-                                                                  widget
-                                                                      .memberIndex]
-                                                              [
-                                                              "outbreakPlaceVisit"],
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              declaration.symptoms[
-                                                                      widget
-                                                                          .memberIndex]
-                                                                  [
-                                                                  "outbreakPlaceVisit"] = value;
-                                                            });
-                                                          }),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 20.0,
-                                                  ),
-                                                  RaisedButton(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15.0)),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Text(
-                                                      "Ok",
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                    color:
-                                                        const Color(0xFF1BC0C5),
-                                                  ),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFF0F2027),
+                                                  Color(0xFF203A43),
+                                                  Color(0xFF2C5364)
                                                 ],
-                                              ),
-                                            )),
-                                      ),
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight),
+                                          ),
+                                          margin: EdgeInsets.all(10.0),
+                                          padding: EdgeInsets.all(10.0),
+                                          height: 400,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              50,
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  "Select Options",
+                                                  style: TextStyle(
+                                                      color: Colors.white70,
+                                                      fontSize: 20.0),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Fever?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["fever"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "fever"] = value;
+                                                            ;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["fever"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "fever"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Cough?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["cough"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "cough"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["cough"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "cough"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Short Breath?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["breathing"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "breathing"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["breathing"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "breathing"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Running \nNose?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["nose"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "nose"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["nose"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "nose"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Dizziness?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["dizziness"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "dizziness"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["dizziness"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "dizziness"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Difficulty\nin\npronounciation?",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 12),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["pronounciation"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "pronounciation"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["pronounciation"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "pronounciation"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Chest/Throat\nPain?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["throatchest"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "throatchest"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["throatchest"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "throatchest"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Diarrhea?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["diarrhea"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "diarrhea"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["diarrhea"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "diarrhea"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Attended \njamat?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["attendJamat"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "attendJamat"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["attendJamat"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "attendJamat"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Met\nany\njamati?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["metJamatis"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "metJamatis"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            ["metJamatis"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "metJamatis"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Met someone\nwho\nvisited\nabroad?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            [
+                                                            "metSomeoneAbroad"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "metSomeoneAbroad"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            [
+                                                            "metSomeoneAbroad"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "metSomeoneAbroad"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Visited any\ncorona\noutbreak\nplace?",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "Yes",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: true,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            [
+                                                            "outbreakPlaceVisit"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "outbreakPlaceVisit"] = value;
+                                                          });
+                                                        }),
+                                                    Text(
+                                                      "No",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    Radio(
+                                                        value: false,
+                                                        groupValue: declaration
+                                                                    .symptoms[
+                                                                widget
+                                                                    .memberIndex]
+                                                            [
+                                                            "outbreakPlaceVisit"],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            declaration.symptoms[
+                                                                    widget
+                                                                        .memberIndex]
+                                                                [
+                                                                "outbreakPlaceVisit"] = value;
+                                                          });
+                                                        }),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 20.0,
+                                                ),
+                                                RaisedButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0)),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                    "Ok",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  color:
+                                                      const Color(0xFF1BC0C5),
+                                                ),
+                                              ],
+                                            ),
+                                          )),
                                     );
                                   });
                                 });
