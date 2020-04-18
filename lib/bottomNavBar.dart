@@ -26,7 +26,7 @@ class _BottomnavBarState extends State<BottomnavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
-    LanguagePage(),
+    LogoApp(),
     NewsApi(),
     ChatBot(),
     Quiz(),
