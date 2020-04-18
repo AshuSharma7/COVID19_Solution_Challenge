@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_localization_master/pages/newDeclaration.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'bottomNavBar.dart';
 
 import 'DeclarationForm.dart';
-import 'MyHomePage.dart';
-import 'grid.dart';
 import 'LanguagePage.dart';
-import 'slefDeclaration.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,18 +29,18 @@ class _CheckUserState extends State<CheckUser> {
             prefs.getBool('declared') == null) {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => FamilyDeclaration()),
+              CupertinoPageRoute(builder: (context) => SelectMembers()),
               (_) => false);
         } else {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => BottomnavBar()),
+              CupertinoPageRoute(builder: (context) => BottomnavBar()),
               (_) => false);
         }
       } else {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => LanguagePage()),
+            CupertinoPageRoute(builder: (context) => LanguagePage()),
             (_) => false);
       }
     });
@@ -52,11 +53,7 @@ class _CheckUserState extends State<CheckUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 10.0,
-          ),
-        ),
+        child: Center(child: SpinKitChasingDots(color: Colors.black)),
       ),
     );
   }

@@ -1,10 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_localization_master/pages/advisory.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:translator/translator.dart';
 
-import 'searchPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -84,9 +82,9 @@ class _NewsApi extends State<NewsApi> {
 
   @override
   void initState() {
+    lang.prefs();
     // TODO: implement initState
     super.initState();
-    lang.prefs();
   }
 
   @override
@@ -126,7 +124,7 @@ class _NewsApi extends State<NewsApi> {
                               onTap: () {
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                         builder: (context) => NewsDetails(
                                               content: content,
                                               index: index,
@@ -270,7 +268,7 @@ class _NewsDetailsState extends State<NewsDetails> {
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
         ),
-        body: title != ""
+        body: (title != "" && detail != "")
             ? Column(
                 children: <Widget>[
                   Container(
@@ -310,12 +308,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                       child: Container(
                           alignment: Alignment.topCenter,
                           child: Text(
-                            widget.content["articles"][widget.index]
-                                        ["description"] ==
-                                    null
-                                ? "We didn't find any description"
-                                : widget.content["articles"][widget.index]
-                                    ["description"],
+                            detail,
                             style: TextStyle(fontSize: 18.0),
                           ))),
                   Container(
@@ -332,9 +325,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                       ],
                     ),
                     child: Center(
-                      child: Expanded(
-                          child: RichText(
-                              text: TextSpan(
+                      child: RichText(
+                          text: TextSpan(
                         text: "Click here to Read Full Article",
                         style: TextStyle(fontSize: 15.0),
                         recognizer: TapGestureRecognizer()
@@ -342,7 +334,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                             launch(widget.content["articles"][widget.index]
                                 ["url"]);
                           },
-                      ))),
+                      )),
                     ),
                   ),
                   SizedBox(

@@ -1,8 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
-import 'package:flutter_localization_master/pages/MyHomePage.dart';
-// import 'package:fprojects/familyDeclaration.dart';
-// import 'package:fprojects/slefDeclaration.dart';
+import 'newDeclaration.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -590,8 +589,8 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                             onPressed: () {
                               Navigator.pushAndRemoveUntil(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => mainBoard()),
+                                  CupertinoPageRoute(
+                                      builder: (context) => SelectMembers()),
                                   (_) => false);
                             },
                             child: Text(

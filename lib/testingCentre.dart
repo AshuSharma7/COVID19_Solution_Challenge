@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -97,7 +98,7 @@ class _TestingCentreState extends State<TestingCentre> {
                               onTap: () {
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                         builder: (context) =>
                                             TestingCenterDetail(
                                               state: states[index],

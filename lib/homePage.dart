@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization_master/localization/language_constants.dart';
 
-import 'loginPage.dart';
+import 'LoginPage.dart';
 import 'register.dart';
-import 'package:translator/translator.dart';
+// import 'package:translator/translator.dart';
 
-GoogleTranslator translator = new GoogleTranslator();
+// GoogleTranslator translator = new GoogleTranslator();
 
 class HomePage extends StatelessWidget {
   @override
@@ -193,7 +194,8 @@ class HomePage extends StatelessWidget {
                                           builder: (context) => LoginPage()));
                                 },
                                 child: Text(
-                                  "Login ",
+                                  // "Login ",
+                                  getTranslated(context, 'login'),
                                   style: TextStyle(fontSize: 12.0),
                                 ),
                               ),
@@ -229,7 +231,8 @@ class HomePage extends StatelessWidget {
                                               RegisterPage()));
                                 },
                                 child: Text(
-                                  "Register",
+                                  // "Register",
+                                  getTranslated(context, 'register'),
                                   style: TextStyle(fontSize: 12.0),
                                 ),
                               ),

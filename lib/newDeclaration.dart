@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization_master/pages/bottomNavBar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'MyHomePage.dart';
 import 'registerVariables.dart' as declaration;
 
 class Declaration extends StatefulWidget {
@@ -100,8 +99,8 @@ class _DeclarationState extends State<Declaration>
     {"color": color5, "shadow": Colors.deepOrange[300]},
     {"color": color5, "shadow": Colors.deepOrange[300]},
     {"color": color5, "shadow": Colors.deepOrange[300]},
-    {"color": color5, "shadow": Colors.black54},
-    {"color": color5, "shadow": Colors.black54},
+    {"color": color6, "shadow": Colors.black54},
+    {"color": color6, "shadow": Colors.black54},
   ];
   void initState() {
     super.initState();
@@ -1715,7 +1714,7 @@ class _DeclarationState extends State<Declaration>
                             print(tempIndex);
                             Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                     builder: (context) =>
                                         Declaration(memberIndex: tempIndex)));
                           } else {
@@ -1784,7 +1783,11 @@ class _DeclarationState extends State<Declaration>
                             }
                             if (declaration.error == false) {
                               prefs.setBool('declared', true);
-                              print("Done");
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => BottomnavBar()),
+                                  (_) => false);
                             }
                           }
                         }

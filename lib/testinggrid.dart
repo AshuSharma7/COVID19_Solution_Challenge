@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,7 +38,7 @@ class _testinggrid1 extends State<testinggrid1>
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                     builder: (context) => TestingCentre(
                                           para: "TC",
                                         )),
@@ -145,7 +146,7 @@ class _testinggrid1 extends State<testinggrid1>
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                                 builder: (context) => TestingCentre(
                                       para: "PR",
                                     )),
@@ -168,7 +169,7 @@ class _testinggrid1 extends State<testinggrid1>
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
+                          CupertinoPageRoute(
                               builder: (context) => TestingCentre(
                                     para: "SC",
                                   )),
@@ -271,13 +272,7 @@ class _testinggrid1 extends State<testinggrid1>
                           ),
                           margin: EdgeInsets.all(10.0),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => secondgrid()),
-                          );
-                        },
+                        onTap: () {},
                       ),
                     ),
                   ],

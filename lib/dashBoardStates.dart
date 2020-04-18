@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -121,7 +122,7 @@ class _stateList extends State<stateList> {
                             onTap: () {
                               Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) => d.DistrictList(
                                       state: states[index],
                                     ),
