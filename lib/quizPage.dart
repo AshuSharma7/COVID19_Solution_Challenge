@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_localization_master/pages/getLangCode.dart' as lang;
-import 'package:flutter_localization_master/pages/globalVar.dart';
 import 'package:translator/translator.dart';
-
-import 'googleMap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -379,108 +376,119 @@ class _QuizPageState extends State<QuizPage> {
                           margin: EdgeInsets.all(15.0),
                           width: width,
                           height: height,
-                          child: Center(
-                              child: AnimationConfiguration.staggeredList(
-                            position: 2,
-                            duration: Duration(milliseconds: 1000),
-                            child: SlideAnimation(
-                              horizontalOffset: 50.0,
-                              child: FadeInAnimation(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      title.isEmpty
-                                          ? "Loading..."
-                                          : title[index],
-                                      style: TextStyle(
-                                          fontSize: 20.0, color: Colors.white),
+                          child: title.isEmpty
+                              ? Center(
+                                  child:
+                                      SpinKitChasingDots(color: Colors.black),
+                                )
+                              : Center(
+                                  child: AnimationConfiguration.staggeredList(
+                                  position: 2,
+                                  duration: Duration(milliseconds: 1000),
+                                  child: SlideAnimation(
+                                    horizontalOffset: 50.0,
+                                    child: FadeInAnimation(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            title.isEmpty
+                                                ? "Loading..."
+                                                : title[index],
+                                            style: TextStyle(
+                                                fontSize: 20.0,
+                                                color: Colors.white),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                widget.content[widget.index]
+                                                        ["questions"][index]
+                                                    ["choice_a"],
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.0),
+                                              ),
+                                              Radio(
+                                                  activeColor: Colors.white,
+                                                  focusColor: Colors.black,
+                                                  value: "A",
+                                                  groupValue: answers[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      answers[index] = value;
+                                                    });
+                                                  }),
+                                              Text(
+                                                widget.content[widget.index]
+                                                        ["questions"][index]
+                                                    ["choice_b"],
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.0),
+                                              ),
+                                              Radio(
+                                                  activeColor: Colors.white,
+                                                  focusColor: Colors.black,
+                                                  value: "B",
+                                                  groupValue: answers[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      answers[index] = value;
+                                                    });
+                                                  }),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                widget.content[widget.index]
+                                                        ["questions"][index]
+                                                    ["choice_c"],
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.0),
+                                              ),
+                                              Radio(
+                                                  activeColor: Colors.white,
+                                                  focusColor: Colors.black,
+                                                  value: "C",
+                                                  groupValue: answers[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      answers[index] = value;
+                                                    });
+                                                  }),
+                                              Text(
+                                                widget.content[widget.index]
+                                                        ["questions"][index]
+                                                    ["choice_d"],
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.0),
+                                              ),
+                                              Radio(
+                                                  activeColor: Colors.white,
+                                                  focusColor: Colors.black,
+                                                  value: "D",
+                                                  groupValue: answers[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      answers[index] = value;
+                                                    });
+                                                  }),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          widget.content[widget.index]
-                                              ["questions"][index]["choice_a"],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0),
-                                        ),
-                                        Radio(
-                                            activeColor: Colors.white,
-                                            focusColor: Colors.black,
-                                            value: "A",
-                                            groupValue: answers[index],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                answers[index] = value;
-                                              });
-                                            }),
-                                        Text(
-                                          widget.content[widget.index]
-                                              ["questions"][index]["choice_b"],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0),
-                                        ),
-                                        Radio(
-                                            activeColor: Colors.white,
-                                            focusColor: Colors.black,
-                                            value: "B",
-                                            groupValue: answers[index],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                answers[index] = value;
-                                              });
-                                            }),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          widget.content[widget.index]
-                                              ["questions"][index]["choice_c"],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0),
-                                        ),
-                                        Radio(
-                                            activeColor: Colors.white,
-                                            focusColor: Colors.black,
-                                            value: "C",
-                                            groupValue: answers[index],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                answers[index] = value;
-                                              });
-                                            }),
-                                        Text(
-                                          widget.content[widget.index]
-                                              ["questions"][index]["choice_d"],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0),
-                                        ),
-                                        Radio(
-                                            activeColor: Colors.white,
-                                            focusColor: Colors.black,
-                                            value: "D",
-                                            groupValue: answers[index],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                answers[index] = value;
-                                              });
-                                            }),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )),
+                                  ),
+                                )),
                         ),
                       ),
                     ),
