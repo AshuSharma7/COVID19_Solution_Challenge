@@ -2,16 +2,30 @@ import 'dart:convert';
 
 // import 'package:flutter_localization_master/pages/zkcm.dart';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_localization_master/classes/audiodata.dart';
 import 'package:flutter_localization_master/pages/DailyBasis.dart';
+import 'package:flutter_localization_master/pages/advisory.dart';
+import 'package:flutter_localization_master/pages/awareness.dart';
+import 'package:flutter_localization_master/pages/developerPage.dart';
+import 'package:flutter_localization_master/pages/externaltest.dart';
+import 'package:flutter_localization_master/pages/faqPage.dart';
+import 'package:flutter_localization_master/pages/helpLine.dart';
+import 'package:flutter_localization_master/pages/othersource.dart';
+import 'package:flutter_localization_master/pages/precaution.dart';
+import 'package:flutter_localization_master/pages/testinggrid.dart';
+import 'package:flutter_localization_master/pages/userrequire.dart';
+import 'package:flutter_localization_master/pages/videoPage.dart';
+import 'package:flutter_localization_master/pages/vrdlCenter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'dashBoardStates.dart' as dash;
+import 'info.dart';
 import 'ministrystate.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'selfchecker.dart';
 import 'package:flutter/foundation.dart';
-import 'pointClass.dart' as point;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'tracker.dart';
@@ -197,9 +211,8 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      point.hospitalgrid()),
+                                              CupertinoPageRoute(
+                                                  builder: (context) => vrdl()),
                                             );
                                           },
                                         ),
@@ -251,9 +264,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                               margin: EdgeInsets.all(10.0)),
                                           onTap: () {
                                             Navigator.of(context).push(
-                                                MaterialPageRoute(
+                                                CupertinoPageRoute(
                                                     builder: (context) =>
-                                                        point.helpgrid()));
+                                                        HelpLine()));
                                           },
                                         ),
                                       ),
@@ -297,9 +310,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.labgrid()),
+                                                      testinggrid1()),
                                             );
                                           },
                                         ),
@@ -392,9 +405,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.videogrid()),
+                                                      VideoPage()),
                                             );
                                           },
                                         ),
@@ -445,7 +458,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
                                                       stateList()),
                                             );
@@ -492,9 +505,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.secondgrid()),
+                                                      Precaution()),
                                             );
                                           },
                                         ),
@@ -547,9 +560,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.awaregrid()),
+                                                      Awareness()),
                                             );
                                           },
                                         ),
@@ -594,9 +607,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.advicegrid()
+                                                      AdvisoryPage()
                                                   // LocalAudio(),
                                                   ),
                                             );
@@ -652,9 +665,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.faqgrid()),
+                                                      FAQPage()),
                                             );
                                           },
                                         ),
@@ -697,9 +710,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.audiogrid()),
+                                                      audiodata()),
                                             );
                                           },
                                         ),
@@ -750,7 +763,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
                                                       checker()),
                                             );
@@ -796,7 +809,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
                                                       Tracker()),
                                             );
@@ -851,9 +864,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.usergrid()),
+                                                      userReq()),
                                             );
                                           },
                                         ),
@@ -898,9 +911,8 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      point.infogrid()),
+                                              CupertinoPageRoute(
+                                                  builder: (context) => Info()),
                                             );
                                           },
                                         ),
@@ -952,9 +964,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.outgrid()),
+                                                      OtherSource()),
                                             );
                                           },
                                         ),
@@ -998,9 +1010,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.exterTestgrid()),
+                                                      ExternalTest()),
                                             );
                                           },
                                         ),
@@ -1047,7 +1059,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
                                                       DailyBasis()),
                                             );
@@ -1090,9 +1102,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                           onTap: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      point.exterTestgrid()),
+                                                      AboutPage()),
                                             );
                                           },
                                         ),
@@ -1167,7 +1179,7 @@ class _ContState extends State<Cont> with TickerProviderStateMixin {
           ? () {}
           : () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => widget.page));
+                  CupertinoPageRoute(builder: (context) => widget.page));
             },
       child: Container(
         margin: EdgeInsets.all(10.0),
