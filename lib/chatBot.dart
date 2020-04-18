@@ -142,20 +142,7 @@ class _ChatBotState extends State<ChatBot> {
               ),
             ),
             Container(
-                margin: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black38,
-                        blurRadius: 6.0,
-                        offset: Offset.fromDirection(1.0, 3.0))
-                  ],
-                  borderRadius: BorderRadius.circular(15.0),
-                  gradient: LinearGradient(colors: [
-                    Color(0xFFFF5F6D),
-                    Color(0xFFFFC371),
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
+                color: Colors.white,
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   children: <Widget>[
