@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/classes/language.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
@@ -47,54 +48,51 @@ class _LanguagePage extends State<LanguagePage> {
               "assets/images/flag.png",
             ),
             Container(
-                margin: EdgeInsets.all(20.0),
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Color(0xFFff9966),
-                    Color(0xFFff5e62),
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.deepOrange[200],
-                        blurRadius: 15.0,
-                        offset: Offset.fromDirection(1.0, 10.0))
-                  ],
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Center(
-                      child: Text(
-                        lang,
-                        style: TextStyle(fontSize: 20.0),
-                      ),
-                    ),
-                    Center(
-                      child: Expanded(
-                        child: DropdownButton(
-                          underline: SizedBox(),
-                          onChanged: (language) {
-                            _changeLanguage(language);
-                            setState(() {
-                              lang = language.name;
-                            });
-                          },
-                          items: Language.languageList()
-                              .map(
-                                (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(
-                                      e.name,
-                                      style: TextStyle(color: Colors.black),
-                                    )),
-                              )
-                              .toList(),
+              margin: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Color(0xFFff9966),
+                  Color(0xFFff5e62),
+                ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                borderRadius: BorderRadius.circular(15.0),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.deepOrange[200],
+                      blurRadius: 15.0,
+                      offset: Offset.fromDirection(1.0, 10.0))
+                ],
+              ),
+              child: Center(
+                child: DropdownButton<Language>(
+                  hint: Text(lang),
+                  underline: SizedBox(),
+                  onChanged: (Language language) {
+                    _changeLanguage(language);
+                    setState(() {
+                      lang = language.name;
+                    });
+                  },
+                  items: Language.languageList()
+                      .map<DropdownMenuItem<Language>>(
+                        (e) => DropdownMenuItem<Language>(
+                          value: e,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                e.name,
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                )),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
             Material(
               color: Colors.transparent,
               child: InkWell(
@@ -103,7 +101,7 @@ class _LanguagePage extends State<LanguagePage> {
                       await SharedPreferences.getInstance();
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    CupertinoPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 child: Container(
