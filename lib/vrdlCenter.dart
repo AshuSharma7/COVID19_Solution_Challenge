@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/pages/DeclarationForm.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -63,12 +64,7 @@ class _vrdlState extends State<vrdl> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white),
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFFFF9933),
-          Color(0xFFFFFFFF),
-          Color(0xFF138808),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        decoration: BoxDecoration(color: Colors.white),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
@@ -90,7 +86,7 @@ class _vrdlState extends State<vrdl> {
                           onTap: () {
                             Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                     builder: (context) => vrdlList(
                                         state: states[index],
                                         content: content)));
@@ -191,12 +187,7 @@ class _vrdlListState extends State<vrdlList> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white),
       body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(0xFFFF9933),
-            Color(0xFFFFFFFF),
-            Color(0xFF138808),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          decoration: BoxDecoration(color: Colors.white),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: districtTranslated.isNotEmpty
@@ -207,7 +198,7 @@ class _vrdlListState extends State<vrdlList> {
                         onTap: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
                                   builder: (context) =>
                                       detail(district[index])));
                         },
@@ -248,13 +239,17 @@ class _vrdlListState extends State<vrdlList> {
 
 Widget detail(String dis) {
   return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        "Details",
+        style: TextStyle(fontSize: 30.0, color: Colors.black),
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+    ),
     body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFFFF9933),
-          Color(0xFFFFFFFF),
-          Color(0xFF138808),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        color: Colors.white,
         // width: MediaQuery.of(context).size.width,
         // height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
@@ -268,14 +263,16 @@ Widget detail(String dis) {
                     if (content[index]["district"] == dis) {
                       return Column(
                         children: <Widget>[
-                          Image(image: AssetImage('images/flag.gif')),
                           Container(
                               margin: EdgeInsets.all(10.0),
                               padding: EdgeInsets.all(10.0),
                               // width: MediaQuery.of(context).size.width - 100,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                    colors: color2,
+                                    colors: [
+                                      Color(0xFF11998e),
+                                      Color(0xFF38ef7d),
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight),
                                 borderRadius: BorderRadius.circular(15.0),

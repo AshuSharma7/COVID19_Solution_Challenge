@@ -1,32 +1,31 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'AudioPlayer.dart';
- 
+// import 'AudioPlayer.dart';
+
 class Awareness extends StatefulWidget {
   Awareness() : super();
- 
+
   final String title = "Carousel Demo";
- 
+
   @override
   AwarenessState createState() => AwarenessState();
 }
- 
+
 class AwarenessState extends State<Awareness> {
   //
   CarouselSlider carouselSlider;
   int _current = 0;
   List imgList = [
-   'https://navbharattimes.indiatimes.com/feeds/photo.cms?photoid=73515884',
-   'https://www.bcpharmacists.org/sites/default/files/2019coronavirusposterphsa.PNG',
-   'https://www.health.gov.au/sites/default/files/images/publications/2020/03/coronavirus-covid-19-stop-the-spread_0.png',
-   'https://backpanel.kemlu.go.id/PublishingImages/Korona%202%20.jpg',
-   'https://images-na.ssl-images-amazon.com/images/I/81t0BuNsKFL._AC_SY741_.jpg',
-   'https://www.tameside.gov.uk/getmedia/74774340-548a-4f33-9eda-ca8dc8103812/hand-hygiene-poster?width=450&height=636',
-   'https://www.newcrosshealthcare.com/sites/default/files/styles/max_650_wide/public/inline-images/CV300%20%281%29.jpg?itok=W3p_bQQS'
+    'https://navbharattimes.indiatimes.com/feeds/photo.cms?photoid=73515884',
+    'https://www.bcpharmacists.org/sites/default/files/2019coronavirusposterphsa.PNG',
+    'https://www.health.gov.au/sites/default/files/images/publications/2020/03/coronavirus-covid-19-stop-the-spread_0.png',
+    'https://backpanel.kemlu.go.id/PublishingImages/Korona%202%20.jpg',
+    'https://images-na.ssl-images-amazon.com/images/I/81t0BuNsKFL._AC_SY741_.jpg',
+    'https://www.tameside.gov.uk/getmedia/74774340-548a-4f33-9eda-ca8dc8103812/hand-hygiene-poster?width=450&height=636',
+    'https://www.newcrosshealthcare.com/sites/default/files/styles/max_650_wide/public/inline-images/CV300%20%281%29.jpg?itok=W3p_bQQS'
   ];
- 
+
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
     for (var i = 0; i < list.length; i++) {
@@ -34,23 +33,17 @@ class AwarenessState extends State<Awareness> {
     }
     return result;
   }
- 
+
+  List<Color> sweet = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
       body: Container(
-         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xFFFF9933),
-            Color(0xFFFFFFFF),
-            Color(0xFF138808),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        ),
-      height: MediaQuery.of(context).size.height,
-      width:  MediaQuery.of(context).size.height,
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.height,
         child: Column(
-             
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -75,13 +68,22 @@ class AwarenessState extends State<Awareness> {
                   builder: (BuildContext context) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 10.0),
+                      height: MediaQuery.of(context).size.height,
+                      margin: EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
-                        color: Colors.green,
-                      ),
-                      child: Image.network(
-                        imgUrl,
-                        fit: BoxFit.fill,
+                        image: DecorationImage(
+                            image: NetworkImage(imgUrl), fit: BoxFit.fill),
+                        borderRadius: BorderRadius.circular(15.0),
+                        gradient: LinearGradient(
+                            colors: sweet,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black45,
+                              blurRadius: 10.0,
+                              offset: Offset.fromDirection(4.5, -5.0))
+                        ],
                       ),
                     );
                   },
@@ -107,7 +109,6 @@ class AwarenessState extends State<Awareness> {
             ),
             SizedBox(
               height: 20.0,
-              
             ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
@@ -115,12 +116,12 @@ class AwarenessState extends State<Awareness> {
             //     OutlineButton(
             //       onPressed: goToPrevious,
             //       child: Text("<"),
-                
+
             //     ),
             //     OutlineButton(
             //       onPressed: goToNext,
             //       child: Text(">"),
-                  
+
             //     ),
             //   ],
             // ),
@@ -129,13 +130,13 @@ class AwarenessState extends State<Awareness> {
       ),
       // floatingActionButton: FloatingActionButton.extended
       // (
-      //   onPressed: () 
+      //   onPressed: ()
       //   {
       //     Navigator.push
       //     (
       //       context,
-      //         MaterialPageRoute(builder: 
-      //         (context) 
+      //         MaterialPageRoute(builder:
+      //         (context)
       //           => MyApp()),
       //     );
       //   },
@@ -149,13 +150,12 @@ class AwarenessState extends State<Awareness> {
       // ),
     );
   }
- 
+
   goToPrevious() {
     carouselSlider.previousPage(
-    
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
- 
+
   goToNext() {
     carouselSlider.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);

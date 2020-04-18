@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localization_master/pages/districtMap.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'getLangCode.dart' as lang;
@@ -61,15 +60,16 @@ class _Precaution extends State<Precaution> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("India's Fight Against Corona"),
+        automaticallyImplyLeading: false,
+        title: Text(
+          "Precaution",
+          style: TextStyle(color: Colors.black, fontSize: 30.0),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.white,
       ),
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFFFF9933),
-          Color(0xFFFFFFFF),
-          Color(0xFF138808),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        color: Colors.white,
         child: FutureBuilder(
             future: getPrec(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -111,7 +111,7 @@ class _Precaution extends State<Precaution> {
                                               Offset.fromDirection(1.0, 10.0))
                                     ],
                                   ),
-                                  margin: EdgeInsets.all(10.0),
+                                  margin: EdgeInsets.all(20.0),
                                   child: Center(
                                       child: Padding(
                                           padding: EdgeInsets.all(10),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization_master/pages/districtMap.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:translator/translator.dart';
@@ -24,7 +23,6 @@ class _AdvisoryPageState extends State<AdvisoryPage> {
   List<Map<String, String>> advisory = [];
   void translate(List content) async {
     String langCode = await lang.prefs();
-    langCode = 'hi';
     for (int i = 0; i < content.length - 15; i++) {
       String title = content[i]["title"];
       String detail = content[i]["detail"];
@@ -55,12 +53,7 @@ class _AdvisoryPageState extends State<AdvisoryPage> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFFFF9933),
-          Color(0xFFFFFFFF),
-          Color(0xFF138808),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        color: Colors.white,
         child: FutureBuilder(
           future: getUri(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
