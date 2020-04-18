@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization_master/pages/LanguagePage.dart';
 import 'package:flutter_localization_master/pages/chatBot.dart';
+import 'package:flutter_localization_master/pages/farmerDashBoard.dart';
 import 'package:flutter_localization_master/pages/grid.dart';
 import 'package:flutter_localization_master/pages/newDeclaration.dart';
 import 'package:flutter_localization_master/pages/newsapi.dart';
@@ -24,10 +26,10 @@ class _BottomnavBarState extends State<BottomnavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
-    Quiz(),
+    LanguagePage(),
     NewsApi(),
     ChatBot(),
-    LogoApp(),
+    Quiz(),
   ];
 
   @override
@@ -56,8 +58,8 @@ class _BottomnavBarState extends State<BottomnavBar> {
                 ),
                 tabs: [
                   GButton(
-                    icon: LineIcons.graduation_cap,
-                    text: 'Quiz',
+                    icon: LineIcons.home,
+                    text: 'Dash Board',
                   ),
                   GButton(
                     icon: LineIcons.newspaper_o,
@@ -68,8 +70,8 @@ class _BottomnavBarState extends State<BottomnavBar> {
                     text: 'ChatBot',
                   ),
                   GButton(
-                    icon: LineIcons.home,
-                    text: 'DashBoard',
+                    icon: LineIcons.graduation_cap,
+                    text: 'Quiz',
                   ),
                 ],
                 selectedIndex: _selectedIndex,
