@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
-import 'deathgrid.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_icons/line_icons.dart';
 import 'depart.dart';
-import 'pcr.dart';
-import 'samplecollection.dart';
 import 'testingCentre.dart';
 
 class testinggrid1 extends StatefulWidget {
@@ -17,202 +16,273 @@ class _testinggrid1 extends State<testinggrid1>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Color(0xFFFF9933),
-              Color(0xFFFFFFFF),
-              Color(0xFF138808),
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-            child: ListView(children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 8,
-              ),
-              Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                          child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TestingCentre(
-                                            para: "TC",
-                                          )),
-                                );
-                              },
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0)),
-                                elevation: 10.0,
-                                color: Color(0xFFFFFFFF),
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 5,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Image(
-                                          image:
-                                              AssetImage('images/center.png')),
-                                      Center(
-                                        child: Text(
-                                          getTranslated(
-                                              context, 'testing_center'),
-                                          // "परीक्षण केंद्र",
-                                          textAlign: TextAlign.center,
-                                          textDirection: TextDirection.ltr,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                margin: EdgeInsets.only(left: 10),
-                              ))),
-                      Expanded(
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Align(
+          alignment: Alignment.center,
+          child: ListView(children: <Widget>[
+            SizedBox(
+              height: 15.0,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
                         child: GestureDetector(
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            elevation: 10.0,
-                            color: Color(0xFFFFFFFF),
-                            child: Container(
-                              height: MediaQuery.of(context).size.height / 5,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image(image: AssetImage('images/pcr.png')),
-                                  Center(
-                                    child: Text(
-                                      getTranslated(context, 'pcr'),
-                                      // "पीसीआर मशीन",
-                                      textAlign: TextAlign.center,
-                                      textDirection: TextDirection.ltr,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TestingCentre(
+                                          para: "TC",
+                                        )),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              elevation: 10.0,
+                              color: Color(0xFFFFFFFF),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFFff9966),
+                                      Color(0xFFff5e62)
+                                    ],
+                                    begin: Alignment.bottomRight,
+                                    end: Alignment.topLeft,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.deepOrange[300],
+                                        blurRadius: 20.0,
+                                        spreadRadius: 0.1,
+                                        offset:
+                                            Offset.fromDirection(4.0, -10.0))
+                                  ],
+                                ),
+                                height: MediaQuery.of(context).size.height / 5,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(FontAwesomeIcons.stethoscope,
+                                        size: 60.0),
+                                    Center(
+                                      child: Text(
+                                        getTranslated(
+                                            context, 'testing_center'),
+                                        // "परीक्षण केंद्र",
+                                        textAlign: TextAlign.center,
+                                        textDirection: TextDirection.ltr,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.black87,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            margin: EdgeInsets.only(left: 10),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TestingCentre(
-                                        para: "PR",
-                                      )),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  )),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 8,
-              ),
-              Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                          child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TestingCentre(
-                                      para: "SC",
-                                    )),
-                          );
-                        },
+                              margin: EdgeInsets.all(10.0),
+                            ))),
+                    Expanded(
+                      child: GestureDetector(
                         child: Card(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
+                              borderRadius: BorderRadius.circular(10.0)),
                           elevation: 10.0,
                           color: Color(0xFFFFFFFF),
                           child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              gradient: LinearGradient(
+                                colors: [Color(0xFFff9966), Color(0xFFff5e62)],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.deepOrange[300],
+                                    blurRadius: 20.0,
+                                    spreadRadius: 0.1,
+                                    offset: Offset.fromDirection(4.0, -10.0))
+                              ],
+                            ),
                             height: MediaQuery.of(context).size.height / 5,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Image(image: AssetImage('images/sample.png')),
+                                Icon(
+                                  FontAwesomeIcons.allergies,
+                                  size: 60.0,
+                                ),
                                 Center(
                                   child: Text(
-                                    getTranslated(context, 'sample_coll'),
-                                    // "नमूना संग्रह",
+                                    getTranslated(context, 'pcr'),
+                                    // "पीसीआर मशीन",
                                     textAlign: TextAlign.center,
                                     textDirection: TextDirection.ltr,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
                                     ),
                                   ),
                                 )
                               ],
                             ),
                           ),
-                          margin: EdgeInsets.only(left: 10),
+                          margin: EdgeInsets.all(10.0),
                         ),
-                      )),
-                      Expanded(
-                        child: GestureDetector(
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            elevation: 10.0,
-                            color: Color(0xFFFFFFFF),
-                            child: Container(
-                              height: MediaQuery.of(context).size.height / 5,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image(image: AssetImage('images/inform.png')),
-                                  Center(
-                                    child: Text(
-                                      getTranslated(context, 'guidlines'),
-                                      // "\nदिशा निर्देशों",
-                                      textAlign: TextAlign.center,
-                                      textDirection: TextDirection.ltr,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            margin: EdgeInsets.only(left: 10),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => secondgrid()),
-                            );
-                          },
-                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TestingCentre(
+                                      para: "PR",
+                                    )),
+                          );
+                        },
                       ),
-                    ],
-                  ))
-            ])));
+                    ),
+                  ],
+                )),
+            SizedBox(
+              height: 15.0,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                        child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TestingCentre(
+                                    para: "SC",
+                                  )),
+                        );
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        elevation: 10.0,
+                        color: Color(0xFFFFFFFF),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFff9966), Color(0xFFff5e62)],
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.deepOrange[300],
+                                  blurRadius: 20.0,
+                                  spreadRadius: 0.1,
+                                  offset: Offset.fromDirection(4.0, -10.0))
+                            ],
+                          ),
+                          height: MediaQuery.of(context).size.height / 5,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                LineIcons.flask,
+                                size: 60.0,
+                              ),
+                              Center(
+                                child: Text(
+                                  getTranslated(context, 'sample_coll'),
+                                  // "नमूना संग्रह",
+                                  textAlign: TextAlign.center,
+                                  textDirection: TextDirection.ltr,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        margin: EdgeInsets.all(10.0),
+                      ),
+                    )),
+                    Expanded(
+                      child: GestureDetector(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          elevation: 10.0,
+                          color: Color(0xFFFFFFFF),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              gradient: LinearGradient(
+                                colors: [Color(0xFFff9966), Color(0xFFff5e62)],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.deepOrange[300],
+                                    blurRadius: 20.0,
+                                    spreadRadius: 0.1,
+                                    offset: Offset.fromDirection(4.0, -10.0))
+                              ],
+                            ),
+                            height: MediaQuery.of(context).size.height / 5,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  LineIcons.info_circle,
+                                  size: 60.0,
+                                ),
+                                Center(
+                                  child: Text(
+                                    getTranslated(context, 'guidlines'),
+                                    // "\nदिशा निर्देशों",
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          margin: EdgeInsets.all(10.0),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => secondgrid()),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ))
+          ]),
+        ));
   }
 }
