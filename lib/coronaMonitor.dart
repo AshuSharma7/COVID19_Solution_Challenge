@@ -59,7 +59,14 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
             future: getUri(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
+                int index;
                 Map content = snapshot.data;
+                for (int i = 0; i < content["countries_stat"].length; i++) {
+                  if (content["countries_stat"][i]["country_name"] == "India") {
+                    index = i;
+                    break;
+                  }
+                }
                 return ListView(
                   children: <Widget>[
                     Padding(
@@ -74,7 +81,8 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  content["countries_stat"][21]["country_name"]
+                                  content["countries_stat"][index]
+                                          ["country_name"]
                                       .toString()
                                       .toUpperCase(),
                                   style: TextStyle(fontSize: 30.0),
@@ -120,7 +128,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                               'total_infected') +
                                                           "\n" +
                                                           content["countries_stat"]
-                                                              [21]["cases"],
+                                                              [index]["cases"],
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -162,7 +170,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         'total_death') +
                                                     "\n" +
                                                     content["countries_stat"]
-                                                        [21]["deaths"],
+                                                        [index]["deaths"],
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   color: Colors.white,
@@ -215,7 +223,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                               'total_cured') +
                                                           "\n" +
                                                           content["countries_stat"]
-                                                                  [21][
+                                                                  [index][
                                                               "total_recovered"],
                                                       textAlign:
                                                           TextAlign.center,
@@ -258,7 +266,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         context, 'new_cases') +
                                                     "\n" +
                                                     content["countries_stat"][
-                                                            21] //new_deaths":"2","new_cases":"121","serious_critical":"0","active_cases":"602","total_cases_per_1m_population":"0.5
+                                                            index] //new_deaths":"2","new_cases":"121","serious_critical":"0","active_cases":"602","total_cases_per_1m_population":"0.5
                                                         ["new_cases"],
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
@@ -313,7 +321,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                                 'critical') +
                                                             "\n" +
                                                             content["countries_stat"]
-                                                                    [21][
+                                                                    [index][
                                                                 "serious_critical"],
                                                         textAlign:
                                                             TextAlign.center,
@@ -355,7 +363,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                                         'active_cases') +
                                                     "\n" +
                                                     content["countries_stat"]
-                                                        [21]["active_cases"],
+                                                        [index]["active_cases"],
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   color: Colors.white,
@@ -370,7 +378,7 @@ class _CoronaMonitorState extends State<CoronaMonitor> {
                                 Text(
                                   // "प्रति 10 लाख लोगों पर कुल मामले: "
                                   getTranslated(context, 'total_cases_per') +
-                                      content["countries_stat"][21]
+                                      content["countries_stat"][index]
                                           ["total_cases_per_1m_population"],
                                   style: TextStyle(
                                       fontSize: 20.0,
