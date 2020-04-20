@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-//import 'fluttertoast.dart';
-import 'familyDeclaration.dart';
-import 'package:geolocator/geolocator.dart';
-import 'dart:async';
-import 'package:http/http.dart';
 import 'dart:convert';
+import 'package:http/http.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'dart:async';
+
+class userReq extends StatefulWidget {
+  @override
+  _userReq createState() => _userReq();
+}
 
 void makePost2(String a, String b, String c, String d, String e, double f,
-    double g, String h, String i, String j, String k, var l) async {
+    double g, String m, String h, String i, String j, String k, var l) async {
   String url = "https://covid-mitrc.herokuapp.com/apis/requirements/create";
   var body = {
     "rashan": a,
@@ -17,6 +21,7 @@ void makePost2(String a, String b, String c, String d, String e, double f,
     "emergency": e,
     "latitude": f,
     "longitude": g,
+    "feedback": m,
     "colony": h,
     "state": i,
     "district": j,
@@ -31,10 +36,43 @@ void makePost2(String a, String b, String c, String d, String e, double f,
   print(r.body);
 }
 
-class userReq extends StatefulWidget {
-  @override
-  _userReq createState() => _userReq();
-}
+List<Map<String, dynamic>> animCont = [
+  {"color": color5, "shadow": Colors.deepOrange[300]},
+  {"color": color5, "shadow": Colors.deepOrange[300]},
+  {"color": color5, "shadow": Colors.deepOrange[300]},
+  {"color": color5, "shadow": Colors.black54},
+  {"color": color6, "shadow": Colors.black54},
+  {"color": color6, "shadow": Colors.black54},
+];
+
+List<Color> color6 = [
+  Color(0xFFf80759),
+  Color(0xFFbc4e9c),
+];
+
+List<Color> color3 = [
+  Color(0xFF8E2DE2),
+  Color(0xFF4A00E0),
+];
+List<Color> color1 = [
+  Color(0xFF00b09b),
+  Color(0xFF00b09b),
+];
+List<Color> color5 = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
+List<Color> color2 = [
+  Color(0xFFff9966),
+  Color(0xFFff5e62),
+];
+List<Color> color4 = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
+
+bool _value1 = false,
+    _value2 = false,
+    _value3 = false,
+    _value4 = false,
+    _value5 = false,
+    _value6 = false,
+    _value7 = false,
+    _value8 = false;
 
 class _userReq extends State<userReq> {
   List<String> dRajasthan = [
@@ -45,26 +83,18 @@ class _userReq extends State<userReq> {
     "bhilwara",
     "kota"
   ];
-
-  var value1, value2, value3, value4;
-  bool boolv1 = false,
-      boolv2 = false,
-      boolv3 = false,
-      boolv4 = false,
-      boolv5 = false,
-      boolv6 = false,
-      boolv7 = false,
-      boolv8 = false;
-  String selectedState;
-  List<String> states = ["Rajasthan", "up", "Gujrat"];
-  String selectedDistrict;
+  String lat, long = '';
+  Position position;
+  StreamSubscription<Position> positionStream;
   TextEditingController remarkEditor = new TextEditingController();
   TextEditingController mobEditor = new TextEditingController();
   TextEditingController colnyEditor = new TextEditingController();
   TextEditingController hnumberEditor = new TextEditingController();
-  Position position;
-  StreamSubscription<Position> positionStream;
-  String lat, long = '';
+  TextEditingController feedbackEditor = new TextEditingController();
+  String ration, gas, medical, emergency;
+  String selectedState;
+  List<String> states = ["Rajasthan", "up", "Gujrat"];
+  String selectedDistrict;
 
   getLocation() async {
     var geolocator = Geolocator();
@@ -74,7 +104,6 @@ class _userReq extends State<userReq> {
     positionStream = geolocator
         .getPositionStream(locationOptions)
         .listen((Position position) {
-      // print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
       if (position != null) {
         setState(() {
           lat = position.latitude.toString();
@@ -100,367 +129,926 @@ class _userReq extends State<userReq> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(0xFFFF9933),
-            Color(0xFFFFFFFF),
-            Color(0xFF138808),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-          child: ListView(
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 20),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "उपयोगकर्ता की आवश्यकता के लिए आपका स्वागत है5",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: <Widget>[
-                              Text("राशन:"),
-                              Checkbox(
-                                value: boolv1,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    value1 = "हाँ";
-                                    boolv1 = value;
-                                  });
-                                },
-                              ),
-                              Text("हाँ"),
-                              Checkbox(
-                                value: boolv2,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    value1 = "नहीं";
-                                    boolv2 = value;
-                                  });
-                                },
-                              ),
-                              Text("नहीं")
-                            ],
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text("गैस:"),
-                            Checkbox(
-                              value: boolv3,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  value2 = "हाँ";
-                                  boolv3 = value;
-                                });
-                              },
-                            ),
-                            Text("हाँ"),
-                            Checkbox(
-                              value: boolv4,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  value2 = "नहीं";
-                                  boolv4 = value;
-                                });
-                              },
-                            ),
-                            Text("नहीं")
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text("मेडिकल:"),
-                            Checkbox(
-                              value: boolv5,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  value3 = "हाँ";
-                                  boolv5 = value;
-                                });
-                              },
-                            ),
-                            Text("हाँ"),
-                            Checkbox(
-                              value: boolv6,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  value3 = "नहीं";
-                                  boolv6 = value;
-                                });
-                              },
-                            ),
-                            Text("नहीं")
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: TextFormField(
-                          controller: remarkEditor,
-                          obscureText: false,
-                          keyboardType: TextInputType.text,
-                          // controller: passEditor,
-                          decoration: InputDecoration(
-                            labelText: "टिप्पणी",
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(5.0),
-                              borderSide: new BorderSide(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text("आपातकालीन:"),
-                            Checkbox(
-                              value: boolv7,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  value4 = "हाँ";
-                                  boolv7 = value;
-                                });
-                              },
-                            ),
-                            Text("हाँ"),
-                            Checkbox(
-                              value: boolv8,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  value4 = "नहीं";
-                                  boolv8 = value;
-                                });
-                              },
-                            ),
-                            Text("नहीं")
-                          ],
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    width: 100,
-                                    height: 30.0,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 10.0),
-                                        ]),
-                                    child: Text(
-                                      long,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Container(
-                                    width: 100,
-                                    height: 30.0,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 10.0),
-                                        ]),
-                                    child: Text(
-                                      lat,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 10.0),
-                                        ]),
-                                    child: MaterialButton(
-                                      onPressed: getLocation,
-                                      child: Text("स्थान प्राप्त करें"),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  // border: Border.all(
-                                  //     color: Colors.white,
-                                  //     style: BorderStyle.solid,
-                                  //     width: 0.80),
+        body: Container(
+            color: Colors.white,
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    SizedBox(height: 80),
+                    Padding(
+                        padding: EdgeInsets.only(left: 30, right: 30),
+                        child: Container(
+                            height: 150,
+                            child: Card(
+                                shape: BeveledRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                child: DropdownButton(
-                                  iconDisabledColor: Colors.black,
-                                  hint: Text(
-                                    'अपना राज्य चुनें',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 15.0),
-                                  ),
-                                  value: selectedState,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      selectedState = newValue;
-                                    });
-                                  },
-                                  items: states.map((location) {
-                                    return DropdownMenuItem(
-                                      child: new Text(location,
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                      value: location,
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              SizedBox(width: 10.0),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: DropdownButton(
-                                  hint: Text('अपने जिले का चयन करें',
+                                elevation: 10,
+                                color: Colors.white,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Ration Details:",
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 15.0)),
-                                  value: selectedDistrict,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      selectedDistrict = newValue;
-                                    });
-                                  },
-                                  items: dRajasthan.map((location) {
-                                    return DropdownMenuItem(
-                                      child: new Text(location,
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                      value: location,
-                                    );
-                                  }).toList(),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        GestureDetector(
+                                            onTap: () {
+                                              ration = "yes";
+                                              if (_value2 == false) {
+                                                setState(() {
+                                                  _value1 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value1 = true;
+                                                  _value2 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value1 == false
+                                                ? AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[1]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Yes",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ))
+                                                : AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[5]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Icon(Icons.done),
+                                                  )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              ration = "no";
+                                              if (_value1 == false) {
+                                                setState(() {
+                                                  _value2 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value2 = true;
+                                                  _value1 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value2 == false
+                                                ? Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve:
+                                                            Curves.bounceInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[1]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child: Text("No",
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                        )),
+                                                  )
+                                                : Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve:
+                                                            Curves.bounceInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[5]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child:
+                                                              Icon(Icons.done),
+                                                        )),
+                                                  ))
+                                      ],
+                                    ),
+                                  ],
+                                )))),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 30, right: 30),
+                        child: Container(
+                            height: 150,
+                            child: Card(
+                                elevation: 10,
+                                color: Colors.white,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Gas Details:",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        GestureDetector(
+                                            onTap: () {
+                                              gas = "yes";
+                                              if (_value4 == false) {
+                                                setState(() {
+                                                  _value3 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value3 = true;
+                                                  _value4 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value3 == false
+                                                ? AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[1]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Yes",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ))
+                                                : AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[5]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Icon(Icons.done),
+                                                  )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              gas = "no";
+                                              if (_value3 == false) {
+                                                setState(() {
+                                                  _value4 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value4 = true;
+                                                  _value3 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value4 == false
+                                                ? Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve:
+                                                            Curves.bounceInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[1]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child: Text("No",
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                        )),
+                                                  )
+                                                : Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve:
+                                                            Curves.bounceInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[5]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child:
+                                                              Icon(Icons.done),
+                                                        )),
+                                                  ))
+                                      ],
+                                    ),
+                                  ],
+                                )))),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 30, right: 30),
+                        child: Container(
+                            height: 150,
+                            child: Card(
+                                elevation: 10,
+                                color: Colors.white,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Emergency Details:",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        GestureDetector(
+                                            onTap: () {
+                                              emergency = "yes";
+
+                                              if (_value8 == false) {
+                                                setState(() {
+                                                  _value7 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value7 = true;
+                                                  _value8 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value7 == false
+                                                ? AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[1]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Yes",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ))
+                                                : AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[5]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Icon(Icons.done),
+                                                  )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              emergency = "no";
+                                              if (_value7 == false) {
+                                                setState(() {
+                                                  _value8 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value8 = true;
+                                                  _value7 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value8 == false
+                                                ? Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve:
+                                                            Curves.bounceInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[1]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child: Text("No",
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                        )),
+                                                  )
+                                                : Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve:
+                                                            Curves.bounceInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[5]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child:
+                                                              Icon(Icons.done),
+                                                        )),
+                                                  ))
+                                      ],
+                                    ),
+                                  ],
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: 100,
+                                  height: 30.0,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 10.0),
+                                      ]),
+                                  child: Text(
+                                    long,
+                                    // "jhjhn",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                Container(
+                                  width: 100,
+                                  height: 30.0,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 10.0),
+                                      ]),
+                                  child: Text(
+                                    lat,
+                                    // "jhjhn",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8.0,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 10.0),
+                                      ]),
+                                  child: MaterialButton(
+                                    onPressed: getLocation,
+                                    child: Text(
+                                        // getTranslated(context, 'fetch'),
+                                        "स्थान प्राप्त करें"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
+                    SizedBox(height: 20),
+                    Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                // border: Border.all(
+                                //     color: Colors.white,
+                                //     style: BorderStyle.solid,
+                                //     width: 0.80),
                               ),
-                            ],
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                          obscureText: false,
+                              child: DropdownButton(
+                                iconDisabledColor: Colors.black,
+                                hint: Text(
+                                  // getTranslated(context, 'select_state'),
+                                  'अपना राज्य चुनें',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15.0),
+                                ),
+                                value: selectedState,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    selectedState = newValue;
+                                  });
+                                },
+                                items: states.map((location) {
+                                  return DropdownMenuItem(
+                                    child: new Text(location,
+                                        style: TextStyle(color: Colors.black)),
+                                    value: location,
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            SizedBox(width: 10.0),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: DropdownButton(
+                                hint: Text(
+                                    // getTranslated(context, 'select_district'),
+                                    'अपने जिले का चयन करें',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15.0)),
+                                value: selectedDistrict,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    selectedDistrict = newValue;
+                                  });
+                                },
+                                items: dRajasthan.map((location) {
+                                  return DropdownMenuItem(
+                                    child: new Text(location,
+                                        style: TextStyle(color: Colors.black)),
+                                    value: location,
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        )),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
+                          controller: remarkEditor,
+                          decoration: InputDecoration(
+                            labelText: "Remarks",
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(25.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          ),
+                        )),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 30, right: 30),
+                        child: AnimatedContainer(
+                            curve: Curves.bounceInOut,
+                            duration: Duration(milliseconds: 500),
+                            height: 150,
+                            child: Card(
+                                elevation: 10,
+                                color: Colors.white,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Medical Facility:",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        GestureDetector(
+                                            onTap: () {
+                                              medical = "yes";
+                                              if (_value6 == false) {
+                                                setState(() {
+                                                  _value5 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value5 = true;
+                                                  _value6 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value5 == false
+                                                ? AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.bounceInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[1]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Yes",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ))
+                                                : AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.easeInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[5]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Icon(Icons.done),
+                                                  )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              medical = "no";
+                                              if (_value5 == false) {
+                                                setState(() {
+                                                  _value6 = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value6 = true;
+                                                  _value5 = false;
+                                                });
+                                              }
+                                            },
+                                            child: _value6 == false
+                                                ? Center(
+                                                    child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve: Curves.easeInOut,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: animCont[1]
+                                                                ["color"],
+                                                            begin: Alignment
+                                                                .bottomRight,
+                                                            end: Alignment
+                                                                .topLeft,
+                                                          ),
+                                                        ),
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: Center(
+                                                          child: Text("No",
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                        )),
+                                                  )
+                                                : Center(
+                                                    child: AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.easeInOut,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6.0),
+                                                      gradient: LinearGradient(
+                                                        colors: animCont[5]
+                                                            ["color"],
+                                                        begin: Alignment
+                                                            .bottomRight,
+                                                        end: Alignment.topLeft,
+                                                      ),
+                                                    ),
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Icon(Icons.done),
+                                                  )))
+                                      ],
+                                    ),
+                                  ],
+                                )))),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
                           controller: mobEditor,
-                          keyboardType: TextInputType.number,
-                          // controller: passEditor,
                           decoration: InputDecoration(
-                            labelText: "मोबाइल नंबर",
+                            labelText: "Mobile Number",
                             border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(5.0),
+                              borderRadius: new BorderRadius.circular(25.0),
                               borderSide: new BorderSide(),
                             ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                          obscureText: false,
+                        )),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
                           controller: colnyEditor,
-                          keyboardType: TextInputType.text,
-                          // controller: passEditor,
                           decoration: InputDecoration(
-                            labelText: "कालोनी",
+                            labelText: "Colony",
                             border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(5.0),
+                              borderRadius: new BorderRadius.circular(25.0),
                               borderSide: new BorderSide(),
                             ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: TextFormField(
+                        )),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
                           controller: hnumberEditor,
-                          obscureText: false,
-                          keyboardType: TextInputType.text,
-                          // controller: passEditor,
                           decoration: InputDecoration(
-                            labelText: "घर का नंबर",
+                            labelText: "House Number",
                             border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(5.0),
+                              borderRadius: new BorderRadius.circular(25.0),
                               borderSide: new BorderSide(),
                             ),
                           ),
+                        )),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
+                          controller: feedbackEditor,
+                          decoration: InputDecoration(
+                            labelText: "Feedback",
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(25.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          ),
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: Container(
+                        width: 200,
+                        child: RaisedButton(
+                          color: Color(0xFF57bbd8),
+                          highlightElevation: 10,
+                          onPressed: () {
+                            var mob = int.parse(mobEditor.text);
+                            var latu = double.parse(lat.toString());
+                            var longu = double.parse(long.toString());
+                            makePost2(
+                                ration.toString(),
+                                gas.toString(),
+                                medical.toString(),
+                                remarkEditor.text,
+                                emergency.toString(),
+                                latu,
+                                longu,
+                                feedbackEditor.text,
+                                colnyEditor.text,
+                                selectedState.toString(),
+                                selectedDistrict.toString(),
+                                hnumberEditor.text,
+                                mob);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                          ),
+                          child: Text(
+                            "Submit",
+                            // getTranslated(context, 'login'),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 30),
-                          child: Center(
-                              child: RaisedButton(
-                            onPressed: () {
-                              var mob = int.parse(mobEditor.text);
-                              var latu = double.parse(lat.toString());
-                              var longu = double.parse(long.toString());
-                              makePost2(
-                                  value1.toString(),
-                                  value2.toString(),
-                                  value3.toString(),
-                                  remarkEditor.text,
-                                  value4.toString(),
-                                  latu,
-                                  longu,
-                                  colnyEditor.text,
-                                  selectedState.toString(),
-                                  selectedDistrict.toString(),
-                                  hnumberEditor.text,
-                                  mob);
-                            },
-                            //   Fluttertoast.showToast(
-                            //       msg: valu2.toString(),
-                            //       toastLength: Toast.LENGTH_SHORT);
-                            // },
-                            child: Text("Submit"),
-                          )))
-                    ],
-                  ))
-            ],
-          )),
-    );
+                    )
+                  ],
+                ),
+              ],
+            )));
   }
 }
