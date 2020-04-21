@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
+import 'dart:math' as math;
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,22 +14,32 @@ class Tracker extends StatefulWidget {
 }
 
 final databaseReference = FirebaseDatabase.instance.reference();
-
+final auth = FirebaseAuth.instance;
 Future<SharedPreferences> getPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs;
 }
 
+double dist(double userLat, double userLong, double lat1, double long1) {
+  double dlat1 = userLat / 57.29577951;
+  double dlong1 = userLong / 57.29577951;
+  double dlat2 = lat1 / 57.29577951;
+  double dlong2 = long1 / 57.29577951;
+  double d = 6378.8 *
+      math.acos((math.sin(dlat1) * math.sin(dlat2)) +
+          math.cos(dlat1) * math.cos(dlat2) * math.cos(dlong1 - dlong2));
+  return d;
+}
+
 class _TrackerState extends State<Tracker> {
   List content = [];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPrefs().then((value) {
-      String user = value.getString('aadhar');
-      print(user);
-      firebaseDatabase.child(user).once().then((value) {
+    auth.currentUser().then((value) {
+      firebaseDatabase.child(value.uid).once().then((value) {
         Map data = value.value;
         print(data);
         lat = data["latitude"];
@@ -87,7 +99,9 @@ class _MapPageState extends State<MapPage> {
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       for (int i = 0; i < widget.content.length; i++) {
-        if ((widget.content[i]["value"]["latitude"] - lat) <= 4.0) {
+        if (dist(lat, long, widget.content[i]["value"]["latitude"],
+                widget.content[i]["value"]["longitude"]) <
+            1.0) {
           final marker = Marker(
             markerId:
                 MarkerId(widget.content[i]["value"]["username"].toString()),
@@ -113,7 +127,7 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       body: GoogleMap(
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, long), zoom: 15.0),
+            CameraPosition(target: LatLng(lat, long), zoom: 16.0),
         onMapCreated: _onMapCreated,
         markers: markers.values.toSet(),
         // markers: ,
