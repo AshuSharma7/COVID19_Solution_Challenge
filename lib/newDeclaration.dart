@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization_master/pages/bottomNavBar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'registerVariables.dart' as declaration;
 
@@ -14,6 +18,9 @@ class Declaration extends StatefulWidget {
   _DeclarationState createState() => _DeclarationState();
 }
 
+final auth = FirebaseAuth.instance;
+final reference = FirebaseDatabase.instance.reference();
+bool submitAll = false;
 bool onTapped = true;
 double width = 150;
 double height = 50;
@@ -66,6 +73,7 @@ Future<bool> _exitApp(BuildContext context) {
 
 class _DeclarationState extends State<Declaration>
     with SingleTickerProviderStateMixin {
+  bool flag = false;
   double lat = 0.0, long = 0.0;
   Position position;
   StreamSubscription<Position> positionStream;
@@ -88,15 +96,22 @@ class _DeclarationState extends State<Declaration>
           long = 0.0;
         });
       }
+      if (lat != 0.0 || lat != null) {
+        auth.currentUser().then((value) {
+          reference.child(value.uid).set({"latitude": lat, "longitude": long});
+        });
+      }
     });
   }
 
   int id = 0;
   String selectedState;
+  bool stateWidget = false;
+  bool address = false;
   String selectedDistrict;
   List<Map<String, dynamic>> animCont = [
     {"color": color5, "shadow": Colors.deepOrange[300]},
-    {"color": color5, "shadow": Colors.deepOrange[300]},
+    {"color": color5, "shadow": Colors.black45},
     {"color": color5, "shadow": Colors.deepOrange[300]},
     {"color": color5, "shadow": Colors.black54},
     {"color": color6, "shadow": Colors.black54},
@@ -362,13 +377,59 @@ class _DeclarationState extends State<Declaration>
                           onTap: () {
                             if (widget.memberIndex == 0) {
                               getLocation();
-                            } else {}
-                            setState(() {
-                              animCont[1]["color"] = [
-                                Color(0xFF005C97),
-                                Color(0xFF363795)
-                              ];
-                            });
+                              setState(() {
+                                animCont[1]["color"] = [
+                                  Color(0xFF005C97),
+                                  Color(0xFF363795)
+                                ];
+                              });
+                            } else {
+                              return showDialog(
+                                  context: (context),
+                                  builder: (context) {
+                                    return Dialog(
+                                      child: Container(
+                                        height: 100,
+                                        child: Column(
+                                          children: <Widget>[
+                                            TextField(
+                                              controller:
+                                                  declaration.addressEditor[
+                                                      widget.memberIndex],
+                                              decoration: InputDecoration(
+                                                  hintText:
+                                                      "Enter Your Complete Address"),
+                                            ),
+                                            RaisedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                if (declaration
+                                                            .addressEditor[widget
+                                                                .memberIndex]
+                                                            .text !=
+                                                        null ||
+                                                    declaration
+                                                            .addressEditor[widget
+                                                                .memberIndex]
+                                                            .text !=
+                                                        "") {
+                                                  setState(() {
+                                                    address = true;
+                                                    animCont[1]["color"] = [
+                                                      Color(0xFF005C97),
+                                                      Color(0xFF363795)
+                                                    ];
+                                                  });
+                                                }
+                                              },
+                                              child: Text("Submit"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            }
                           },
                           child: Center(
                             child: widget.memberIndex == 0
@@ -383,10 +444,20 @@ class _DeclarationState extends State<Declaration>
                                         color: lat == 0.0
                                             ? Colors.black
                                             : Colors.white))
-                                : Text(
-                                    "Select Address",
-                                    style: TextStyle(
-                                        fontSize: 14.0, color: Colors.black54),
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        "Select Address",
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.white70),
+                                      ),
+                                      address == false
+                                          ? Text("")
+                                          : Icon(Icons.done,
+                                              color: Colors.white),
+                                    ],
                                   ),
                           ),
                         ),
@@ -398,13 +469,13 @@ class _DeclarationState extends State<Declaration>
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6.0),
                         gradient: LinearGradient(
-                          colors: color5,
-                          begin: Alignment.bottomRight,
-                          end: Alignment.topLeft,
+                          colors: animCont[2]["color"],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.deepOrange[300],
+                              color: animCont[2]["shadow"],
                               blurRadius: 20.0,
                               spreadRadius: 0.1,
                               offset: Offset.fromDirection(4.0, -10.0))
@@ -490,6 +561,19 @@ class _DeclarationState extends State<Declaration>
                                             MaterialButton(
                                               color: Colors.teal,
                                               onPressed: () {
+                                                if (declaration.district[widget
+                                                            .memberIndex] !=
+                                                        "" ||
+                                                    declaration.state[widget
+                                                            .memberIndex] !=
+                                                        "Select State") {
+                                                  setState(() {
+                                                    stateWidget = true;
+                                                    animCont[2]["color"] = blue;
+                                                    animCont[2]["shadow"] =
+                                                        Colors.blue[300];
+                                                  });
+                                                }
                                                 Navigator.pop(context);
                                               },
                                               child: Text("Submit"),
@@ -502,10 +586,19 @@ class _DeclarationState extends State<Declaration>
                                 });
                           },
                           child: Center(
-                              child: Text(
-                            "Select State & District",
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.black54),
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Select State & District",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.white70),
+                              ),
+                              stateWidget == true
+                                  ? Icon(Icons.done, color: Colors.white)
+                                  : Text(""),
+                            ],
                           )),
                         ),
                       ),
@@ -747,7 +840,7 @@ class _DeclarationState extends State<Declaration>
                                 "Is Hospitalised?",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 18.0, color: Colors.black54),
+                                    fontSize: 16.0, color: Colors.black54),
                               ),
                               SizedBox(
                                 height: 5.0,
@@ -844,6 +937,12 @@ class _DeclarationState extends State<Declaration>
                                                   style: TextStyle(
                                                       color: Colors.white70,
                                                       fontSize: 20.0),
+                                                ),
+                                                Text(
+                                                  "Hint: Scroll to bottom of this page",
+                                                  style: TextStyle(
+                                                      color: Colors.white70,
+                                                      fontSize: 10.0),
                                                 ),
                                                 Row(
                                                   mainAxisAlignment:
@@ -1608,6 +1707,7 @@ class _DeclarationState extends State<Declaration>
                                                           BorderRadius.circular(
                                                               15.0)),
                                                   onPressed: () {
+                                                    flag = true;
                                                     Navigator.pop(context);
                                                   },
                                                   child: Text(
@@ -1659,131 +1759,191 @@ class _DeclarationState extends State<Declaration>
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () async {
-                        if (declaration.editor[widget.memberIndex].text ==
-                                    null ||
-                                declaration.editor[widget.memberIndex].text ==
-                                    "" ||
-                                declaration.adhharEditor[widget.memberIndex]
-                                        .text ==
-                                    null ||
-                                declaration.adhharEditor[widget.memberIndex]
-                                        .text ==
-                                    "" ||
-                                widget.memberIndex == 0
-                            ? false
-                            : (declaration.addressEditor[widget.memberIndex]
-                                        .text ==
-                                    null ||
-                                declaration.addressEditor[widget.memberIndex]
-                                        .text ==
-                                    "")) {
-                          return showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text("One or More fields are Empty"),
-                                  actions: <Widget>[
-                                    IconButton(
-                                        icon: Icon(Icons.done),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        })
-                                  ],
-                                );
-                              });
-                        } else {
-                          if (tempIndex < (members - 1)) {
-                            setState(() {
-                              tempIndex = tempIndex + 1;
-                            });
-                            print(tempIndex);
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) =>
-                                        Declaration(memberIndex: tempIndex)));
-                          } else {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            for (int i = 0; i < members; i++) {
-                              if (declaration.symptoms[i]["attendJamat"] ==
-                                      true ||
-                                  declaration.symptoms[i]["metJamatis"] ==
-                                      true ||
-                                  declaration.symptoms[i]["metSomeoneAbroad"] ||
-                                  declaration.symptoms[i]
-                                      ["outbreakPlaceVisit"]) {
-                                declaration.haveSymptoms[i] = true;
-                              } else if (declaration.symptoms[i]["dizziness"] ==
-                                      true ||
-                                  declaration.symptoms[i]["cough"] == true &&
-                                      declaration.symptoms[i]["nose"] == true &&
-                                      declaration.symptoms[i]["fever"] ==
-                                          true) {
-                                declaration.haveSymptoms[i] = true;
-                              } else if (declaration.symptoms[i]["cough"] ==
-                                      true &&
-                                  declaration.symptoms[i]["nose"] == true &&
-                                  declaration.symptoms[i]["fever"] == true &&
-                                  declaration.symptoms[i]["throatchest"] ==
-                                      true) {
-                                declaration.haveSymptoms[i] = true;
-                              } else if (declaration.symptoms[i]["cough"] ==
-                                      true &&
-                                  declaration.symptoms[i]["nose"] == true &&
-                                  (declaration.symptoms[i]["pronounciation"] ==
-                                          true ||
-                                      declaration.symptoms[i]["breathing"] ==
-                                          true ||
-                                      declaration.symptoms[i]["diarrhea"] ==
-                                          true)) {
-                                declaration.haveSymptoms[i] = true;
+                      onTap: submitAll == true
+                          ? () {}
+                          : () async {
+                              Response response;
+                              if (declaration.editor[widget.memberIndex].text ==
+                                      null ||
+                                  declaration
+                                          .editor[widget.memberIndex].text ==
+                                      "" ||
+                                  declaration.adhharEditor[widget.memberIndex]
+                                          .text ==
+                                      null ||
+                                  declaration.adhharEditor[widget.memberIndex]
+                                          .text ==
+                                      "" ||
+                                  stateWidget == false ||
+                                  (widget.memberIndex == 0
+                                      ? false
+                                      : (declaration
+                                                  .addressEditor[
+                                                      widget.memberIndex]
+                                                  .text ==
+                                              null ||
+                                          declaration
+                                                  .addressEditor[
+                                                      widget.memberIndex]
+                                                  .text ==
+                                              ""))) {
+                                return showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Error"),
+                                        content: Text(
+                                            "One or More fields/Options are Empty"),
+                                        actions: <Widget>[
+                                          IconButton(
+                                              icon: Icon(Icons.done),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              })
+                                        ],
+                                      );
+                                    });
                               } else {
-                                declaration.haveSymptoms[i] = false;
+                                if (tempIndex < (members - 1) && flag == true) {
+                                  setState(() {
+                                    tempIndex = tempIndex + 1;
+                                  });
+                                  print(tempIndex);
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => Declaration(
+                                              memberIndex: tempIndex)));
+                                } else if (flag == false) {
+                                  return showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text("Error"),
+                                          content:
+                                              Text("Please Select Options"),
+                                          actions: <Widget>[
+                                            IconButton(
+                                                icon: Icon(Icons.done),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                })
+                                          ],
+                                        );
+                                      });
+                                } else {
+                                  setState(() {
+                                    submitAll = true;
+                                  });
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  for (int i = 0; i < members; i++) {
+                                    if (declaration.symptoms[i]
+                                                ["attendJamat"] ==
+                                            true ||
+                                        declaration.symptoms[i]["metJamatis"] ==
+                                            true ||
+                                        declaration.symptoms[i]
+                                            ["metSomeoneAbroad"] ||
+                                        declaration.symptoms[i]
+                                            ["outbreakPlaceVisit"]) {
+                                      declaration.haveSymptoms[i] = true;
+                                    } else if (declaration.symptoms[i]
+                                                ["dizziness"] ==
+                                            true ||
+                                        declaration.symptoms[i]["cough"] ==
+                                                true &&
+                                            declaration.symptoms[i]["nose"] ==
+                                                true &&
+                                            declaration.symptoms[i]["fever"] ==
+                                                true) {
+                                      declaration.haveSymptoms[i] = true;
+                                    } else if (declaration.symptoms[i]
+                                                ["cough"] ==
+                                            true &&
+                                        declaration.symptoms[i]["nose"] ==
+                                            true &&
+                                        declaration.symptoms[i]["fever"] ==
+                                            true &&
+                                        declaration.symptoms[i]
+                                                ["throatchest"] ==
+                                            true) {
+                                      declaration.haveSymptoms[i] = true;
+                                    } else if (declaration.symptoms[i]
+                                                ["cough"] ==
+                                            true &&
+                                        declaration.symptoms[i]["nose"] ==
+                                            true &&
+                                        (declaration.symptoms[i]
+                                                    ["pronounciation"] ==
+                                                true ||
+                                            declaration.symptoms[i]
+                                                    ["breathing"] ==
+                                                true ||
+                                            declaration.symptoms[i]
+                                                    ["diarrhea"] ==
+                                                true)) {
+                                      declaration.haveSymptoms[i] = true;
+                                    } else {
+                                      declaration.haveSymptoms[i] = false;
+                                    }
+                                    if (i != 0) {
+                                      Map content = await declaration.geoCoding(
+                                          declaration.addressEditor[i].text);
+                                      lat = content["results"][0]["geometry"]
+                                          ["location"]["lat"];
+                                      long = content["results"][0]["geometry"]
+                                          ["location"]["lng"];
+                                    }
+                                    response = await declaration.makePost(
+                                        int.parse(
+                                            declaration.adhharEditor[0].text),
+                                        declaration.editor[i].text,
+                                        declaration.gender[i],
+                                        declaration.adhharEditor[i].text,
+                                        declaration.isInfected[i],
+                                        declaration.haveSymptoms[i],
+                                        declaration.isCured[i],
+                                        declaration.district[i],
+                                        declaration.state[i],
+                                        declaration.haveTravelled[i],
+                                        declaration.from[i],
+                                        declaration.to[i],
+                                        declaration.addressEditor[i].text,
+                                        lat,
+                                        long);
+                                  }
+                                  print(response.statusCode);
+                                  if (response.statusCode == 201) {
+                                    auth.currentUser().then((value) {
+                                      reference
+                                          .child(value.uid)
+                                          .update({"declaration": true});
+                                    });
+                                    Fluttertoast.showToast(
+                                        msg: "Form Submitted");
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) =>
+                                                BottomnavBar()),
+                                        (_) => false);
+                                  }
+                                }
                               }
-                              if (members != 1) {
-                                Map content = await declaration.geoCoding(
-                                    declaration.addressEditor[i].text);
-                                lat = content["results"][0]["geometry"]
-                                    ["location"]["lat"];
-                                long = content["results"][0]["geometry"]
-                                    ["location"]["lng"];
-                              }
-                              declaration.makePost(
-                                  int.parse(prefs.getString('aadhar')),
-                                  declaration.editor[i].text,
-                                  declaration.gender[i],
-                                  declaration.adhharEditor[i].text,
-                                  declaration.isInfected[i],
-                                  declaration.haveSymptoms[i],
-                                  declaration.isCured[i],
-                                  declaration.district[i],
-                                  declaration.state[i],
-                                  declaration.haveTravelled[i],
-                                  declaration.from[i],
-                                  declaration.to[i],
-                                  declaration.addressEditor[i].text,
-                                  lat,
-                                  long);
-                            }
-                            if (declaration.error == false) {
-                              prefs.setBool('declared', true);
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => BottomnavBar()),
-                                  (_) => false);
-                            }
-                          }
-                        }
-                      },
+                            },
                       child: Center(
-                          child: Text(
-                        "Next",
-                        style: TextStyle(color: Colors.white, fontSize: 15.0),
-                      )),
+                          child: submitAll == false
+                              ? Text(
+                                  widget.memberIndex == (members - 1)
+                                      ? "Submit all forms"
+                                      : "Next",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15.0),
+                                )
+                              : CircularProgressIndicator(
+                                  strokeWidth: 5,
+                                )),
                     ),
                   ),
                 ),

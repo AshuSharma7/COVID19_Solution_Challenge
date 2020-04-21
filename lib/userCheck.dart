@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_localization_master/pages/LanguagePage.dart';
 import 'package:flutter_localization_master/pages/bottomNavBar.dart';
@@ -24,6 +25,7 @@ Future<SharedPreferences> getPrefs() async {
   return prefs;
 }
 
+final auth = FirebaseAuth.instance;
 final reference = FirebaseDatabase.instance.reference();
 
 class _CheckUserState extends State<CheckUser> {
@@ -51,11 +53,10 @@ class _CheckUserState extends State<CheckUser> {
       }
     });
     if (lat != 0.0 || lat != null) {
-      getPrefs().then((value) {
-        reference.child(value.getString('aadhar')).set({
+      auth.currentUser().then((value) {
+        reference.child(value.uid).update({
           'latitude': lat,
           'longitude': long,
-          "username": value.getString('aadhar')
         });
       });
     }
@@ -67,21 +68,21 @@ class _CheckUserState extends State<CheckUser> {
   }
 
   void check() {
-    getPrefs().then((value) {
-      SharedPreferences prefs = value;
-      if (prefs.getString('aadhar') != null) {
-        if (prefs.getBool('declared') == false ||
-            prefs.getBool('declared') == null) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => CoronaMonitor()),
-              (_) => false);
-        } else {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => BottomnavBar()),
-              (_) => false);
-        }
+    auth.currentUser().then((value) {
+      if (value != null) {
+        reference.child(value.uid).once().then((value) {
+          if (value.value["declaration"] == true) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => BottomnavBar()),
+                (_) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => CoronaMonitor()),
+                (_) => false);
+          }
+        });
       } else {
         Navigator.pushAndRemoveUntil(
             context,
