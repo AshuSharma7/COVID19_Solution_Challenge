@@ -4,6 +4,7 @@ import 'package:flutter_localization_master/classes/language.dart';
 import 'package:flutter_localization_master/localization/language_constants.dart';
 import 'package:flutter_localization_master/main.dart';
 import 'package:flutter_localization_master/pages/homePage.dart';
+import 'package:flutter_localization_master/pages/newLoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_localization_master/router/route_constants.dart';
 
@@ -101,7 +102,7 @@ class _LanguagePage extends State<LanguagePage> {
                       await SharedPreferences.getInstance();
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => HomePage()),
+                    CupertinoPageRoute(builder: (context) => Login()),
                   );
                 },
                 child: Container(
