@@ -8,7 +8,6 @@ import 'package:flutter_localization_master/pages/coronaMonitor.dart';
 import 'package:flutter_localization_master/pages/homePage.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localization_master/pages/DeclarationForm.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,7 +62,7 @@ class _CheckUserState extends State<CheckUser> {
   }
 
   startTime() async {
-    var _duration = new Duration(seconds: 5);
+    var _duration = new Duration(seconds: 3);
     return new Timer(_duration, check);
   }
 
