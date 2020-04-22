@@ -20,9 +20,10 @@ List<bool> check = [false, false, false];
 List<Color> sweet = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
 List<Color> blue = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
 final FirebaseAuth auth = FirebaseAuth.instance;
+String user;
 List<String> users = ["Hospital", "Citizen"];
 String selectedUser;
-TextEditingController passEditor = new TextEditingController();
+TextEditingController volEditor = new TextEditingController();
 TextEditingController phoneEditor = new TextEditingController();
 bool submit = false;
 bool _check = false, _check2 = false, _check3 = false;
@@ -54,6 +55,7 @@ class _Login extends State<Login> {
                     GestureDetector(
                         onTap: () {
                           setState(() {
+                            user = "citizen";
                             check[0] = true;
                             check[1] = false;
                             check[2] = false;
@@ -85,6 +87,7 @@ class _Login extends State<Login> {
                     GestureDetector(
                         onTap: () {
                           setState(() {
+                            user = "farmer";
                             check[0] = false;
                             check[1] = true;
                             check[2] = false;
@@ -120,6 +123,7 @@ class _Login extends State<Login> {
                 GestureDetector(
                     onTap: () {
                       setState(() {
+                        user = "volunteer";
                         check[0] = false;
                         check[1] = false;
                         check[2] = true;
@@ -157,13 +161,13 @@ class _Login extends State<Login> {
                           : (check[1] == true
                               ? "Farmer Category"
                               : (check[2] == true
-                                  ? "Hospital Category"
+                                  ? "Volunteer Category"
                                   : "Please Select Category"))),
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 )),
                 SizedBox(height: 50),
-                Padding(
+               Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: Container(
                       padding: EdgeInsets.all(5.0),
@@ -195,6 +199,39 @@ class _Login extends State<Login> {
                             ),
                           )),
                     )),
+                    SizedBox(height: 20.0,),
+                   user == "volunteer" ? Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        gradient: LinearGradient(
+                            colors: blue,
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.blue[200],
+                              blurRadius: 20.0,
+                              offset: Offset.fromDirection(4.0, -10.0))
+                        ],
+                      ),
+                      child: TextFormField(
+                          controller: volEditor,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            prefixIcon: Icon(Icons.lock),
+                            hintText: "Enter Volunteer Code",
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(5.0),
+                              borderSide: new BorderSide(),
+                            ),
+                          )),
+                    )) : SizedBox(height: 0.0,),
                 SizedBox(height: 40),
                 Container(
                     width: 100,
@@ -219,7 +256,11 @@ class _Login extends State<Login> {
                           onTap: submit == true ? () {
                             Fluttertoast.showToast(msg: "Please Wait");
                           } : () {
-                            if (phoneEditor.text != "") {
+                            if(user == null || user == "") {
+                              Fluttertoast.showToast(msg: "Please Select User Category");
+                            } else if(user == "volunteer") {
+                              if(volEditor.text == "7073") {
+                                if(phoneEditor.text != "") {
                               setState(() {
                                 submit = true;
                               });
@@ -235,9 +276,29 @@ class _Login extends State<Login> {
                                   codeSent: (verificationId, [code]) =>
                                       smsSent(verificationId, [code], context),
                                   codeAutoRetrievalTimeout: (verificationId) =>
-                                      Fluttertoast.showToast(
-                                          msg: "Enter Code Manually"));
-                                          phoneEditor.clear();
+                                          phoneEditor.clear());
+                            }
+                              } else {
+                                Fluttertoast.showToast(msg: "Please Enter valid volunteer code");
+                              }
+                            }
+                             else if(phoneEditor.text != "") {
+                              setState(() {
+                                submit = true;
+                              });
+                              auth.verifyPhoneNumber(
+                                  phoneNumber: "+91" + phoneEditor.text,
+                                  timeout: Duration(seconds: 5),
+                                  verificationCompleted: (authCredential) =>
+                                      verifyComplete(authCredential, context),
+                                  verificationFailed:
+                                      (AuthException authException) =>
+                                          verificationFailed(
+                                              authException, context),
+                                  codeSent: (verificationId, [code]) =>
+                                      smsSent(verificationId, [code], context),
+                                  codeAutoRetrievalTimeout: (verificationId) =>
+                                          phoneEditor.clear());
                             } else {
                               return showDialog(
                                   context: (context),
@@ -271,18 +332,6 @@ class _Login extends State<Login> {
                               ))),
                     ))),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "No Account?\t",
-                    ),
-                    GestureDetector(
-                        onTap: () {},
-                        child: Text("SignUp",
-                            style: TextStyle(color: Colors.blue)))
-                  ],
-                )
               ],
             ),
           ],
@@ -297,6 +346,7 @@ verifyComplete(AuthCredential authCredential, BuildContext context) async {
       database.child(value.user.uid).once().then((snapshot){
         if(snapshot.value == null) {
           database.child(value.user.uid).set({
+            "user" : user,
             "declaration": false,
             "latitude": 0.0,
             "longitude": 0.0
@@ -347,6 +397,7 @@ void codeVerify(String otp, String sms, BuildContext context) async {
           database.child(value.user.uid).once().then((snapshot){
         if(snapshot.value == null) {
           database.child(value.user.uid).set({
+            "user" : user,
             "declaration": false,
             "latitude": 0.0,
             "longitude": 0.0
