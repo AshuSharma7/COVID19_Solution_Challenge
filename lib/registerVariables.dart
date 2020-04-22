@@ -3,8 +3,6 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 int mobile;
 String fatherName;
 List<String> stateList = [
@@ -856,7 +854,7 @@ List<String> state = [
 ];
 List<double> lat = [];
 List<double> lng = [];
-bool error = true;
+bool error = false;
 List<Map<String, bool>> symptoms = [
   {
     "fever": false,
@@ -1008,11 +1006,11 @@ List<TextEditingController> addressEditor = [
   add7Editor
 ];
 
-void makePost(
+Future<Response> makePost(
     int username,
     String name,
     String gender,
-    String adhhar,
+    int adhhar,
     bool infected,
     bool symptoms,
     bool cured,
@@ -1025,8 +1023,9 @@ void makePost(
     double lat,
     double lng) async {
   String url = "https://covid-mitrc.herokuapp.com/accounts/member/create";
+  int user = username ~/ 10000;
   var body = {
-    "user_id": username,
+    "user_id": user,
     "name": name,
     "father_name": "demo",
     "gender": gender,
@@ -1035,27 +1034,20 @@ void makePost(
     "diabetes": false,
     "symptoms": symptoms,
     "cured": cured,
-    "travelled": travel,
+    "travelled": false,
     "state": state,
     "district": district,
-    "address": address,
+    "address": null,
     "latitude": lat,
     "longitude": lng
   };
-  print(body);
   //print(body);
   Response r = await post(
     Uri.parse(url),
     headers: {"Content-Type": "application/json"},
     body: json.encode(body),
   );
-  print(r.body);
-  print(r.statusCode);
-  if (r.statusCode == 201) {
-    error = false;
-  } else {
-    error = true;
-  }
+  return r;
   //print(r.body);
 }
 
