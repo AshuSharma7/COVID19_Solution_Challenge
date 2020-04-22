@@ -1900,7 +1900,8 @@ class _DeclarationState extends State<Declaration>
                                             declaration.adhharEditor[0].text),
                                         declaration.editor[i].text,
                                         declaration.gender[i],
-                                        declaration.adhharEditor[i].text,
+                                        int.parse(
+                                            declaration.adhharEditor[i].text),
                                         declaration.isInfected[i],
                                         declaration.haveSymptoms[i],
                                         declaration.isCured[i],
@@ -1913,6 +1914,7 @@ class _DeclarationState extends State<Declaration>
                                         lat,
                                         long);
                                   }
+                                  print(response.body);
                                   print(response.statusCode);
                                   if (response.statusCode == 201) {
                                     auth.currentUser().then((value) {

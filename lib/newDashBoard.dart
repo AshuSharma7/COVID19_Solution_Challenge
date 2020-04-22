@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_localization_master/blackSpot.dart';
 import 'package:flutter_localization_master/pages/AppData.dart';
 import 'package:flutter_localization_master/pages/UserAware.dart';
 import 'package:flutter_localization_master/pages/externalSoc.dart';
 import 'package:flutter_localization_master/pages/userSupport.dart';
+import 'package:flutter_localization_master/pages/volunteer.dart';
 import 'CoronaTracker.dart';
 import 'package:flutter_localization_master/pages/developerPage.dart';
 import 'package:flutter_localization_master/pages/helpLine.dart';
@@ -24,7 +26,8 @@ class LogoApp extends StatefulWidget {
   @override
   _LogoAppState createState() => _LogoAppState();
 }
-
+final databse = FirebaseDatabase.instance.reference();
+String user;
 String apiKey = "a051a6e786msheabdb117530fe36p133d27jsn3c2846d089cd";
 Future<dynamic> getUri() async {
   String url =
@@ -48,9 +51,23 @@ List<Color> purple = [
 int india;
 
 class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+
+  void userType() {
+    auth.currentUser().then((value) {
+      databse.child(value.uid).once().then((value) {
+        Map data = value.value;
+        setState(() {
+          user = data["user"];
+        });
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    userType();
+    
   }
 
   @override
@@ -714,37 +731,42 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                                                   MainAxisAlignment.center,
                                               children: <Widget>[
                                                 Expanded(
-                                                    child: Container(
+                                                    child: GestureDetector(
+                                                      onTap: user == "volunteer" ? () {
+                                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => Volunteer()));
+                                                      } : () {},
+                                                                                                          child: Container(
                                                   decoration: decorate(
-                                                      blue, Colors.blue[200]),
+                                                        blue, Colors.blue[200]),
                                                   height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                      5,
+                                                            .size
+                                                            .height /
+                                                        5,
                                                   child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Center(
-                                                        child: Text(
-                                                          "Stay Home\nStay Safe",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          textDirection:
-                                                              TextDirection.ltr,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 18.0,
-                                                            color: Colors.black,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Center(
+                                                          child: Text(
+                                                           user == "volunteer" ? "Volunteer Page" : "Stay Home\nStay Safe",
+                                                            textAlign:
+                                                                TextAlign.center,
+                                                            textDirection:
+                                                                TextDirection.ltr,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              fontSize: 18.0,
+                                                              color: Colors.black,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )
-                                                    ],
+                                                        )
+                                                      ],
                                                   ),
                                                   margin: EdgeInsets.all(10.0),
-                                                )),
+                                                ),
+                                                    )),
                                                 Expanded(
                                                   child: GestureDetector(
                                                     child: Container(
