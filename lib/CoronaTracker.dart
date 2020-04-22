@@ -99,17 +99,20 @@ class _MapPageState extends State<MapPage> {
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       for (int i = 0; i < widget.content.length; i++) {
-        if (dist(lat, long, widget.content[i]["value"]["latitude"],
-                widget.content[i]["value"]["longitude"]) <
-            1.0) {
-          final marker = Marker(
-            markerId:
-                MarkerId(widget.content[i]["value"]["username"].toString()),
-            position: LatLng(widget.content[i]["value"]["latitude"],
-                widget.content[i]["value"]["longitude"]),
-            infoWindow: InfoWindow(),
-          );
-          markers[widget.content[i]["value"]["username"].toString()] = marker;
+        if (widget.content[i]["value"]["latitude"] != null &&
+            widget.content[i]["value"]["latitude"] != 0) {
+          if (dist(lat, long, widget.content[i]["value"]["latitude"],
+                  widget.content[i]["value"]["longitude"]) <
+              1.0) {
+            final marker = Marker(
+              markerId:
+                  MarkerId(widget.content[i]["value"]["username"].toString()),
+              position: LatLng(widget.content[i]["value"]["latitude"],
+                  widget.content[i]["value"]["longitude"]),
+              infoWindow: InfoWindow(),
+            );
+            markers[widget.content[i]["value"]["username"].toString()] = marker;
+          }
         }
       }
       final marker = Marker(
