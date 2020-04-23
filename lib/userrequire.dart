@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:geolocator/geolocator.dart';
-
+import 'registerVariables.dart' as declaration;
 import 'dart:async';
 
 class userReq extends StatefulWidget {
@@ -10,7 +10,19 @@ class userReq extends StatefulWidget {
   _userReq createState() => _userReq();
 }
 
-void makePost2(String a, String b, String c, String d, String e, double f,
+List<Map<String, dynamic>> animCont = [
+  {"color": sweet, "shadow": Colors.deepOrange[300]},
+  {"color": sweet, "shadow": Colors.deepOrange[300]},
+  {"color": color5, "shadow": Colors.deepOrange[300]},
+  {"color": color5, "shadow": Colors.black54},
+  {"color": color6, "shadow": Colors.black54},
+  {"color": color6, "shadow": Colors.black54},
+];
+int id = 0;
+String state, district;
+bool stateWidget = false;
+bool medical = false;
+void makePost2(String a, String b, String c, String d, bool e, double f,
     double g, String m, String h, String i, String j, String k, var l) async {
   String url = "https://covid-mitrc.herokuapp.com/apis/requirements/create";
   var body = {
@@ -36,15 +48,7 @@ void makePost2(String a, String b, String c, String d, String e, double f,
   print(r.body);
 }
 
-List<Map<String, dynamic>> animCont = [
-  {"color": color5, "shadow": Colors.deepOrange[300]},
-  {"color": color5, "shadow": Colors.deepOrange[300]},
-  {"color": color5, "shadow": Colors.deepOrange[300]},
-  {"color": color5, "shadow": Colors.black54},
-  {"color": color6, "shadow": Colors.black54},
-  {"color": color6, "shadow": Colors.black54},
-];
-
+bool _value5, _value6 = false;
 List<Color> color6 = [
   Color(0xFFf80759),
   Color(0xFFbc4e9c),
@@ -64,15 +68,13 @@ List<Color> color2 = [
   Color(0xFFff5e62),
 ];
 List<Color> color4 = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
-
-bool _value1 = false,
-    _value2 = false,
-    _value3 = false,
-    _value4 = false,
-    _value5 = false,
-    _value6 = false,
-    _value7 = false,
-    _value8 = false;
+List<Color> orange = [Color(0xFFff9966), Color(0xFFff5e62)];
+List<Color> blue = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
+List<Color> sweet = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
+List<Color> purple = [
+  Color(0xFFbc4e9c),
+  Color(0xFFf80759),
+];
 
 class _userReq extends State<userReq> {
   List<String> dRajasthan = [
@@ -83,17 +85,18 @@ class _userReq extends State<userReq> {
     "bhilwara",
     "kota"
   ];
-  String lat, long = '';
+  double lat, long;
   Position position;
   StreamSubscription<Position> positionStream;
+  TextEditingController rationEditor = new TextEditingController();
+  TextEditingController gasEditor = new TextEditingController();
+  TextEditingController emegrencyEditor = new TextEditingController();
   TextEditingController remarkEditor = new TextEditingController();
   TextEditingController mobEditor = new TextEditingController();
   TextEditingController colnyEditor = new TextEditingController();
   TextEditingController hnumberEditor = new TextEditingController();
   TextEditingController feedbackEditor = new TextEditingController();
-  String ration, gas, medical, emergency;
   String selectedState;
-  List<String> states = ["Rajasthan", "up", "Gujrat"];
   String selectedDistrict;
 
   getLocation() async {
@@ -106,13 +109,13 @@ class _userReq extends State<userReq> {
         .listen((Position position) {
       if (position != null) {
         setState(() {
-          lat = position.latitude.toString();
-          long = position.longitude.toString();
+          lat = position.latitude;
+          long = position.longitude;
         });
       } else {
         setState(() {
-          lat = 'लैट्इटयूड';
-          long = 'लोंगीटूड ';
+          lat = 0.0;
+          long = 0.0;
         });
       }
     });
@@ -122,8 +125,8 @@ class _userReq extends State<userReq> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    lat = 'लैट्इटयूड';
-    long = 'लोंगीटूड ';
+    lat = 0.0;
+    long = 0.0;
   }
 
   @override
@@ -132,655 +135,385 @@ class _userReq extends State<userReq> {
         body: Container(
             color: Colors.white,
             child: ListView(
+              physics: BouncingScrollPhysics(),
               children: <Widget>[
                 Column(
                   children: <Widget>[
                     SizedBox(height: 80),
-                    Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        child: Container(
-                            height: 150,
-                            child: Card(
-                                shape: BeveledRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                elevation: 10,
-                                color: Colors.white,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Ration Details:",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        GestureDetector(
-                                            onTap: () {
-                                              ration = "yes";
-                                              if (_value2 == false) {
-                                                setState(() {
-                                                  _value1 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value1 = true;
-                                                  _value2 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value1 == false
-                                                ? AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[1]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ))
-                                                : AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[5]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Icon(Icons.done),
-                                                  )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              ration = "no";
-                                              if (_value1 == false) {
-                                                setState(() {
-                                                  _value2 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value2 = true;
-                                                  _value1 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value2 == false
-                                                ? Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve:
-                                                            Curves.bounceInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[1]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child: Text("No",
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        )),
-                                                  )
-                                                : Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve:
-                                                            Curves.bounceInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[5]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child:
-                                                              Icon(Icons.done),
-                                                        )),
-                                                  ))
-                                      ],
-                                    ),
-                                  ],
-                                )))),
-                    SizedBox(height: 30),
-                    Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        child: Container(
-                            height: 150,
-                            child: Card(
-                                elevation: 10,
-                                color: Colors.white,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Gas Details:",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        GestureDetector(
-                                            onTap: () {
-                                              gas = "yes";
-                                              if (_value4 == false) {
-                                                setState(() {
-                                                  _value3 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value3 = true;
-                                                  _value4 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value3 == false
-                                                ? AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[1]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ))
-                                                : AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[5]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Icon(Icons.done),
-                                                  )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              gas = "no";
-                                              if (_value3 == false) {
-                                                setState(() {
-                                                  _value4 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value4 = true;
-                                                  _value3 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value4 == false
-                                                ? Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve:
-                                                            Curves.bounceInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[1]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child: Text("No",
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        )),
-                                                  )
-                                                : Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve:
-                                                            Curves.bounceInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[5]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child:
-                                                              Icon(Icons.done),
-                                                        )),
-                                                  ))
-                                      ],
-                                    ),
-                                  ],
-                                )))),
-                    SizedBox(height: 30),
-                    Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        child: Container(
-                            height: 150,
-                            child: Card(
-                                elevation: 10,
-                                color: Colors.white,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Emergency Details:",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        GestureDetector(
-                                            onTap: () {
-                                              emergency = "yes";
-
-                                              if (_value8 == false) {
-                                                setState(() {
-                                                  _value7 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value7 = true;
-                                                  _value8 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value7 == false
-                                                ? AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[1]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ))
-                                                : AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[5]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Icon(Icons.done),
-                                                  )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              emergency = "no";
-                                              if (_value7 == false) {
-                                                setState(() {
-                                                  _value8 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value8 = true;
-                                                  _value7 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value8 == false
-                                                ? Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve:
-                                                            Curves.bounceInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[1]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child: Text("No",
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        )),
-                                                  )
-                                                : Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve:
-                                                            Curves.bounceInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[5]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child:
-                                                              Icon(Icons.done),
-                                                        )),
-                                                  ))
-                                      ],
-                                    ),
-                                  ],
-                                )))),
-                    Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  width: 100,
-                                  height: 30.0,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 10.0),
-                                      ]),
-                                  child: Text(
-                                    long,
-                                    // "jhjhn",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Container(
-                                  width: 100,
-                                  height: 30.0,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 10.0),
-                                      ]),
-                                  child: Text(
-                                    lat,
-                                    // "jhjhn",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8.0,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 10.0),
-                                      ]),
-                                  child: MaterialButton(
-                                    onPressed: getLocation,
-                                    child: Text(
-                                        // getTranslated(context, 'fetch'),
-                                        "स्थान प्राप्त करें"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
-                    SizedBox(height: 20),
-                    Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15.0),
-                                // border: Border.all(
-                                //     color: Colors.white,
-                                //     style: BorderStyle.solid,
-                                //     width: 0.80),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        gradient: LinearGradient(
+                            colors: blue,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.blue[400],
+                              blurRadius: 20.0,
+                              offset: Offset.fromDirection(4.0, -10.0))
+                        ],
+                      ),
+                      child: Center(
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          controller: rationEditor,
+                          cursorColor: Colors.white,
+                          focusNode: FocusNode(canRequestFocus: false),
+                          textCapitalization: TextCapitalization.sentences,
+                          style:
+                              TextStyle(color: Colors.white60, fontSize: 20.0),
+                          decoration: InputDecoration(
+                              hintText: "Enter Ration details",
+                              hintStyle: TextStyle(
+                                fontSize: 20.0,
                               ),
-                              child: DropdownButton(
-                                iconDisabledColor: Colors.black,
-                                hint: Text(
-                                  // getTranslated(context, 'select_state'),
-                                  'अपना राज्य चुनें',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15.0),
-                                ),
-                                value: selectedState,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedState = newValue;
-                                  });
-                                },
-                                items: states.map((location) {
-                                  return DropdownMenuItem(
-                                    child: new Text(location,
-                                        style: TextStyle(color: Colors.black)),
-                                    value: location,
+                              border: InputBorder.none,
+                              fillColor: Colors.white,
+                              focusColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        gradient: LinearGradient(
+                            colors: sweet,
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.deepOrange[300],
+                              blurRadius: 20.0,
+                              offset: Offset.fromDirection(4.0, -10.0))
+                        ],
+                      ),
+                      child: Center(
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          controller: gasEditor,
+                          cursorColor: Colors.white,
+                          focusNode: FocusNode(canRequestFocus: false),
+                          textCapitalization: TextCapitalization.sentences,
+                          style:
+                              TextStyle(color: Colors.white60, fontSize: 20.0),
+                          decoration: InputDecoration(
+                              hintText: "Enter Gas details",
+                              hintStyle: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                              border: InputBorder.none,
+                              fillColor: Colors.white,
+                              focusColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        gradient: LinearGradient(
+                            colors: orange,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.deepOrange[300],
+                              blurRadius: 20.0,
+                              offset: Offset.fromDirection(4.0, -10.0))
+                        ],
+                      ),
+                      child: Center(
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          controller: emegrencyEditor,
+                          cursorColor: Colors.white,
+                          focusNode: FocusNode(canRequestFocus: false),
+                          textCapitalization: TextCapitalization.sentences,
+                          style:
+                              TextStyle(color: Colors.white60, fontSize: 20.0),
+                          decoration: InputDecoration(
+                              hintText: "Enter Medical Emergency details",
+                              hintStyle: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                              border: InputBorder.none,
+                              fillColor: Colors.white,
+                              focusColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                          width: 100,
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6.0),
+                            gradient: LinearGradient(
+                              colors: animCont[2]["color"],
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: animCont[2]["shadow"],
+                                  blurRadius: 14.0,
+                                  spreadRadius: 0.1,
+                                  offset: Offset.fromDirection(4.0, -5.0))
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                getLocation();
+                                if (medical == true) {
+                                  setState(
+                                    () {
+                                      medical = false;
+                                      animCont[2]["color"] = blue;
+                                      animCont[2]["shadow"] = Colors.blue[300];
+                                    },
                                   );
-                                }).toList(),
-                              ),
-                            ),
-                            SizedBox(width: 10.0),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: DropdownButton(
-                                hint: Text(
-                                    // getTranslated(context, 'select_district'),
-                                    'अपने जिले का चयन करें',
+                                } else if (medical == false) {
+                                  setState(
+                                    () {
+                                      medical = true;
+                                      animCont[2]["color"] = purple;
+                                      animCont[2]["shadow"] = Colors.pink[600];
+                                    },
+                                  );
+                                }
+                              },
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "Need Medical Facility?",
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.black, fontSize: 15.0)),
-                                value: selectedDistrict,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedDistrict = newValue;
-                                  });
-                                },
-                                items: dRajasthan.map((location) {
-                                  return DropdownMenuItem(
-                                    child: new Text(location,
-                                        style: TextStyle(color: Colors.black)),
-                                    value: location,
-                                  );
-                                }).toList(),
-                              ),
+                                        fontSize: 14.0, color: Colors.black54),
+                                  ),
+                                  Text((medical == true) ? "Yes" : "No")
+                                ],
+                              )),
                             ),
-                          ],
-                        )),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                          width: 100,
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6.0),
+                            gradient: LinearGradient(
+                              colors: animCont[1]["color"],
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: lat == 0.0
+                                      ? animCont[1]["shadow"]
+                                      : Colors.blue[800],
+                                  blurRadius: 14.0,
+                                  spreadRadius: 0.1,
+                                  offset: Offset.fromDirection(4.0, -5.0))
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                getLocation();
+                                setState(
+                                  () {
+                                    animCont[1]["color"] = [
+                                      Color(0xFF005C97),
+                                      Color(0xFF363795)
+                                    ];
+                                  },
+                                );
+                              },
+                              child: Center(
+                                  child: lat == 0.0
+                                      ? Text(
+                                          "Get location",
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.black54),
+                                        )
+                                      : Icon(Icons.done,
+                                          color: lat == 0.0
+                                              ? Colors.black
+                                              : Colors.white)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        Container(
+                          width: 100,
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6.0),
+                            gradient: LinearGradient(
+                              colors: animCont[3]["color"],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: animCont[3]["shadow"],
+                                  blurRadius: 20.0,
+                                  spreadRadius: 0.1,
+                                  offset: Offset.fromDirection(4.0, -10.0))
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                return showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return StatefulBuilder(
+                                          builder: (context, setState) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          child: Container(
+                                            height: 200,
+                                            child: Column(
+                                              children: <Widget>[
+                                                DropdownButton(
+                                                  iconDisabledColor:
+                                                      Colors.black,
+                                                  hint: Text(
+                                                    "Select State",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15.0),
+                                                  ),
+                                                  value: selectedState,
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      district = "";
+                                                      id = declaration
+                                                          .statesID[newValue];
+                                                      selectedState = newValue;
+                                                    });
+                                                  },
+                                                  items: declaration.stateList
+                                                      .map((location) {
+                                                    return DropdownMenuItem(
+                                                      child: new Text(location,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black)),
+                                                      value: location,
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                                DropdownButton(
+                                                  iconDisabledColor:
+                                                      Colors.black,
+                                                  hint: Text(
+                                                    "Select District",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15.0),
+                                                  ),
+                                                  value: selectedDistrict,
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      selectedDistrict =
+                                                          newValue;
+                                                      district = newValue;
+                                                    });
+                                                  },
+                                                  items: declaration
+                                                      .districtList[id]
+                                                      .map((location) {
+                                                    return DropdownMenuItem(
+                                                      child: new Text(location,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black)),
+                                                      value: location,
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                                SizedBox(
+                                                  height: 20.0,
+                                                ),
+                                                MaterialButton(
+                                                  color: Colors.teal,
+                                                  onPressed: () {
+                                                    if (district != "" ||
+                                                        state !=
+                                                            "Select State") {
+                                                      setState(() {
+                                                        stateWidget = true;
+                                                        animCont[3]["color"] =
+                                                            blue;
+                                                        animCont[3]["shadow"] =
+                                                            Colors.blue[300];
+                                                      });
+                                                    }
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("Submit"),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                    });
+                              },
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "Select State & District",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 18.0, color: Colors.white70),
+                                  ),
+                                  stateWidget == true
+                                      ? Icon(Icons.done, color: Colors.white)
+                                      : Text(""),
+                                ],
+                              )),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                     SizedBox(height: 30),
                     Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
@@ -794,167 +527,6 @@ class _userReq extends State<userReq> {
                             ),
                           ),
                         )),
-                    SizedBox(height: 30),
-                    Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        child: AnimatedContainer(
-                            curve: Curves.bounceInOut,
-                            duration: Duration(milliseconds: 500),
-                            height: 150,
-                            child: Card(
-                                elevation: 10,
-                                color: Colors.white,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Medical Facility:",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        GestureDetector(
-                                            onTap: () {
-                                              medical = "yes";
-                                              if (_value6 == false) {
-                                                setState(() {
-                                                  _value5 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value5 = true;
-                                                  _value6 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value5 == false
-                                                ? AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.bounceInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[1]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Yes",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ))
-                                                : AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.easeInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[5]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Icon(Icons.done),
-                                                  )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              medical = "no";
-                                              if (_value5 == false) {
-                                                setState(() {
-                                                  _value6 = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _value6 = true;
-                                                  _value5 = false;
-                                                });
-                                              }
-                                            },
-                                            child: _value6 == false
-                                                ? Center(
-                                                    child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 500),
-                                                        curve: Curves.easeInOut,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      6.0),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: animCont[1]
-                                                                ["color"],
-                                                            begin: Alignment
-                                                                .bottomRight,
-                                                            end: Alignment
-                                                                .topLeft,
-                                                          ),
-                                                        ),
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: Center(
-                                                          child: Text("No",
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        )),
-                                                  )
-                                                : Center(
-                                                    child: AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.easeInOut,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6.0),
-                                                      gradient: LinearGradient(
-                                                        colors: animCont[5]
-                                                            ["color"],
-                                                        begin: Alignment
-                                                            .bottomRight,
-                                                        end: Alignment.topLeft,
-                                                      ),
-                                                    ),
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: Icon(Icons.done),
-                                                  )))
-                                      ],
-                                    ),
-                                  ],
-                                )))),
                     SizedBox(height: 30),
                     Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
@@ -1008,24 +580,20 @@ class _userReq extends State<userReq> {
                           ),
                         )),
                     Padding(
-                      padding: EdgeInsets.only(top: 30),
-                      child: Container(
-                        width: 200,
-                        child: RaisedButton(
-                          color: Color(0xFF57bbd8),
-                          highlightElevation: 10,
-                          onPressed: () {
+                      padding: EdgeInsets.only(top: 10),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
                             var mob = int.parse(mobEditor.text);
-                            var latu = double.parse(lat.toString());
-                            var longu = double.parse(long.toString());
                             makePost2(
-                                ration.toString(),
-                                gas.toString(),
-                                medical.toString(),
+                                rationEditor.text,
+                                gasEditor.text,
+                                emegrencyEditor.text,
                                 remarkEditor.text,
-                                emergency.toString(),
-                                latu,
-                                longu,
+                                medical,
+                                lat,
+                                long,
                                 feedbackEditor.text,
                                 colnyEditor.text,
                                 selectedState.toString(),
@@ -1033,16 +601,33 @@ class _userReq extends State<userReq> {
                                 hnumberEditor.text,
                                 mob);
                           },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                          ),
-                          child: Text(
-                            "Submit",
-                            // getTranslated(context, 'login'),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF1488CC),
+                                      Color(0xFF2B32B2)
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight),
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.blue[800],
+                                      blurRadius: 20.0,
+                                      offset: Offset.fromDirection(4.5, -10.0))
+                                ],
+                              ),
+                              padding: EdgeInsets.only(
+                                  top: 10.0,
+                                  bottom: 10.0,
+                                  left: 20.0,
+                                  right: 20.0),
+                              child: Text(
+                                "Next",
+                                style: TextStyle(
+                                    fontSize: 20.0, color: Colors.white),
+                              )),
                         ),
                       ),
                     )
