@@ -78,6 +78,7 @@ class _TimeSeries extends State<TimeSeries> {
                 Map content = snapshot.data;
 
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: content['cases_time_series'].length,
                   itemBuilder: (BuildContext context, int index) {
                     return AnimationConfiguration.staggeredList(

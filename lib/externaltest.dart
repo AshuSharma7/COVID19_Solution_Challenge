@@ -84,6 +84,7 @@ class _ExternalTest extends State<ExternalTest> {
                 // states.sort((a, b) => a.toString().compareTo(b.toString()));
 
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: content['tested'].length,
                   itemBuilder: (BuildContext context, int index) {
                     return AnimationConfiguration.staggeredList(

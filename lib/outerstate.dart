@@ -68,6 +68,7 @@ class _OuterState extends State<OuterState> {
               if (snapshot.hasData) {
                 Map content = snapshot.data;
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: content['statewise'].length,
                   itemBuilder: (BuildContext context, int index) {
                     return AnimationConfiguration.staggeredList(
