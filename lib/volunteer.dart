@@ -1,24 +1,54 @@
 import 'dart:convert';
-
+import 'dart:math' as math;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'newDeclaration.dart';
 
 class Volunteer extends StatefulWidget {
   @override
   _Volunteer createState() => _Volunteer();
 }
 
+final firebaseDatabase = FirebaseDatabase.instance.reference();
 Future<List<dynamic>> getUri() async {
   String url = "https://covid-mitrc.herokuapp.com/apis/requirements";
   http.Response response = await http.get(url);
   return jsonDecode(response.body);
 }
 
+double lat;
+double long;
+double dist(double userLat, double userLong, double lat1, double long1) {
+  double dlat1 = userLat / 57.29577951;
+  double dlong1 = userLong / 57.29577951;
+  double dlat2 = lat1 / 57.29577951;
+  double dlong2 = long1 / 57.29577951;
+  double d = 6378.8 *
+      math.acos((math.sin(dlat1) * math.sin(dlat2)) +
+          math.cos(dlat1) * math.cos(dlat2) * math.cos(dlong1 - dlong2));
+  return d;
+}
+
 List<Color> blue = [Color(0xFF36D1DC), Color(0xFF5B86E5)];
 List<Color> sweet = [Color(0xFFFF5F6D), Color(0xFFFFC371)];
 
 class _Volunteer extends State<Volunteer> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    auth.currentUser().then((value) {
+      firebaseDatabase.child(value.uid).once().then((value) {
+        Map data = value.value;
+        lat = data["latitude"];
+        long = data["longitude"];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,58 +71,59 @@ class _Volunteer extends State<Volunteer> {
             if (snapshot.hasData) {
               List content = snapshot.data;
               return ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: content.length,
                 itemBuilder: (BuildContext context, int index) {
-                  // textOriginal = content[index]["title"];
-                  // translator.translate(textOriginal, to: "hi").then((value) {
-                  //   text = value;
-                  // });
-                  return GestureDetector(
-                    child: Container(
-                      padding: EdgeInsets.all(10.0),
-                      margin: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        gradient: LinearGradient(
-                          colors: index % 2 == 0 ? sweet : blue,
-                          begin: Alignment.bottomRight,
-                          end: Alignment.topLeft,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                              color: index % 2 == 0
-                                  ? Colors.deepOrange[300]
-                                  : Colors.blue[200],
-                              blurRadius: 20.0,
-                              spreadRadius: 0.1,
-                              offset: Offset.fromDirection(4.0, -10.0))
-                        ],
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            content[index]["house"],
-                            // text,
-                            style: TextStyle(
-                                fontSize: 25.0, fontWeight: FontWeight.bold),
+                  if (dist(lat, long, double.parse(content[index]["latitude"]),
+                          double.parse(content[index]["longitude"])) <
+                      5.0) {
+                    return GestureDetector(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        margin: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          gradient: LinearGradient(
+                            colors: index % 2 == 0 ? sweet : blue,
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft,
                           ),
-                          Text(
-                            content[index]["mobile"].toString(),
-                            style: TextStyle(
-                              fontSize: 20.0,
+                          boxShadow: [
+                            BoxShadow(
+                                color: index % 2 == 0
+                                    ? Colors.deepOrange[300]
+                                    : Colors.blue[200],
+                                blurRadius: 20.0,
+                                spreadRadius: 0.1,
+                                offset: Offset.fromDirection(4.0, -10.0))
+                          ],
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              content[index]["house"],
+                              // text,
+                              style: TextStyle(
+                                  fontSize: 25.0, fontWeight: FontWeight.bold),
                             ),
-                          )
-                        ],
+                            Text(
+                              content[index]["mobile"].toString(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  reqDetails(content[index]["mobile"])));
-                    },
-                  );
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) =>
+                                    reqDetails(content[index]["mobile"])));
+                      },
+                    );
+                  }
                 },
               );
             } else {
