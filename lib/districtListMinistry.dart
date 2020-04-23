@@ -69,6 +69,7 @@ class _DistrictListState extends State<DistrictList> {
                 translate(content);
                 if (district.isNotEmpty) {
                   return ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: district.length,
                       itemBuilder: (BuildContextcontext, int index) {
                         return Container(

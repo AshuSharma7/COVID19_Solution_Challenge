@@ -85,6 +85,7 @@ class _TestingCentreState extends State<TestingCentre> {
                 translate();
                 if (translatedState.isNotEmpty) {
                   return ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     itemCount: states.length,
                     itemBuilder: (BuildContext context, int index) {
                       return AnimationConfiguration.staggeredList(

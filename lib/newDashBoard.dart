@@ -99,7 +99,9 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
                           child: SlideAnimation(
                             verticalOffset: 150.0,
                             child: FadeInAnimation(
-                              child: ListView(children: <Widget>[
+                              child: ListView(
+                                physics: BouncingScrollPhysics(),
+                                children: <Widget>[
                                     SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height /

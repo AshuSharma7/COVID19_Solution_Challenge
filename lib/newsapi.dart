@@ -112,6 +112,7 @@ class _NewsApi extends State<NewsApi> {
                 Map content = snapshot.data;
                 translate(content);
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: content['articles'].length,
                   itemBuilder: (BuildContext context, int index) {
                     return AnimationConfiguration.staggeredList(

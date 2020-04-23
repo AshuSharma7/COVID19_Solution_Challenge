@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -215,110 +216,125 @@ class _stateList extends State<stateList> {
                       }
                       states.sort((a, b) => a["state"].compareTo(b["state"]));
                       translate();
-                      return ListView.builder(
-                        itemCount: states.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => stateDetails(
-                                          states[index]["state"])));
-                            },
-                            child: Container(
-                              // height: 60,
-                              margin: EdgeInsets.all(10.0),
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: index % 2 == 0 ? color1 : color2,
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight),
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black45,
-                                      blurRadius: 5.0,
-                                      offset: Offset.fromDirection(1.0, 3.0))
-                                ],
+                      if (translatedStates.isNotEmpty) {
+                        return ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: states.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => stateDetails(
+                                            states[index]["state"])));
+                              },
+                              child: Container(
+                                // height: 60,
+                                margin: EdgeInsets.all(10.0),
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: index % 2 == 0 ? color1 : color2,
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black45,
+                                        blurRadius: 5.0,
+                                        offset: Offset.fromDirection(1.0, 3.0))
+                                  ],
+                                ),
+                                child: Center(
+                                    child: translatedStates.isEmpty
+                                        ? Shimmer.fromColors(
+                                            child: Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 15.0,
+                                                    color: Colors.white54,
+                                                  ),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 2.0),
+                                                  ),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 15.0,
+                                                    color: Colors.white54,
+                                                  ),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 2.0),
+                                                  ),
+                                                  Container(
+                                                    width: 40.0,
+                                                    height: 15.0,
+                                                    color: Colors.white54,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            baseColor: Colors.grey[300],
+                                            highlightColor: Colors.grey[50])
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                translatedStates[index]
+                                                    ["state"],
+                                                style: TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                "Total Cases: " +
+                                                    states[index]["cases"]
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                "Total Cured: " +
+                                                    states[index]["cured"]
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                "Total Deaths: " +
+                                                    states[index]["death"]
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          )),
                               ),
-                              child: Center(
-                                  child: translatedStates.isEmpty
-                                      ? Shimmer.fromColors(
-                                          child: Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 15.0,
-                                                  color: Colors.white54,
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 2.0),
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 15.0,
-                                                  color: Colors.white54,
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 2.0),
-                                                ),
-                                                Container(
-                                                  width: 40.0,
-                                                  height: 15.0,
-                                                  color: Colors.white54,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          baseColor: Colors.grey[300],
-                                          highlightColor: Colors.grey[50])
-                                      : Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(
-                                              translatedStates[index]["state"],
-                                              style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "Total Cases: " +
-                                                  states[index]["cases"]
-                                                      .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "Total Cured: " +
-                                                  states[index]["cured"]
-                                                      .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  color: Colors.white),
-                                            ),
-                                            Text(
-                                              "Total Deaths: " +
-                                                  states[index]["death"]
-                                                      .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        )),
-                            ),
-                          );
-                        },
-                      );
+                            );
+                          },
+                        );
+                      } else {
+                        return Container(
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: Center(
+                            child: SpinKitChasingDots(color: Colors.black),
+                          ),
+                        );
+                      }
                     } else {
                       return Container(
                         color: Colors.white,

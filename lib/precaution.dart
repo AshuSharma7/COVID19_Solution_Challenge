@@ -10,7 +10,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 Future<List<dynamic>> getPrec() async {
   String url = "https://covid-mitrc.herokuapp.com/apis/precaution";
   http.Response response = await http.get(url);
-  print(response.statusCode);
   return json.decode(response.body);
 }
 
@@ -78,6 +77,7 @@ class _Precaution extends State<Precaution> {
                 translate(content);
                 if (precaution.isNotEmpty) {
                   return ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: content.length,
                       itemBuilder: (BuildContext context, int index) {
                         return AnimationConfiguration.staggeredList(

@@ -82,6 +82,7 @@ class _FAQPageState extends State<FAQPage> {
             if (snapshot.hasData) {
               List content = snapshot.data;
               return ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: content.length,
                 itemBuilder: (BuildContext context, int index) {
                   translate(content[index]["que"], content[index]["ans"]);

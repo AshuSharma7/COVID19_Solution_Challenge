@@ -128,6 +128,7 @@ class _HelpLineState extends State<HelpLine> {
                 translate(states);
                 if (data.isNotEmpty) {
                   return ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     itemCount: states.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
